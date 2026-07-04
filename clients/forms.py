@@ -44,6 +44,18 @@ class ClientFactSetForm(forms.Form):
     estate_planned_lifetime_gift = forms.FloatField(initial=0, min_value=0, required=False)
     estate_prior_year_annual_exemption_unused = forms.BooleanField(initial=False, required=False)
 
+    property_disposal_gain = forms.FloatField(initial=0, min_value=0, required=False)
+    property_disposal_asset_type = forms.ChoiceField(
+        choices=[("residential", "Residential"), ("other", "Other asset")],
+        initial="residential", required=False,
+    )
+    property_ownership_months = forms.IntegerField(initial=0, min_value=0, required=False)
+    property_occupied_as_main_residence_months = forms.IntegerField(initial=0, min_value=0, required=False)
+    property_spouse_available_for_transfer = forms.BooleanField(initial=False, required=False)
+    property_purchase_price = forms.FloatField(initial=0, min_value=0, required=False)
+    property_purchase_is_additional_dwelling = forms.BooleanField(initial=False, required=False)
+    property_purchase_first_time_buyer = forms.BooleanField(initial=False, required=False)
+
     def to_facts(self) -> dict:
         data = self.cleaned_data
         return {
