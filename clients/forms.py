@@ -93,6 +93,16 @@ class ClientFactSetForm(forms.Form):
                 "planned_lifetime_gift": data.get("estate_planned_lifetime_gift") or 0,
                 "prior_year_annual_exemption_unused": data.get("estate_prior_year_annual_exemption_unused") or False,
             },
+            "property": {
+                "disposal_gain": data.get("property_disposal_gain") or 0,
+                "disposal_asset_type": data.get("property_disposal_asset_type") or "residential",
+                "ownership_months": data.get("property_ownership_months") or 0,
+                "occupied_as_main_residence_months": data.get("property_occupied_as_main_residence_months") or 0,
+                "spouse_available_for_transfer": data.get("property_spouse_available_for_transfer") or False,
+                "purchase_price": data.get("property_purchase_price") or 0,
+                "purchase_is_additional_dwelling": data.get("property_purchase_is_additional_dwelling") or False,
+                "purchase_first_time_buyer": data.get("property_purchase_first_time_buyer") or False,
+            },
         }
 
 
