@@ -213,6 +213,49 @@ class Command(BaseCommand):
                 "s.228ZA, inserted by Finance (No.2) Act 2015) its tapering for high-income individuals.",
             ),
             dict(
+                key="tcga1992_s58",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.58",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/58",
+                verbatim_extract="Disposals between spouses or civil partners living together "
+                "are treated as made for a consideration giving neither gain nor loss.",
+            ),
+            dict(
+                key="tcga1992_s222",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 ss.222-223",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/222",
+                verbatim_extract="Relief on disposal of a dwelling-house that is or has been "
+                "the individual's only or main residence; s.223(2) treats the final nine "
+                "months of ownership as qualifying in any event.",
+            ),
+            dict(
+                key="tcga1992_s1h",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 ss.1H-1K",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/1H",
+                verbatim_extract="Rates of capital gains tax by reference to unused basic-rate "
+                "band, and the annual exempt amount (s.1K).",
+            ),
+            dict(
+                key="fa2003_s55",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance Act 2003 s.55 and Sch 4ZA",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/section/55",
+                verbatim_extract="Amount of stamp duty land tax chargeable on residential "
+                "property; Schedule 4ZA imposes higher rates for additional dwellings, "
+                "refundable where a main residence is replaced within three years.",
+            ),
+            dict(
+                key="fa2003_sch6za",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance Act 2003 Sch 6ZA",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/schedule/6ZA",
+                verbatim_extract="Relief for first-time buyers: no SDLT up to the relief "
+                "threshold and a reduced rate above it, unavailable where the price exceeds "
+                "the cap.",
+            ),
+            dict(
                 key="jones_v_garnett_2007",
                 authority_type=Authority.AuthorityType.COURT_JUDGMENT,
                 canonical_citation="Jones v Garnett (Arctic Systems) [2007] UKHL 35",
