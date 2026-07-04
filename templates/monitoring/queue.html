@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Editorial change queue{% endblock %}
+{% block content %}
+<h1>Editorial change queue</h1>
+<p class="disclaimer">
+    Watchers detect and diff changes in the primary sources behind the authority
+    registry. They never change a rule: assess each alert against the primary source,
+    then either action it through a rule-base release or dismiss it with reasons.
+</p>
+
+<h2>Open alerts ({{ open_alerts|length }})</h2>
+{% for alert in open_alerts %}
+<section style="border:1px solid #b9770e; border-radius:6px; padding:1rem; margin:0.75rem 0; background:#fffdf5;">
+    <p style="margin-top:0;">
+        <strong>{{ alert.source.label }}</strong>
+        <span style="font-size:0.8rem; color:#666;">({{ alert.source.get_source_type_display }})</span>
+        — detected {{ alert.detected_at|date:"d M Y H:i" }} — status <strong>{{ alert.get_status_display }}</strong><br>
+        <a href="{{ alert.source.url }}" target="_blank" rel="noopener">Open primary source</a>
+    </p>
+    {% with strategies=alert.dependent_strategies %}
+    {% if strategies %}
+    <p><strong>Dependent strategies:</strong>
+        {% for s in strategies %}{{ s.name }} [{{ s.risk_status }}]{% if not forloop.last %}; {% endif %}{% endfor %}
+    </p>
+    {% endif %}
+    {% endwith %}
+    <details>
+        <summary>Diff excerpt</summary>
+        <pre style="font-size:0.75rem; overflow-x:auto; background:#f7f7f7; padding:0.5rem;">{{ alert.diff_excerpt }}</pre>
+    </details>
+    <form method="post" action="{% url 'monitoring:alert-action' alert.pk %}" style="margin-top:0.5rem;">
+        {% csrf_token %}
+        <textarea name="notes" rows="2" style="width:100%;"
+                  placeholder="Notes (required to action or dismiss): what was checked against the primary source and why this outcome"></textarea>
+        <select name="release" style="margin-top:0.4rem;">
+            <option value="">— rule-base release (required if actioned) —</option>
+            {% for r in releases %}<option value="{{ r.pk }}">{{ r.version }} ({{ r.status }})</option>{% endfor %}
+        </select>
+        <div style="margin-top:0.4rem;">
+            <button type="submit" name="action" value="under_review">Mark under review</button>
+            <button type="submit" name="action" value="actioned">Actioned in release</button>
+            <button type="submit" name="action" value="dismissed">Dismiss (no rule impact)</button>
+        </div>
+    </form>
+</section>
+{% empty %}
+<p>No open alerts — all watched sources match their last reviewed state.</p>
+{% endfor %}
+
+<h2>Recently closed</h2>
+<table>
+    <tr><th>Source</th><th>Detected</th><th>Outcome</th><th>By</th><th>Notes</th><th>Release</th></tr>
+    {% for alert in closed_alerts %}
+    <tr>
+        <td>{{ alert.source.label }}</td>
+        <td>{{ alert.detected_at|date:"d M Y" }}</td>
+        <td>{{ alert.get_status_display }}</td>
+        <td>{{ alert.reviewed_by }}</td>
+        <td>{{ alert.resolution_notes|truncatechars:80 }}</td>
+        <td>{{ alert.actioned_in_release.version|default:"—" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">None yet.</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Watched sources ({{ sources|length }})</h2>
+<table>
+    <tr><th>Source</th><th>Type</th><th>Last checked</th><th>Baseline?</th></tr>
+    {% for s in sources %}
+    <tr>
+        <td><a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a></td>
+        <td>{{ s.get_source_type_display }}</td>
+        <td>{{ s.last_checked_at|date:"d M Y H:i"|default:"never" }}</td>
+        <td>{% if s.last_fingerprint %}Yes{% else %}no{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
