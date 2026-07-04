@@ -30,7 +30,7 @@ Last full run before handover: **109 passed, 0 failed, 0 skipped** —
 locally (Python 3.13.14, Django 6.0.6, PostgreSQL 16/Docker, Windows 11)
 and in CI (ubuntu-latest, Python 3.13), 4 July 2026.
 
-## 2. Test inventory (92 tests)
+## 2. Test inventory (109 tests)
 
 | File | Tests | What it proves |
 |---|---|---|
