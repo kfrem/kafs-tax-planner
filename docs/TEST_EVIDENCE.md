@@ -40,6 +40,7 @@ and in CI (ubuntu-latest, Python 3.13), 4 July 2026.
 | `ruleengine/tests/test_pension_relief.py` | 6 | RAS band extension (40% relief case), taper restoration (60% effective relief case), FA 2004 s.190 earnings cap, £3,600 floor, AA charge basis, employer-route CT saving |
 | `ruleengine/tests/test_iht.py` | 12 | Estate calculator (NRB/RNRB, home-equity cap, descendants condition, £2m taper, spouse exemption, 36% boundary) and all three IHT strategies incl. RNRB-restoration-by-gift |
 | `ruleengine/tests/test_provenance.py` | 5 | Draft releases never influence calculations; released rows do; provenance logs exact row ids/releases and survives cache hits |
+| `ruleengine/tests/test_property.py` | 12 | CGT band straddling, AEA, PPR relief with the final-9-months rule, spousal transfer (both the honest £720 both-higher-rate case and the basic-rate-spouse case), SDLT bands, 5% surcharge, FTB relief and its price cap |
 | `advice/tests/test_generator.py` | 5 | Generator pipeline: eligibility, immutability (save/delete refusal), supersession, release stamping |
 | `advice/tests/test_personas.py` | 17 | **The consistency suite** — see §3 |
 | `advice/tests/test_panel.py` | 12 | **Expert panel**: per-persona verdicts across all three personas (Emma clear, Sarah/Victor attention with specific finding codes); blockers on rule drift (independent recomputation) and on an overruled authority; decision workflow gating (no decision without a review, blocker override needs a written note, reject/revise need notes); panel reviews append-only |
