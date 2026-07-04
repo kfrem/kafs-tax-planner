@@ -28,7 +28,7 @@ def _current_rule_base_release() -> RuleBaseRelease:
         RuleBaseRelease.objects.filter(
             status=RuleBaseRelease.Status.RELEASED, effective_date__lte=timezone.now().date()
         )
-        .order_by("-effective_date")
+        .order_by("-effective_date", "-id")
         .first()
     )
     if release is None:
