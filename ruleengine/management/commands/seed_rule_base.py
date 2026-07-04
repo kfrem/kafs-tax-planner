@@ -259,7 +259,7 @@ class Command(BaseCommand):
                 key="jones_v_garnett_2007",
                 authority_type=Authority.AuthorityType.COURT_JUDGMENT,
                 canonical_citation="Jones v Garnett (Arctic Systems) [2007] UKHL 35",
-                canonical_uri="https://caselaw.nationalarchives.gov.uk/ukhl/2007/35",
+                canonical_uri="https://www.bailii.org/uk/cases/UKHL/2007/35.html",
                 verbatim_extract="The House of Lords held that the ordinary-share arrangement "
                 "between spouses was a settlement within ITTOIA 2005 s.620, but fell within the "
                 "s.626 outright-gifts-between-spouses exemption because the shares were not "
