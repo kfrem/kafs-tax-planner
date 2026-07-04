@@ -601,6 +601,60 @@ class Command(BaseCommand):
                 ]},
                 release=release_iht,
             ),
+            dict(
+                code="cgt-ppr-relief",
+                name="Private residence relief on property disposal",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_ppr_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Gains on a property that has at some time been the owner's only or "
+                "main residence are exempt for the periods of actual occupation plus the final "
+                "nine months of ownership, apportioned over the total ownership period. Where a "
+                "property was the main residence for part of the ownership, the relief often "
+                "removes more of the gain than clients expect — and the occupation history "
+                "should be evidenced before disposal.",
+                authority_keys=["tcga1992_s222", "tcga1992_s1h"],
+                eligibility_conditions={"all": [
+                    {"path": "property.disposal_gain", "op": "gt", "value": 0},
+                    {"path": "property.occupied_as_main_residence_months", "op": "gt", "value": 0},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="cgt-spousal-transfer-before-disposal",
+                name="Spousal transfer before disposal",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_spousal_transfer_before_disposal",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Transfers between spouses or civil partners living together are at "
+                "no gain/no loss, so a half share transferred before an arm's-length disposal "
+                "uses both annual exempt amounts and both basic-rate bands. The transfer must "
+                "be an outright gift of beneficial ownership made before any unconditional "
+                "contract to sell exists.",
+                authority_keys=["tcga1992_s58", "tcga1992_s1h"],
+                eligibility_conditions={"all": [
+                    {"path": "property.disposal_gain", "op": "gt", "value": 0},
+                    {"path": "property.spouse_available_for_transfer", "op": "eq", "value": True},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="sdlt-purchase-planning",
+                name="SDLT on planned property purchase",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.sdlt_purchase_planning",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the SDLT on a planned residential purchase, including the "
+                "5% additional-dwellings surcharge and first-time buyers' relief. Where the "
+                "purchase replaces a main residence sold within three years, the surcharge is "
+                "recoverable — timing the sale matters as much as the price.",
+                authority_keys=["fa2003_s55", "fa2003_sch6za"],
+                eligibility_conditions={"all": [{"path": "property.purchase_price", "op": "gt", "value": 0}]},
+                release=release_property,
+            ),
         ]
 
         for spec in specs:
