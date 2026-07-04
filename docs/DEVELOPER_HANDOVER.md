@@ -36,7 +36,10 @@ green at every checkpoint. Test count shows cumulative growth.
 | 21 | Audit integrity: draft-release gating in `get_parameter`; `parameters_used` provenance on every advice record; provenance table in the PDF | 63 tests |
 | 22 | Personas Emma (simple) / Sarah (typical) / Victor (complex) as permanent consistency suite; *Jones v Garnett* added to authority registry | 80 tests |
 | 23 | Layered documentation (this file, ARCHITECTURE.md, TEST_EVIDENCE.md) | — |
-| 24 | **Expert review panel**: four deterministic reviewer personas, per-persona + overall verdicts, append-only `PanelReview`/`ProfessionalDecision` with RLS, decision gating (panel-first, blocker override notes), UI deploy button, provenance-style independent recomputation check | **92 tests** |
+| 24 | **Expert review panel**: four deterministic reviewer personas, per-persona + overall verdicts, append-only `PanelReview`/`ProfessionalDecision` with RLS, decision gating (panel-first, blocker override notes), UI deploy button, provenance-style independent recomputation check | 92 tests |
+| 25 | git repository + GitHub Actions CI (Postgres service container, non-superuser role, full suite on every push/PR): https://github.com/kfrem/kafs-tax-planner | CI green |
+| 26 | Accountant-grade presentation: `quant_table` template filter (£/percent/Yes-No formatting, humanised labels, nested + columned tables) used by both the PDF and the web view | 96 tests |
+| 27 | **Property/CGT module**: CGT (AEA, band-straddling rates) and SDLT (bands, 5% surcharge, FTB relief) calculators; PPR relief with final-9-months rule, spousal transfer before disposal, SDLT purchase planning strategies; release 2025.3, 5 TCGA/FA 2003 authorities, 3 golden cases; Victor persona extended with a rental disposal | **109 tests** |
 
 ## 2. Standing it up from nothing
 
