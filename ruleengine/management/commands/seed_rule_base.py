@@ -794,6 +794,32 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="cgt_liability",
+                description="Gain straddling the basic-rate band boundary, 2025/26",
+                source="Hand-computed: earned 42,270 -> taxable income 29,700, basic band "
+                "remaining 8,000; gain 15,000 - 3,000 AEA = 12,000: 8,000 at 18% (1,440) + "
+                "4,000 at 24% (960) = 2,400",
+                input_facts={"chargeable_gain": 15000, "asset_type": "residential", "earned_income": 42270},
+                expected_output={"taxable_gain": 12000.0, "gain_at_lower_rate": 8000.0,
+                                 "gain_at_higher_rate": 4000.0, "tax_due": 2400.0},
+            ),
+            dict(
+                calculator_key="sdlt_residential",
+                description="Standard residential purchase at 350,000, 2025/26",
+                source="Hand-computed: 125,000 at 0% + 125,000 at 2% (2,500) + 100,000 at "
+                "5% (5,000) = 7,500",
+                input_facts={"price": 350000},
+                expected_output={"banded_sdlt": 7500.0, "total_sdlt": 7500.0},
+            ),
+            dict(
+                calculator_key="sdlt_residential",
+                description="Additional dwelling at 350,000: 5% surcharge on whole price",
+                source="Hand-computed: banded 7,500 + surcharge 17,500 = 25,000",
+                input_facts={"price": 350000, "additional_dwelling": True},
+                expected_output={"banded_sdlt": 7500.0, "additional_dwelling_surcharge": 17500.0,
+                                 "total_sdlt": 25000.0},
+            ),
+            dict(
                 calculator_key="strategy.pension_annual_allowance_carry_forward",
                 description="Owner-manager: desired contribution exceeds relevant earnings; employer route quantified, 2025/26",
                 source="Hand-computed: desired 40,000 vs relevant earnings 28,000 -> relievable "
