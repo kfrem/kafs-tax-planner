@@ -630,6 +630,215 @@ def strategy_marriage_allowance_transfer(facts: dict, tax_year: str) -> dict:
     }
 
 
+# --- Capital gains tax and SDLT ------------------------------------------------
+
+
+@register(
+    "cgt_liability",
+    consumes=[
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="CGT on a chargeable gain: annual exempt amount, then the lower rate "
+    "within the individual's unused basic-rate band and the higher rate above it "
+    "(TCGA 1992 ss.1H-1K).",
+)
+def cgt_liability(facts: dict, tax_year: str) -> dict:
+    gain = max(0.0, float(facts.get("chargeable_gain", 0)))
+    asset_type = facts.get("asset_type", "residential")
+    earned_income = max(0.0, float(facts.get("earned_income", 0)))
+
+    aea_param = get_parameter("cgt.annual_exempt_amount", tax_year)
+    rates_param = get_parameter("cgt.rates", tax_year)
+    bands_param = get_parameter("income_tax.bands", tax_year)
+    rates = rates_param[asset_type]
+
+    taxable_income = income_tax_on_earned_income({"total_income": earned_income}, tax_year)[
+        "taxable_income"
+    ]
+    aea_used = min(aea_param["amount"], gain)
+    taxable_gain = round(gain - aea_used, 2)
+
+    basic_rate_limit = bands_param["bands"][0]["upper"]
+    basic_band_remaining = max(0.0, basic_rate_limit - taxable_income)
+    at_lower_rate = min(taxable_gain, basic_band_remaining)
+    at_higher_rate = max(0.0, taxable_gain - at_lower_rate)
+    tax_due = round(at_lower_rate * rates["lower"] + at_higher_rate * rates["higher"], 2)
+
+    return {
+        "chargeable_gain": gain,
+        "asset_type": asset_type,
+        "annual_exempt_amount_used": round(aea_used, 2),
+        "taxable_gain": taxable_gain,
+        "gain_at_lower_rate": round(at_lower_rate, 2),
+        "gain_at_higher_rate": round(at_higher_rate, 2),
+        "tax_due": tax_due,
+    }
+
+
+@register(
+    "sdlt_residential",
+    consumes=["sdlt.residential_bands"],
+    description="SDLT on a residential purchase (England/NI): banded rates, the "
+    "additional-dwellings surcharge (FA 2003 Sch 4ZA), and first-time buyers' "
+    "relief (Sch 6ZA) with its price cap.",
+)
+def sdlt_residential(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts.get("price", 0)))
+    additional = bool(facts.get("additional_dwelling", False))
+    first_time_buyer = bool(facts.get("first_time_buyer", False))
+
+    param = get_parameter("sdlt.residential_bands", tax_year)
+    ftb = param["first_time_buyer"]
+
+    ftb_relief_applies = first_time_buyer and not additional and price <= ftb["cap"]
+    if ftb_relief_applies:
+        banded = round(max(0.0, price - ftb["relief_threshold"]) * ftb["rate_above_threshold"], 2)
+    else:
+        banded = 0.0
+        lower = 0.0
+        for band in param["bands"]:
+            upper = band["upper"] if band["upper"] is not None else price
+            if price > lower:
+                banded += (min(price, upper) - lower) * band["rate"]
+            lower = upper
+        banded = round(banded, 2)
+
+    surcharge = round(price * param["additional_dwelling_surcharge"], 2) if additional else 0.0
+
+    return {
+        "price": price,
+        "first_time_buyer_relief_applied": ftb_relief_applies,
+        "banded_sdlt": banded,
+        "additional_dwelling_surcharge": surcharge,
+        "total_sdlt": round(banded + surcharge, 2),
+    }
+
+
+@register(
+    "strategy.cgt_ppr_relief",
+    consumes=[
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="Private residence relief on disposal of a property that has been the "
+    "main residence for part of the ownership period, including the final-9-months rule.",
+)
+def strategy_cgt_ppr_relief(facts: dict, tax_year: str) -> dict:
+    gain = float(facts["disposal_gain"])
+    ownership_months = max(1.0, float(facts.get("ownership_months", 1)))
+    occupied_months = min(
+        ownership_months, max(0.0, float(facts.get("occupied_as_main_residence_months", 0)))
+    )
+    earned_income = float(facts.get("earned_income", 0))
+
+    # TCGA 1992 s.223(2): the final 9 months of ownership always qualify if
+    # the property has at some time been the only or main residence.
+    final_period = min(9.0, ownership_months - occupied_months) if occupied_months else 0.0
+    exempt_months = min(ownership_months, occupied_months + final_period)
+    exempt_fraction = exempt_months / ownership_months
+    exempt_gain = round(gain * exempt_fraction, 2)
+    chargeable_gain = round(gain - exempt_gain, 2)
+
+    with_relief = cgt_liability(
+        {"chargeable_gain": chargeable_gain, "asset_type": "residential", "earned_income": earned_income},
+        tax_year,
+    )
+    without_relief = cgt_liability(
+        {"chargeable_gain": gain, "asset_type": "residential", "earned_income": earned_income},
+        tax_year,
+    )
+
+    return {
+        "total_gain": gain,
+        "ownership_months": ownership_months,
+        "exempt_months_including_final_period": exempt_months,
+        "exempt_gain": exempt_gain,
+        "chargeable_gain_after_relief": chargeable_gain,
+        "cgt_with_relief": with_relief["tax_due"],
+        "cgt_without_relief": without_relief["tax_due"],
+        "relief_saving": round(without_relief["tax_due"] - with_relief["tax_due"], 2),
+    }
+
+
+@register(
+    "strategy.cgt_spousal_transfer_before_disposal",
+    consumes=[
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="No-gain/no-loss transfer of a half share to a spouse before disposal "
+    "(TCGA 1992 s.58): both annual exempt amounts and both basic-rate bands are used.",
+)
+def strategy_cgt_spousal_transfer(facts: dict, tax_year: str) -> dict:
+    gain = float(facts["disposal_gain"])
+    asset_type = facts.get("asset_type", "residential")
+    earned_income = float(facts.get("earned_income", 0))
+    spouse_earned_income = float(facts.get("spouse_earned_income", 0))
+
+    alone = cgt_liability(
+        {"chargeable_gain": gain, "asset_type": asset_type, "earned_income": earned_income},
+        tax_year,
+    )
+    own_half = cgt_liability(
+        {"chargeable_gain": gain / 2, "asset_type": asset_type, "earned_income": earned_income},
+        tax_year,
+    )
+    spouse_half = cgt_liability(
+        {"chargeable_gain": gain / 2, "asset_type": asset_type, "earned_income": spouse_earned_income},
+        tax_year,
+    )
+    split_total = round(own_half["tax_due"] + spouse_half["tax_due"], 2)
+
+    return {
+        "gain": gain,
+        "cgt_disposing_alone": alone["tax_due"],
+        "cgt_after_half_share_to_spouse": split_total,
+        "own_half_cgt": own_half["tax_due"],
+        "spouse_half_cgt": spouse_half["tax_due"],
+        "saving": round(alone["tax_due"] - split_total, 2),
+        # The transfer must be an outright gift before an unconditional
+        # sale contract exists; anti-avoidance can bite on pre-arranged
+        # same-day transfers with no change of beneficial ownership.
+    }
+
+
+@register(
+    "strategy.sdlt_purchase_planning",
+    consumes=["sdlt.residential_bands"],
+    description="SDLT cost of a planned residential purchase: banded charge, the 5% "
+    "additional-dwellings surcharge exposure, and first-time buyers' relief.",
+)
+def strategy_sdlt_purchase(facts: dict, tax_year: str) -> dict:
+    price = float(facts["price"])
+    additional = bool(facts.get("additional_dwelling", False))
+    first_time_buyer = bool(facts.get("first_time_buyer", False))
+
+    as_planned = sdlt_residential(
+        {"price": price, "additional_dwelling": additional, "first_time_buyer": first_time_buyer},
+        tax_year,
+    )
+    without_surcharge = sdlt_residential(
+        {"price": price, "additional_dwelling": False, "first_time_buyer": first_time_buyer},
+        tax_year,
+    )
+
+    return {
+        "as_planned": as_planned,
+        "surcharge_cost_of_additional_dwelling": round(
+            as_planned["total_sdlt"] - without_surcharge["total_sdlt"], 2
+        ),
+        # If the purchase replaces a main residence sold within 3 years,
+        # the surcharge is refundable on the timeline in FA 2003 Sch 4ZA.
+    }
+
+
 # --- Inheritance tax ----------------------------------------------------------
 
 
