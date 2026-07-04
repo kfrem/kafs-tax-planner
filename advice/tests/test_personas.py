@@ -118,6 +118,20 @@ class TestVictorComplex:
         q = _result(record, "iht-lifetime-gifting-pets")["quantification"]
         assert q["saving_if_survive_7_years"] == approx(200000.0)
 
+    def test_spousal_cgt_transfer_honest_about_small_saving(self, make_advice):
+        # Both spouses are higher-rate taxpayers, so splitting the 150,000
+        # rental gain saves exactly the second annual exempt amount at 24%:
+        # 3,000 x 24% = 720. The tool must report that honestly.
+        record, _, _ = make_advice("A007", "Victor Adeyemi", VICTOR_FACTS)
+        q = _result(record, "cgt-spousal-transfer-before-disposal")["quantification"]
+        assert q["cgt_disposing_alone"] == approx(35280.0)
+        assert q["saving"] == approx(720.0)
+
+    def test_ppr_not_offered_on_never_occupied_rental(self, make_advice):
+        record, _, _ = make_advice("A007", "Victor Adeyemi", VICTOR_FACTS)
+        codes = {r["strategy_code"] for r in record.results}
+        assert "cgt-ppr-relief" not in codes
+
     def test_charity_top_up_arithmetic(self, make_advice):
         # Baseline 4.5m - 650k = 3.85m -> target 385,000; current 50,000.
         # Current tax: (4.5m - 50k - 650k) at 40% = 1,520,000. At target:
