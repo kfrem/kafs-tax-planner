@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load report_format %}
 {% block title %}Advice — {{ record.client.name }}{% endblock %}
 {% block content %}
 <h1>Advice for {{ record.client.name }} — {{ record.tax_year }}</h1>
@@ -82,7 +83,7 @@
     <p><em>Timeframe: {{ r.timeframe }}</em></p>
     <p>{{ r.explanation }}</p>
     <h4>Quantification</h4>
-    <pre>{{ r.quantification }}</pre>
+    <div style="font-size:0.9rem;">{{ r.quantification|quant_table }}</div>
     <h4>Legal basis</h4>
     <ul>
         {% for a in r.authorities %}<li>{{ a.citation }} ({{ a.status }})</li>{% endfor %}
