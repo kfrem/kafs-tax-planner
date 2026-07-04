@@ -159,6 +159,72 @@ class MarriageAllowanceAdapter:
         }
 
 
+def _earned_income(facts: dict) -> float:
+    personal = facts.get("personal", {})
+    return (
+        personal.get("other_income", 0)
+        + personal.get("salary_from_own_company", 0)
+        + facts.get("sole_trade", {}).get("annual_profit", 0)
+    )
+
+
+@adapter("strategy.cgt_ppr_relief")
+class CgtPprReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return (
+            prop.get("disposal_gain", 0) > 0
+            and prop.get("occupied_as_main_residence_months", 0) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "disposal_gain": prop.get("disposal_gain", 0),
+            "ownership_months": prop.get("ownership_months", 1),
+            "occupied_as_main_residence_months": prop.get("occupied_as_main_residence_months", 0),
+            "earned_income": _earned_income(facts),
+        }
+
+
+@adapter("strategy.cgt_spousal_transfer_before_disposal")
+class CgtSpousalTransferAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return prop.get("disposal_gain", 0) > 0 and prop.get(
+            "spouse_available_for_transfer", False
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "disposal_gain": prop.get("disposal_gain", 0),
+            "asset_type": prop.get("disposal_asset_type", "residential"),
+            "earned_income": _earned_income(facts),
+            "spouse_earned_income": facts.get("personal", {}).get("spouse_income", 0),
+        }
+
+
+@adapter("strategy.sdlt_purchase_planning")
+class SdltPurchasePlanningAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("property", {}).get("purchase_price", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "price": prop.get("purchase_price", 0),
+            "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
+            "first_time_buyer": prop.get("purchase_first_time_buyer", False),
+        }
+
+
 @adapter("strategy.iht_spousal_transfer_nil_rate_bands")
 class IhtSpousalTransferAdapter:
     @staticmethod
