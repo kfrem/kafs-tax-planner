@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Record facts — {{ client.name }}{% endblock %}
+{% block content %}
+<h1>Record financial facts — {{ client.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Save facts</button>
+</form>
+{% endblock %}

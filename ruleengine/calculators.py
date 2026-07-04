@@ -1,0 +1,829 @@
+"""Layer 2 (pure computation) and Layer 3 (strategy quantification)
+calculators, per architecture doc Section 5.2/5.3.
+
+Layer 2 calculators are single-purpose and reusable (income tax, dividend
+tax, NIC, corporation tax). Layer 3 "strategy" calculators compose Layer 2
+functions to quantify a planning strategy end to end; a Strategy row's
+``calculator_key`` points at one of these.
+
+Simplifications made explicitly for MVP scope (must be reviewed by the tax
+editor before any client-facing use — see Section 5.6 governance):
+ - Class 2 NIC is voluntary since April 2024 and is not modelled as a cost.
+ - Scottish and Welsh divergent income tax rates are out of scope (English/
+   Welsh employment income tax law only, per architecture doc Section 12).
+ - Marginal relief assumes augmented profits equal net profits (no franked
+   investment income from other companies) — the common case for a single
+   owner-managed trading company.
+"""
+
+from __future__ import annotations
+
+from .engine import _apply_band_rates, get_parameter, parameter_cache, register
+
+
+def _apply_band_rates_with_offset(amount: float, bands: list[dict], offset: float) -> float:
+    """Tax ``amount`` through ``bands`` where ``offset`` of band capacity has
+    already been consumed by other income stacked underneath it."""
+    tax = 0.0
+    remaining = amount
+    lower = 0.0
+    for band in bands:
+        upper = band["upper"]
+        band_capacity = (upper - lower) if upper is not None else float("inf")
+        available_in_band = max(0.0, band_capacity - max(0.0, offset - lower))
+        amount_in_band = max(0.0, min(remaining, available_in_band))
+        tax += amount_in_band * band["rate"]
+        remaining -= amount_in_band
+        lower = upper if upper is not None else lower
+        if remaining <= 0:
+            break
+    return round(tax, 2)
+
+
+@register(
+    "income_tax_on_earned_income",
+    consumes=["income_tax.personal_allowance", "income_tax.bands"],
+    description="Income tax on non-dividend, non-savings income after the tapered personal allowance.",
+)
+def income_tax_on_earned_income(facts: dict, tax_year: str) -> dict:
+    total_income = float(facts["total_income"])
+    pa_param = get_parameter("income_tax.personal_allowance", tax_year)
+    bands_param = get_parameter("income_tax.bands", tax_year)
+
+    excess = max(0.0, total_income - pa_param["taper_threshold"])
+    reduction = min(pa_param["amount"], excess * pa_param["taper_rate"])
+    personal_allowance = round(pa_param["amount"] - reduction, 2)
+
+    taxable_income = max(0.0, round(total_income - personal_allowance, 2))
+    tax_due, breakdown = _apply_band_rates(taxable_income, bands_param["bands"])
+
+    return {
+        "total_income": total_income,
+        "personal_allowance": personal_allowance,
+        "taxable_income": taxable_income,
+        "tax_breakdown": breakdown,
+        "tax_due": tax_due,
+    }
+
+
+@register(
+    "dividend_tax",
+    consumes=["dividend_tax.allowance", "dividend_tax.bands"],
+    description="Tax on dividend income, stacked on top of other taxable income, net of the dividend allowance.",
+)
+def dividend_tax(facts: dict, tax_year: str) -> dict:
+    other_taxable_income = float(facts["other_taxable_income"])
+    dividend_income = float(facts["dividend_income"])
+    allowance_param = get_parameter("dividend_tax.allowance", tax_year)
+    bands_param = get_parameter("dividend_tax.bands", tax_year)
+
+    allowance = allowance_param["amount"]
+    tax_without_allowance = _apply_band_rates_with_offset(
+        dividend_income, bands_param["bands"], other_taxable_income
+    )
+    allowance_used = min(allowance, dividend_income)
+    tax_relieved_by_allowance = _apply_band_rates_with_offset(
+        allowance_used, bands_param["bands"], other_taxable_income
+    )
+    tax_due = round(tax_without_allowance - tax_relieved_by_allowance, 2)
+
+    return {
+        "dividend_income": dividend_income,
+        "dividend_allowance": allowance,
+        "tax_due": tax_due,
+    }
+
+
+@register(
+    "combined_personal_tax",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Income tax and dividend tax computed together on a whole-person basis: "
+    "personal allowance tapered on total income (including dividends), unused personal "
+    "allowance applied to dividends, dividends stacked above earned income in the bands.",
+)
+def combined_personal_tax(facts: dict, tax_year: str) -> dict:
+    """Whole-person personal tax. Unlike the single-purpose calculators above,
+    this models the interactions between income types that materially change
+    the answer for owner-managers:
+
+     - the personal allowance taper (ITA 2007 s.35(2)) operates on adjusted
+       net income INCLUDING dividends, so a large dividend can strip the
+       allowance from salary;
+     - personal allowance not used by earned income shelters dividends;
+     - dividends occupy the tax bands above earned income.
+
+    Documented simplifications (standard allocation order; no beneficial-
+    ordering optimisation; dividend allowance modelled as relief at the
+    lowest dividend slice rather than as band-consuming nil-rate) — for the
+    tax editor to review per Section 5.6 governance.
+    """
+    earned = max(0.0, float(facts.get("earned_income", 0)))
+    dividends = max(0.0, float(facts.get("dividend_income", 0)))
+    # Gross relief-at-source pension contribution: extends the band limits
+    # and reduces adjusted net income for the taper (FA 2004 s.192; ITA 2007
+    # s.35(2) via the s.58 definition of adjusted net income).
+    gross_ras = max(0.0, float(facts.get("gross_pension_contribution", 0)))
+
+    pa_param = get_parameter("income_tax.personal_allowance", tax_year)
+    bands_param = get_parameter("income_tax.bands", tax_year)
+    allowance_param = get_parameter("dividend_tax.allowance", tax_year)
+    div_bands_param = get_parameter("dividend_tax.bands", tax_year)
+
+    def _extend(bands: list[dict]) -> list[dict]:
+        if not gross_ras:
+            return bands
+        return [
+            {"upper": (b["upper"] + gross_ras) if b["upper"] is not None else None, "rate": b["rate"]}
+            for b in bands
+        ]
+
+    total_income = earned + dividends
+    adjusted_net_income = max(0.0, total_income - gross_ras)
+    excess = max(0.0, adjusted_net_income - pa_param["taper_threshold"])
+    reduction = min(pa_param["amount"], excess * pa_param["taper_rate"])
+    personal_allowance = round(pa_param["amount"] - reduction, 2)
+
+    taxable_earned = max(0.0, round(earned - personal_allowance, 2))
+    pa_remaining = max(0.0, round(personal_allowance - earned, 2))
+    taxable_dividends = max(0.0, round(dividends - pa_remaining, 2))
+
+    income_bands = _extend(bands_param["bands"])
+    dividend_bands = _extend(div_bands_param["bands"])
+
+    earned_tax, _ = _apply_band_rates(taxable_earned, income_bands)
+
+    gross_dividend_tax = _apply_band_rates_with_offset(
+        taxable_dividends, dividend_bands, taxable_earned
+    )
+    allowance_used = min(allowance_param["amount"], taxable_dividends)
+    allowance_relief = _apply_band_rates_with_offset(
+        allowance_used, dividend_bands, taxable_earned
+    )
+    dividend_tax_due = round(gross_dividend_tax - allowance_relief, 2)
+
+    return {
+        "earned_income": earned,
+        "dividend_income": dividends,
+        "gross_pension_contribution": gross_ras,
+        "adjusted_net_income": round(adjusted_net_income, 2),
+        "personal_allowance": personal_allowance,
+        "taxable_earned": taxable_earned,
+        "earned_tax": earned_tax,
+        "dividend_tax_due": dividend_tax_due,
+        "total_tax": round(earned_tax + dividend_tax_due, 2),
+    }
+
+
+@register(
+    "employee_class1_nic",
+    consumes=["national_insurance.employee_class1"],
+    description="Employee Class 1 NIC on annual salary.",
+)
+def employee_class1_nic(facts: dict, tax_year: str) -> dict:
+    salary = float(facts["annual_salary"])
+    param = get_parameter("national_insurance.employee_class1", tax_year)
+    pt, uel, rate, upper_rate = (
+        param["primary_threshold"],
+        param["upper_earnings_limit"],
+        param["rate"],
+        param["upper_rate"],
+    )
+    main_band = max(0.0, min(salary, uel) - pt)
+    upper_band = max(0.0, salary - uel)
+    nic = round(main_band * rate + upper_band * upper_rate, 2)
+    return {"annual_salary": salary, "nic_due": nic}
+
+
+@register(
+    "employer_class1_nic",
+    consumes=["national_insurance.employer_class1", "national_insurance.employment_allowance"],
+    description="Employer (secondary) Class 1 NIC on annual salary, with optional Employment Allowance.",
+)
+def employer_class1_nic(facts: dict, tax_year: str) -> dict:
+    salary = float(facts["annual_salary"])
+    employment_allowance_available = bool(facts.get("employment_allowance_available", False))
+    param = get_parameter("national_insurance.employer_class1", tax_year)
+    st, rate = param["secondary_threshold"], param["rate"]
+    gross_nic = round(max(0.0, salary - st) * rate, 2)
+
+    relief = 0.0
+    if employment_allowance_available:
+        ea_param = get_parameter("national_insurance.employment_allowance", tax_year)
+        relief = min(gross_nic, ea_param["amount"])
+    nic_due = round(gross_nic - relief, 2)
+    return {"annual_salary": salary, "gross_nic": gross_nic, "employment_allowance_relief": relief, "nic_due": nic_due}
+
+
+@register(
+    "corporation_tax",
+    consumes=["corporation_tax.rates"],
+    description="Corporation tax with marginal relief between the small profits and main rate limits.",
+)
+def corporation_tax(facts: dict, tax_year: str) -> dict:
+    profit = max(0.0, float(facts["taxable_profit"]))
+    associated_companies = int(facts.get("associated_companies", 0))
+    param = get_parameter("corporation_tax.rates", tax_year)
+
+    divisor = 1 + associated_companies
+    lower_limit = param["small_profits_limit"] / divisor
+    upper_limit = param["main_rate_limit"] / divisor
+
+    if profit <= lower_limit:
+        tax = profit * param["small_profits_rate"]
+        marginal_relief = 0.0
+        effective_rate = param["small_profits_rate"]
+    elif profit >= upper_limit:
+        tax = profit * param["main_rate"]
+        marginal_relief = 0.0
+        effective_rate = param["main_rate"]
+    else:
+        marginal_relief = (upper_limit - profit) * param["marginal_relief_fraction"]
+        tax = profit * param["main_rate"] - marginal_relief
+        effective_rate = tax / profit if profit else 0.0
+
+    return {
+        "taxable_profit": profit,
+        "tax_due": round(tax, 2),
+        "marginal_relief": round(marginal_relief, 2),
+        "effective_rate": round(effective_rate, 4),
+    }
+
+
+@register(
+    "pension_available_annual_allowance",
+    consumes=["pension.annual_allowance"],
+    description="Available pension annual allowance for a tax year including up to 3 years' carry-forward, with tapering for high earners.",
+)
+def pension_available_annual_allowance(facts: dict, tax_year: str) -> dict:
+    threshold_income = float(facts.get("threshold_income", 0))
+    adjusted_income = float(facts.get("adjusted_income", 0))
+    unused_prior_years = [float(x) for x in facts.get("unused_aa_prior_3_years", [])]
+    param = get_parameter("pension.annual_allowance", tax_year)
+
+    standard_aa = param["standard_amount"]
+    tapered = False
+    aa_this_year = standard_aa
+    if threshold_income > param["taper_threshold_income"]:
+        excess = adjusted_income - param["taper_adjusted_income_limit"]
+        if excess > 0:
+            tapered = True
+            reduction = min(standard_aa - param["minimum_tapered_amount"], excess * 0.5)
+            aa_this_year = round(standard_aa - reduction, 2)
+
+    carry_forward = sum(unused_prior_years)
+    total_available = round(aa_this_year + carry_forward, 2)
+
+    return {
+        "annual_allowance_this_year": aa_this_year,
+        "tapered": tapered,
+        "carry_forward_available": round(carry_forward, 2),
+        "total_available": total_available,
+    }
+
+
+# --- Layer 3: strategy quantification -------------------------------------
+
+
+@register(
+    "strategy.salary_dividend_mix",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+        "national_insurance.employee_class1",
+        "national_insurance.employer_class1",
+        "national_insurance.employment_allowance",
+        "corporation_tax.rates",
+    ],
+    description="Compares salary/dividend extraction splits from an owner-managed company for a given profit before remuneration.",
+)
+def strategy_salary_dividend_mix(facts: dict, tax_year: str) -> dict:
+    """Whole-income comparison: personal tax on each extraction option is the
+    INCREMENTAL tax it causes on top of the client's other income (treated as
+    non-dividend income), so sole-trade profits or employment income that
+    fill the basic-rate band or trigger the personal allowance taper are
+    reflected in the numbers, not ignored.
+
+    If ``salary_options`` is supplied, only those levels are compared.
+    Otherwise the optimal salary is found numerically: coarse scan then
+    refinement to £1 granularity. The net function is piecewise linear in
+    salary, but its breakpoints depend on interactions (NIC thresholds, CT
+    marginal relief limits, band crossings of the dividend stack, the PA
+    taper), so a scan is more robust than enumerating breakpoints
+    analytically.
+    """
+    profit_before_remuneration = float(facts["company_profit_before_remuneration"])
+    other_personal_income = float(facts.get("other_personal_income", 0))
+    employment_allowance_available = bool(facts.get("employment_allowance_available", False))
+
+    with parameter_cache():
+        baseline = combined_personal_tax(
+            {"earned_income": other_personal_income, "dividend_income": 0}, tax_year
+        )
+
+        def evaluate(salary: float) -> dict | None:
+            employer_nic = employer_class1_nic(
+                {"annual_salary": salary, "employment_allowance_available": employment_allowance_available},
+                tax_year,
+            )
+            # Infeasible: the company cannot pay salary plus the employer
+            # NIC on it out of the available profit.
+            if salary + employer_nic["nic_due"] > profit_before_remuneration:
+                return None
+            taxable_profit = max(0.0, profit_before_remuneration - salary - employer_nic["nic_due"])
+            ct = corporation_tax({"taxable_profit": taxable_profit}, tax_year)
+            dividends_available = round(taxable_profit - ct["tax_due"], 2)
+
+            with_extraction = combined_personal_tax(
+                {
+                    "earned_income": other_personal_income + salary,
+                    "dividend_income": dividends_available,
+                },
+                tax_year,
+            )
+            personal_tax_on_extraction = round(
+                with_extraction["total_tax"] - baseline["total_tax"], 2
+            )
+            employee_nic = employee_class1_nic({"annual_salary": salary}, tax_year)
+
+            total_tax_and_nic = round(
+                employer_nic["nic_due"]
+                + ct["tax_due"]
+                + personal_tax_on_extraction
+                + employee_nic["nic_due"],
+                2,
+            )
+            net_to_individual = round(
+                salary + dividends_available - employee_nic["nic_due"] - personal_tax_on_extraction,
+                2,
+            )
+            return {
+                "salary": salary,
+                "employer_nic": employer_nic["nic_due"],
+                "corporation_tax": ct["tax_due"],
+                "dividends_available": dividends_available,
+                "personal_tax_on_extraction": personal_tax_on_extraction,
+                "employee_nic": employee_nic["nic_due"],
+                "total_tax_and_nic": total_tax_and_nic,
+                "net_to_individual": net_to_individual,
+            }
+
+        if "salary_options" in facts:
+            options = sorted(set(facts["salary_options"]))
+            comparisons = [
+                result
+                for s in options
+                if s <= profit_before_remuneration and (result := evaluate(s)) is not None
+            ]
+            best = max(comparisons, key=lambda c: c["net_to_individual"]) if comparisons else None
+            optimised = False
+        else:
+            employer_param = get_parameter("national_insurance.employer_class1", tax_year)
+            employee_param = get_parameter("national_insurance.employee_class1", tax_year)
+            reference_salaries = sorted(
+                {
+                    0,
+                    employer_param["secondary_threshold"],
+                    employee_param["primary_threshold"],
+                    employee_param["upper_earnings_limit"],
+                }
+            )
+            optimal_salary = _scan_optimal_salary(
+                evaluate, cap=min(profit_before_remuneration, 130000.0)
+            )
+            best = evaluate(optimal_salary)
+            comparisons = [
+                result
+                for s in reference_salaries
+                if s <= profit_before_remuneration and (result := evaluate(s)) is not None
+            ]
+            if optimal_salary not in [c["salary"] for c in comparisons]:
+                comparisons.append(best)
+                comparisons.sort(key=lambda c: c["salary"])
+            optimised = True
+
+    return {
+        "profit_before_remuneration": profit_before_remuneration,
+        "other_personal_income_considered": other_personal_income,
+        "salary_optimised_to_nearest_pound": optimised,
+        "comparisons": comparisons,
+        "recommended": best,
+    }
+
+
+def _scan_optimal_salary(evaluate, cap: float) -> int:
+    """Coarse-to-fine scan for the salary maximising net_to_individual.
+    Ties resolve to the lower salary."""
+    cap = int(cap)
+
+    def best_in(start: int, stop: int, step: int, seed_salary: int, seed_net: float):
+        best_salary, best_net = seed_salary, seed_net
+        for s in range(start, stop + 1, step):
+            result = evaluate(s)
+            if result is None:
+                continue
+            net = result["net_to_individual"]
+            if net > best_net:
+                best_salary, best_net = s, net
+        return best_salary, best_net
+
+    salary, net = 0, evaluate(0)["net_to_individual"]
+    salary, net = best_in(0, cap, 250, salary, net)
+    salary, net = best_in(max(0, salary - 250), min(cap, salary + 250), 10, salary, net)
+    salary, net = best_in(max(0, salary - 10), min(cap, salary + 10), 1, salary, net)
+    return salary
+
+
+@register(
+    "strategy.pension_annual_allowance_carry_forward",
+    consumes=[
+        "pension.annual_allowance",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+        "corporation_tax.rates",
+    ],
+    description="Pension contribution planning: annual allowance with carry-forward, the "
+    "relevant-UK-earnings cap on personal contribution relief (FA 2004 s.190), correct "
+    "relief-at-source mechanics, and the employer-contribution alternative with its "
+    "corporation tax saving.",
+)
+def strategy_pension_carry_forward(facts: dict, tax_year: str) -> dict:
+    """Two routes are quantified:
+
+    Personal (relief at source): tax relief only up to the greater of £3,600
+    and relevant UK earnings — dividends do NOT count (FA 2004 s.190).
+    Relief value = the basic-rate credit HMRC adds to the pension (gross x
+    basic rate) plus the personal tax saved through band extension and any
+    personal-allowance taper restoration.
+
+    Employer: the company contributes instead — no earnings cap, no NIC, and
+    a corporation tax deduction (CTA 2009 s.54 wholly-and-exclusively
+    condition applies; part of the overall remuneration package question the
+    reviewing accountant owns). The annual allowance still applies to the
+    total pension input under either route.
+    """
+    desired_contribution = float(facts["desired_contribution"])
+    earned_income = float(facts.get("earned_income", facts.get("total_income", 0)))
+    dividend_income = float(facts.get("dividend_income", 0))
+    relevant_uk_earnings = float(facts.get("relevant_uk_earnings", earned_income))
+    company_profit = float(facts.get("company_profit_before_remuneration", 0))
+
+    availability = pension_available_annual_allowance(facts, tax_year)
+    aa_excess = max(0.0, desired_contribution - availability["total_available"])
+
+    # --- Personal route ---
+    relievable_gross = min(desired_contribution, max(3600.0, relevant_uk_earnings))
+    unrelieved_amount = round(desired_contribution - relievable_gross, 2)
+
+    bands_param = get_parameter("income_tax.bands", tax_year)
+    basic_rate = bands_param["bands"][0]["rate"]
+
+    without = combined_personal_tax(
+        {"earned_income": earned_income, "dividend_income": dividend_income}, tax_year
+    )
+    with_contribution = combined_personal_tax(
+        {
+            "earned_income": earned_income,
+            "dividend_income": dividend_income,
+            "gross_pension_contribution": relievable_gross,
+        },
+        tax_year,
+    )
+    basic_rate_credit = round(relievable_gross * basic_rate, 2)
+    band_extension_saving = round(without["total_tax"] - with_contribution["total_tax"], 2)
+
+    personal_route = {
+        "relievable_gross": round(relievable_gross, 2),
+        "unrelieved_amount": unrelieved_amount,
+        "basic_rate_credit_to_pension": basic_rate_credit,
+        "personal_tax_saving": band_extension_saving,
+        "total_relief_value": round(basic_rate_credit + band_extension_saving, 2),
+    }
+
+    # --- Employer route ---
+    employer_route = None
+    if company_profit > 0:
+        contribution = min(desired_contribution, company_profit)
+        ct_before = corporation_tax({"taxable_profit": company_profit}, tax_year)
+        ct_after = corporation_tax(
+            {"taxable_profit": company_profit - contribution}, tax_year
+        )
+        employer_route = {
+            "contribution": round(contribution, 2),
+            "corporation_tax_saving": round(ct_before["tax_due"] - ct_after["tax_due"], 2),
+            "no_relevant_earnings_cap": True,
+        }
+
+    return {
+        "desired_contribution": desired_contribution,
+        "relevant_uk_earnings": round(relevant_uk_earnings, 2),
+        "available_annual_allowance": availability["total_available"],
+        "fits_within_allowance": aa_excess == 0.0,
+        "amount_subject_to_annual_allowance_charge": round(aa_excess, 2),
+        "personal_route": personal_route,
+        "employer_route": employer_route,
+    }
+
+
+@register(
+    "strategy.incorporation_vs_sole_trade",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+        "national_insurance.employee_class1",
+        "national_insurance.employer_class1",
+        "national_insurance.employment_allowance",
+        "national_insurance.class4",
+        "corporation_tax.rates",
+    ],
+    description="Compares sole trader income tax + Class 4 NIC against incorporating and extracting via salary/dividend.",
+)
+def strategy_incorporation_vs_sole_trade(facts: dict, tax_year: str) -> dict:
+    annual_profit = float(facts["annual_profit"])
+    other_personal_income = float(facts.get("other_personal_income", 0))
+
+    # Incremental income tax the sole-trade profit causes on top of the
+    # client's other income, so both arms of the comparison exclude tax the
+    # client would pay anyway.
+    baseline = combined_personal_tax(
+        {"earned_income": other_personal_income, "dividend_income": 0}, tax_year
+    )
+    with_profit = combined_personal_tax(
+        {"earned_income": other_personal_income + annual_profit, "dividend_income": 0}, tax_year
+    )
+    sole_trader_income_tax = round(with_profit["total_tax"] - baseline["total_tax"], 2)
+
+    class4_param = get_parameter("national_insurance.class4", tax_year)
+    lpl, upl, rate, upper_rate = (
+        class4_param["lower_profits_limit"],
+        class4_param["upper_profits_limit"],
+        class4_param["rate"],
+        class4_param["upper_rate"],
+    )
+    class4_nic = round(
+        max(0.0, min(annual_profit, upl) - lpl) * rate + max(0.0, annual_profit - upl) * upper_rate, 2
+    )
+    sole_trader_total = round(sole_trader_income_tax + class4_nic, 2)
+
+    mix_facts = {
+        "company_profit_before_remuneration": annual_profit,
+        "other_personal_income": other_personal_income,
+    }
+    if "salary_options" in facts:
+        mix_facts["salary_options"] = facts["salary_options"]
+    incorporated = strategy_salary_dividend_mix(mix_facts, tax_year)
+    best_incorporated = incorporated["recommended"]
+
+    return {
+        "annual_profit": annual_profit,
+        "other_personal_income_considered": other_personal_income,
+        "sole_trader": {
+            "income_tax": sole_trader_income_tax,
+            "class4_nic": class4_nic,
+            "total_tax_and_nic": sole_trader_total,
+        },
+        "incorporated": best_incorporated,
+        "recommendation": "incorporate"
+        if best_incorporated and best_incorporated["total_tax_and_nic"] < sole_trader_total
+        else "remain_sole_trader",
+    }
+
+
+@register(
+    "strategy.marriage_allowance_transfer",
+    consumes=["income_tax.personal_allowance", "income_tax.marriage_allowance"],
+    description="Marriage Allowance: transferring 10% of an unused personal allowance to a basic-rate-taxpayer spouse/civil partner.",
+)
+def strategy_marriage_allowance_transfer(facts: dict, tax_year: str) -> dict:
+    transferor_income = float(facts["transferor_income"])
+    transferee_income = float(facts["transferee_income"])
+
+    pa_param = get_parameter("income_tax.personal_allowance", tax_year)
+    bands_param = get_parameter("income_tax.bands", tax_year)
+    ma_param = get_parameter("income_tax.marriage_allowance", tax_year)
+
+    basic_rate_upper = bands_param["bands"][0]["upper"]
+    transferee_taxable = max(0.0, transferee_income - pa_param["amount"])
+
+    eligible = (
+        transferor_income <= pa_param["amount"]
+        and transferee_income <= pa_param["amount"] + basic_rate_upper
+        and transferee_taxable > 0
+    )
+    transferable_amount = ma_param["transferable_amount"]
+    tax_saving = round(transferable_amount * bands_param["bands"][0]["rate"], 2) if eligible else 0.0
+
+    return {
+        "eligible": eligible,
+        "transferable_amount": transferable_amount,
+        "estimated_annual_tax_saving": tax_saving,
+    }
+
+
+# --- Inheritance tax ----------------------------------------------------------
+
+
+@register(
+    "iht_estate_liability",
+    consumes=["iht.nil_rate_band", "iht.residence_nil_rate_band", "iht.rates"],
+    description="IHT on a death estate: spouse and charity exemptions, nil-rate band with "
+    "transferred fraction, residence nil-rate band with taper and home-value cap, and the "
+    "36% reduced-rate test for charitable legacies.",
+)
+def iht_estate_liability(facts: dict, tax_year: str) -> dict:
+    """Simplifications documented for editorial review (Section 5.6): the
+    36% baseline amount is (net estate - spouse exemption - NRB), ignoring
+    RNRB in line with HMRC guidance but without the full Schedule 1A
+    component-by-component split; no BPR/APR, settled property, foreign
+    property, or grossing-up of tax-free legacies (IHTA 1984 s.38).
+    """
+    gross = max(0.0, float(facts.get("gross_estate_value", 0)))
+    liabilities = max(0.0, float(facts.get("liabilities", 0)))
+    estate = max(0.0, round(gross - liabilities, 2))
+
+    to_spouse = min(max(0.0, float(facts.get("amount_to_spouse", 0))), estate)
+    charity = min(max(0.0, float(facts.get("charitable_legacy", 0))), estate - to_spouse)
+    chargeable_estate = round(estate - to_spouse - charity, 2)
+
+    nrb_param = get_parameter("iht.nil_rate_band", tax_year)
+    rnrb_param = get_parameter("iht.residence_nil_rate_band", tax_year)
+    rates = get_parameter("iht.rates", tax_year)
+
+    transferred_nrb = min(max(float(facts.get("transferred_nrb_fraction", 0)), 0.0), 1.0)
+    nrb = round(nrb_param["amount"] * (1 + transferred_nrb), 2)
+
+    rnrb = 0.0
+    home_equity = max(0.0, float(facts.get("home_equity_value", 0)))
+    if facts.get("home_passes_to_direct_descendants") and home_equity > 0:
+        transferred_rnrb = min(max(float(facts.get("transferred_rnrb_fraction", 0)), 0.0), 1.0)
+        base_rnrb = rnrb_param["amount"] * (1 + transferred_rnrb)
+        taper_excess = max(0.0, estate - rnrb_param["taper_threshold"])
+        base_rnrb = max(0.0, base_rnrb - taper_excess * rnrb_param["taper_rate"])
+        rnrb = round(min(base_rnrb, home_equity), 2)
+
+    taxable = max(0.0, round(chargeable_estate - nrb - rnrb, 2))
+
+    baseline = max(0.0, round(estate - to_spouse - nrb, 2))
+    qualifies_reduced = (
+        taxable > 0 and charity >= rates["charity_baseline_fraction"] * baseline
+    )
+    rate = rates["reduced_charity_rate"] if qualifies_reduced else rates["death_rate"]
+
+    return {
+        "net_estate": estate,
+        "spouse_exempt": round(to_spouse, 2),
+        "charitable_legacy": round(charity, 2),
+        "chargeable_estate": chargeable_estate,
+        "nil_rate_band": nrb,
+        "residence_nil_rate_band": rnrb,
+        "taxable_amount": taxable,
+        "rate_applied": rate,
+        "qualifies_reduced_charity_rate": qualifies_reduced,
+        "charity_baseline_amount": baseline,
+        "tax_due": round(taxable * rate, 2),
+    }
+
+
+@register(
+    "strategy.iht_spousal_transfer_nil_rate_bands",
+    consumes=["iht.nil_rate_band", "iht.residence_nil_rate_band", "iht.rates"],
+    description="Quantifies the spouse exemption on first death and the value of claiming "
+    "transferred NRB and RNRB on the survivor's death.",
+)
+def strategy_iht_spousal_nil_rate_bands(facts: dict, tax_year: str) -> dict:
+    combined = float(facts["combined_estate_second_death"])
+    home_equity = float(facts.get("combined_home_equity_second_death", 0))
+    to_descendants = bool(facts.get("home_passes_to_direct_descendants", False))
+
+    common = {
+        "gross_estate_value": combined,
+        "home_equity_value": home_equity,
+        "home_passes_to_direct_descendants": to_descendants,
+    }
+    with_claims = iht_estate_liability(
+        {**common, "transferred_nrb_fraction": 1, "transferred_rnrb_fraction": 1}, tax_year
+    )
+    without_claims = iht_estate_liability(common, tax_year)
+
+    rnrb_param = get_parameter("iht.residence_nil_rate_band", tax_year)
+    return {
+        # Transfers between UK-domiciled spouses/civil partners are wholly
+        # exempt (IHTA 1984 s.18), so a full first-death spousal transfer
+        # produces no tax and preserves both nil-rate bands for transfer.
+        "first_death_tax_with_full_spouse_exemption": 0.0,
+        "second_death_with_transferred_bands": with_claims,
+        "second_death_without_claims": without_claims,
+        "value_of_transferable_bands": round(
+            without_claims["tax_due"] - with_claims["tax_due"], 2
+        ),
+        "rnrb_taper_applies": combined > rnrb_param["taper_threshold"],
+    }
+
+
+@register(
+    "strategy.iht_lifetime_gifting",
+    consumes=[
+        "iht.nil_rate_band",
+        "iht.residence_nil_rate_band",
+        "iht.rates",
+        "iht.gift_exemptions",
+    ],
+    description="Lifetime gifting: annual exemptions, the PET seven-year clock, taper relief "
+    "schedule, and the estate tax saved if the donor survives seven years.",
+)
+def strategy_iht_lifetime_gifting(facts: dict, tax_year: str) -> dict:
+    gift = float(facts["planned_gift"])
+    estate_basis = float(facts["estate_basis_value"])
+
+    gifts_param = get_parameter("iht.gift_exemptions", tax_year)
+    exemption_available = gifts_param["annual_exemption"] * (
+        2 if facts.get("prior_year_annual_exemption_unused") else 1
+    )
+    exempt_amount = round(min(gift, exemption_available), 2)
+    pet_amount = round(gift - exempt_amount, 2)
+
+    base_facts = {
+        "gross_estate_value": estate_basis,
+        "home_equity_value": facts.get("home_equity_value", 0),
+        "home_passes_to_direct_descendants": facts.get("home_passes_to_direct_descendants", False),
+        "transferred_nrb_fraction": facts.get("transferred_nrb_fraction", 0),
+        "transferred_rnrb_fraction": facts.get("transferred_rnrb_fraction", 0),
+    }
+    before = iht_estate_liability(base_facts, tax_year)
+    after = iht_estate_liability(
+        {**base_facts, "gross_estate_value": estate_basis - gift}, tax_year
+    )
+
+    return {
+        "planned_gift": round(gift, 2),
+        "immediately_exempt_amount": exempt_amount,
+        "pet_amount": pet_amount,
+        "estate_tax_before_gift": before["tax_due"],
+        "estate_tax_if_survive_7_years": after["tax_due"],
+        "saving_if_survive_7_years": round(before["tax_due"] - after["tax_due"], 2),
+        # Taper relief reduces the TAX on a failed PET (death in years 3-7),
+        # and only where the PET exceeds the NRB; it never reduces the PET
+        # itself (IHTA 1984 s.7(4)).
+        "taper_relief_schedule": gifts_param["taper_relief"],
+    }
+
+
+@register(
+    "strategy.iht_charitable_legacy_reduced_rate",
+    consumes=["iht.nil_rate_band", "iht.residence_nil_rate_band", "iht.rates"],
+    description="Charitable legacy at or above 10% of the baseline amount: the whole taxable "
+    "estate is charged at 36% instead of 40% (IHTA 1984 Sch 1A).",
+)
+def strategy_iht_charitable_legacy(facts: dict, tax_year: str) -> dict:
+    estate_basis = float(facts["estate_basis_value"])
+    current_charity = float(facts.get("current_charitable_legacy", 0))
+
+    rates = get_parameter("iht.rates", tax_year)
+    base_facts = {
+        "gross_estate_value": estate_basis,
+        "home_equity_value": facts.get("home_equity_value", 0),
+        "home_passes_to_direct_descendants": facts.get("home_passes_to_direct_descendants", False),
+        "transferred_nrb_fraction": facts.get("transferred_nrb_fraction", 0),
+        "transferred_rnrb_fraction": facts.get("transferred_rnrb_fraction", 0),
+        "charitable_legacy": current_charity,
+    }
+    current = iht_estate_liability(base_facts, tax_year)
+    target_legacy = round(
+        current["charity_baseline_amount"] * rates["charity_baseline_fraction"], 2
+    )
+
+    result = {
+        "estate_taxable": current["taxable_amount"] > 0,
+        "current_charitable_legacy": round(current_charity, 2),
+        "target_legacy_for_reduced_rate": target_legacy,
+        "current_position": current,
+    }
+    if current["qualifies_reduced_charity_rate"] or current_charity >= target_legacy:
+        result["already_qualifies"] = True
+        return result
+
+    with_target = iht_estate_liability(
+        {**base_facts, "charitable_legacy": target_legacy}, tax_year
+    )
+    extra_legacy = round(target_legacy - current_charity, 2)
+    tax_saving = round(current["tax_due"] - with_target["tax_due"], 2)
+    result.update(
+        {
+            "already_qualifies": False,
+            "position_at_target_legacy": with_target,
+            "extra_charitable_legacy_needed": extra_legacy,
+            "tax_saving": tax_saving,
+            "net_cost_to_beneficiaries": round(extra_legacy - tax_saving, 2),
+        }
+    )
+    return result

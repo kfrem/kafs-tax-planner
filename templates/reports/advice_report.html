@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 11pt; color: #1a1a1a; }
+    h1 { color: #0b3d59; }
+    .disclaimer { background: #fff8e1; border: 1px solid #f0c36d; padding: 8px 12px; font-size: 9pt; }
+    .strategy { border-top: 1px solid #ccc; padding-top: 10px; margin-top: 14px; }
+    .flag { display: inline-block; background: #c0392b; color: white; padding: 1px 6px; border-radius: 3px; font-size: 8pt; margin-left: 4px; }
+    table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+    td, th { border: 1px solid #ddd; padding: 4px 6px; }
+    footer { font-size: 8pt; color: #666; margin-top: 24px; }
+</style>
+</head>
+<body>
+    <h1>Tax Planning Advice Report</h1>
+    <p><strong>{{ record.firm.name }}</strong> &mdash; prepared for {{ record.client.name }} ({{ record.tax_year }})</p>
+    <p class="disclaimer">
+        This report is decision support for the reviewing accountant, prepared under
+        Professional Conduct in Relation to Taxation. It is not tax advice to the end
+        client until reviewed and issued by the professional named below. Flagged
+        strategies (borderline, contested, untested, DOTAS or GAAR exposure) are shown
+        prominently and cannot be omitted from this report.
+    </p>
+    <p>
+        Generated: {{ record.generated_at|date:"d F Y H:i" }}<br>
+        Prepared by: {{ record.generated_by }}<br>
+        Rule-base version: {{ record.rule_base_release.version }} (effective {{ record.rule_base_release.effective_date }})<br>
+        Input data reference: {{ record.input_data_hash|slice:":16" }}&hellip;
+    </p>
+
+    {% for r in record.results %}
+    <div class="strategy">
+        <h3>{{ r.strategy_name }}
+            {% if r.risk_status != "settled" %}<span class="flag">{{ r.risk_status|upper }}</span>{% endif %}
+            {% if r.dotas_notifiable %}<span class="flag">DOTAS</span>{% endif %}
+            {% if r.gaar_exposure %}<span class="flag">GAAR</span>{% endif %}
+        </h3>
+        <p><em>Timeframe: {{ r.timeframe }}</em></p>
+        <p>{{ r.explanation }}</p>
+        <table>
+            {% for key, value in r.quantification.items %}
+            <tr><th>{{ key }}</th><td>{{ value }}</td></tr>
+            {% endfor %}
+        </table>
+        <p><strong>Legal basis:</strong>
+            {% for a in r.authorities %}{{ a.citation }} ({{ a.status }}){% if not forloop.last %}; {% endif %}{% endfor %}
+        </p>
+    </div>
+    {% empty %}
+    <p>No eligible strategies were identified from the recorded facts for this tax year.</p>
+    {% endfor %}
+
+    {% if record.parameters_used %}
+    <div class="strategy">
+        <h3>Rule provenance</h3>
+        <p style="font-size: 9pt;">
+            Every figure above derives from the following versioned rule-base entries.
+            Rows are never deleted or overwritten, so this computation is exactly
+            reproducible at any future date.
+        </p>
+        <table>
+            <tr><th>Rule</th><th>Tax year</th><th>Effective from</th><th>Introduced in release</th><th>Row ref</th></tr>
+            {% for p in record.parameters_used %}
+            <tr>
+                <td>{{ p.key }}</td><td>{{ p.tax_year }}</td>
+                <td>{{ p.effective_from }}</td><td>{{ p.release }}</td><td>#{{ p.parameter_id }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <footer>
+        Software and research infrastructure only; not a substitute for professional judgement.
+        The professional named above remains the adviser of record.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Advice — {{ record.client.name }}{% endblock %}
+{% block content %}
+<h1>Advice for {{ record.client.name }} — {{ record.tax_year }}</h1>
+<p class="disclaimer">
+    This is decision support for the reviewing accountant, not tax advice to the client.
+    Generated {{ record.generated_at|date:"d M Y H:i" }} by {{ record.generated_by }},
+    rule-base version <strong>{{ record.rule_base_release.version }}</strong>.
+    {% if record.rendered_report %}<a href="{{ record.rendered_report.url }}">Download PDF</a>{% endif %}
+</p>
+
+<section style="border:2px solid #0b3d59; border-radius:6px; padding:1rem; margin:1rem 0; background:#f6fafd;">
+    <h2 style="margin-top:0;">Expert panel review</h2>
+    {% with review=record.latest_panel_review decision=record.latest_decision %}
+    {% if review %}
+        <p>
+            Panel deployed {{ review.created_at|date:"d M Y H:i" }} by {{ review.requested_by }} —
+            overall verdict:
+            <strong style="text-transform:uppercase;
+                {% if review.overall == 'blocked' %}color:#c0392b;
+                {% elif review.overall == 'attention' %}color:#b9770e;
+                {% else %}color:#1e8449;{% endif %}">{{ review.overall }}</strong>
+        </p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+            {% for f in review.findings %}
+            <tr style="border-bottom:1px solid #dde;">
+                <td style="padding:4px 8px; white-space:nowrap; vertical-align:top;">
+                    <strong>{{ f.persona|title }}</strong><br>
+                    <span style="font-size:0.75rem; color:#666;">{{ f.code }}</span>
+                </td>
+                <td style="padding:4px 8px; vertical-align:top; white-space:nowrap;">
+                    <span style="padding:1px 6px; border-radius:3px; color:white; font-size:0.75rem;
+                        {% if f.severity == 'blocker' %}background:#c0392b;
+                        {% elif f.severity == 'caution' %}background:#b9770e;
+                        {% else %}background:#5d6d7e;{% endif %}">{{ f.severity|upper }}</span>
+                </td>
+                <td style="padding:4px 8px;">{{ f.message }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if decision %}
+            <p style="margin-top:1rem;">
+                <strong>Professional decision:</strong> {{ decision.get_decision_display }}
+                by {{ decision.decided_by }} on {{ decision.decided_at|date:"d M Y H:i" }}.
+                {% if decision.notes %}<br><em>Note: {{ decision.notes }}</em>{% endif %}
+            </p>
+        {% else %}
+            <form method="post" action="{% url 'advice:advice-decide' record.pk %}" style="margin-top:1rem;">
+                {% csrf_token %}
+                <label><input type="radio" name="decision" value="approved" required> Approve for client</label>
+                <label style="margin-left:1rem;"><input type="radio" name="decision" value="rejected"> Reject</label>
+                <label style="margin-left:1rem;"><input type="radio" name="decision" value="needs_revision"> Needs revision</label><br>
+                <textarea name="notes" rows="2" style="width:100%; margin-top:0.5rem;"
+                          placeholder="Notes for the file (required to reject/revise, or to approve over a blocker)"></textarea>
+                <button type="submit" style="margin-top:0.5rem;">Record decision</button>
+            </form>
+        {% endif %}
+        <form method="post" action="{% url 'advice:panel-deploy' record.pk %}" style="margin-top:0.5rem;">
+            {% csrf_token %}
+            <button type="submit">Re-deploy panel (fresh review)</button>
+        </form>
+    {% else %}
+        <p>The independent expert panel — tax lawyer, tax accountant, HMRC consultant, and
+           business expert — has not reviewed this advice yet. A professional decision cannot
+           be recorded until it has.</p>
+        <form method="post" action="{% url 'advice:panel-deploy' record.pk %}">
+            {% csrf_token %}
+            <button type="submit" style="font-size:1rem; padding:0.4rem 1rem;">Deploy expert panel</button>
+        </form>
+    {% endif %}
+    {% endwith %}
+</section>
+
+{% for r in record.results %}
+<section style="border-top:1px solid #eee; padding-top:1rem; margin-top:1rem;">
+    <h2>{{ r.strategy_name }}
+        {% if r.risk_status != "settled" %}<span class="flag">{{ r.risk_status|upper }}</span>{% endif %}
+        {% if r.dotas_notifiable %}<span class="flag">DOTAS</span>{% endif %}
+        {% if r.gaar_exposure %}<span class="flag">GAAR</span>{% endif %}
+    </h2>
+    <p><em>Timeframe: {{ r.timeframe }}</em></p>
+    <p>{{ r.explanation }}</p>
+    <h4>Quantification</h4>
+    <pre>{{ r.quantification }}</pre>
+    <h4>Legal basis</h4>
+    <ul>
+        {% for a in r.authorities %}<li>{{ a.citation }} ({{ a.status }})</li>{% endfor %}
+    </ul>
+</section>
+{% empty %}
+<p>No eligible strategies were identified from the recorded facts.</p>
+{% endfor %}
+{% endblock %}

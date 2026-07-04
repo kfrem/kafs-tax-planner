@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ client.name }}{% endblock %}
+{% block content %}
+<h1>{{ client.name }}</h1>
+<p>Reference: {{ client.reference }} &middot; {{ client.get_entity_type_display }}</p>
+<p><a class="btn" href="{% url 'clients:client-facts-create' client.pk %}">+ Record facts for a tax year</a>
+   <a class="btn" href="{% url 'advice:advice-list' client.pk %}">View advice history</a></p>
+
+<h2>Tax year fact sets</h2>
+<table>
+    <thead><tr><th>Tax year</th><th>Source</th><th>Recorded</th><th></th></tr></thead>
+    <tbody>
+    {% for fs in fact_sets %}
+        <tr>
+            <td>{{ fs.tax_year }}</td>
+            <td>{{ fs.get_source_display }}</td>
+            <td>{{ fs.created_at|date:"d M Y H:i" }}</td>
+            <td>
+                <form method="post" action="{% url 'advice:advice-generate' fs.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button class="btn" type="submit">Generate advice</button>
+                </form>
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">No facts recorded yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

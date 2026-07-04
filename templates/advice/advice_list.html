@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Advice history — {{ client.name }}{% endblock %}
+{% block content %}
+<h1>Advice history — {{ client.name }}</h1>
+<table>
+    <thead><tr><th>Tax year</th><th>Generated</th><th>Rule base</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for r in records %}
+        <tr>
+            <td>{{ r.tax_year }}</td>
+            <td>{{ r.generated_at|date:"d M Y H:i" }}</td>
+            <td>{{ r.rule_base_release.version }}</td>
+            <td>{% if r.is_current %}Current{% else %}Superseded{% endif %}</td>
+            <td><a href="{% url 'advice:advice-detail' r.pk %}">View</a></td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="5">No advice generated yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

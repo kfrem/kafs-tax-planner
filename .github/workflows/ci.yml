@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: taxplanner
+          POSTGRES_PASSWORD: taxplanner_ci_pw
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U taxplanner"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # A NON-superuser role runs the app in CI too, so the row-level
+      # security tests exercise real enforcement, exactly as in dev.
+      DATABASE_URL: postgres://app_user:app_user_ci_pw@localhost:5432/taxplanner
+      SECRET_KEY: ci-only-not-a-secret
+      DEBUG: "false"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install WeasyPrint native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 libffi-dev
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create non-superuser app role and database
+        env:
+          PGPASSWORD: taxplanner_ci_pw
+        run: |
+          psql -h localhost -U taxplanner -d postgres -c \
+            "CREATE ROLE app_user WITH LOGIN PASSWORD 'app_user_ci_pw' CREATEDB;"
+          psql -h localhost -U taxplanner -d postgres -c \
+            "CREATE DATABASE taxplanner OWNER app_user;"
+
+      - name: Run the full suite (92 hand-computed tests incl. golden cases)
+        run: python -m pytest -q

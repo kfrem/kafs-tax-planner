@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Clients{% endblock %}
+{% block content %}
+<h1>Clients</h1>
+<p><a class="btn" href="{% url 'clients:client-create' %}">+ New client</a></p>
+<table>
+    <thead><tr><th>Reference</th><th>Name</th><th>Type</th><th></th></tr></thead>
+    <tbody>
+    {% for client in clients %}
+        <tr>
+            <td>{{ client.reference }}</td>
+            <td>{{ client.name }}</td>
+            <td>{{ client.get_entity_type_display }}</td>
+            <td><a href="{% url 'clients:client-detail' client.pk %}">View</a></td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">No clients yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

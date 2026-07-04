@@ -1,0 +1,189 @@
+from django.conf import settings
+from django.db import models
+
+from clients.models import Client, ClientFactSet
+from firms.models import Firm
+from ruleengine.models import RuleBaseRelease
+
+
+class AdviceRecord(models.Model):
+    """An immutable, append-only advice record (architecture doc Section 6.2).
+
+    This is the accountant's defence file: if HMRC challenges advice given
+    in 2026, the firm can produce exactly what the tool said, on what data,
+    citing what authority as it stood at that date. Records are never
+    edited; ``save()``/``delete()`` are locked down below so a correction
+    must be a new record via ``supersede()``.
+    """
+
+    firm = models.ForeignKey(Firm, on_delete=models.PROTECT, related_name="advice_records")
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="advice_records")
+    fact_set = models.ForeignKey(ClientFactSet, on_delete=models.PROTECT, related_name="advice_records")
+    tax_year = models.CharField(max_length=7)
+
+    input_data_hash = models.CharField(max_length=64)
+    input_data_snapshot = models.JSONField()
+
+    rule_base_release = models.ForeignKey(
+        RuleBaseRelease, on_delete=models.PROTECT, related_name="advice_records"
+    )
+    results = models.JSONField(
+        help_text="List of strategy results: quantification, citations, timeframe, risk flags, as generated."
+    )
+    parameters_used = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Exact provenance: every TaxParameter row read during generation "
+        "(key, row id, effective-from date, introducing release). The numbers in "
+        "``results`` are reproducible from these rows alone.",
+    )
+    rendered_report = models.FileField(upload_to="advice_reports/", blank=True, null=True)
+
+    generated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="advice_generated"
+    )
+    generated_at = models.DateTimeField(auto_now_add=True)
+
+    superseded_by = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True, related_name="supersedes"
+    )
+
+    class Meta:
+        ordering = ["-generated_at"]
+        indexes = [models.Index(fields=["client", "tax_year"])]
+
+    def __str__(self):
+        return f"Advice for {self.client.name} ({self.tax_year}) at {self.generated_at:%Y-%m-%d %H:%M}"
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError(
+                "AdviceRecord is append-only and cannot be modified after creation. "
+                "Use AdviceRecord.mark_superseded() to link a correcting record."
+            )
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("AdviceRecord cannot be deleted; it is a permanent audit record.")
+
+    def mark_superseded(self, new_record: "AdviceRecord"):
+        AdviceRecord.objects.filter(pk=self.pk).update(superseded_by=new_record)
+
+    def attach_rendered_report(self, filename: str, content_bytes: bytes):
+        """Attach the rendered PDF after the record already exists. This is
+        the one narrow, explicit exception to append-only: the PDF is a
+        byte-for-byte rendering of the already-immutable ``results`` and
+        ``input_data_snapshot`` fields, produced in a second step because it
+        embeds the record's own primary key. No advice content changes."""
+        from django.core.files.base import ContentFile
+
+        self.rendered_report.save(filename, ContentFile(content_bytes), save=False)
+        AdviceRecord.objects.filter(pk=self.pk).update(rendered_report=self.rendered_report.name)
+
+    @property
+    def is_current(self):
+        return self.superseded_by_id is None
+
+    @property
+    def has_flagged_strategy(self):
+        return any(r.get("risk_status") != "settled" or r.get("dotas_notifiable") or r.get("gaar_exposure") for r in self.results)
+
+    @property
+    def latest_panel_review(self):
+        return self.panel_reviews.order_by("-created_at").first()
+
+    @property
+    def latest_decision(self):
+        return self.decisions.order_by("-decided_at").first()
+
+
+class PanelReview(models.Model):
+    """One deployment of the independent expert panel against one advice
+    record. The four reviewers (tax lawyer, tax accountant, HMRC
+    consultant, business expert — ``advice/panel.py``) are deterministic
+    rule sets over the immutable advice record, so a panel review is
+    itself reproducible evidence. Append-only, like the advice it reviews.
+    """
+
+    class Verdict(models.TextChoices):
+        CLEAR = "clear", "Clear — no concerns raised"
+        ATTENTION = "attention", "Attention — cautions for the professional"
+        BLOCKED = "blocked", "Blocked — must be resolved before approval"
+
+    firm = models.ForeignKey(Firm, on_delete=models.PROTECT, related_name="panel_reviews")
+    advice_record = models.ForeignKey(
+        AdviceRecord, on_delete=models.PROTECT, related_name="panel_reviews"
+    )
+    findings = models.JSONField(
+        help_text="All findings from all four reviewers: persona, code, severity, message, strategy."
+    )
+    verdicts = models.JSONField(
+        help_text="Per-persona verdict plus 'overall' (clear/attention/blocked)."
+    )
+    requested_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="panel_reviews_requested"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Panel review of advice {self.advice_record_id}: {self.verdicts.get('overall')}"
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("PanelReview is append-only; deploy the panel again for a fresh review.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("PanelReview cannot be deleted; it is part of the audit record.")
+
+    @property
+    def overall(self):
+        return self.verdicts.get("overall")
+
+    @property
+    def blockers(self):
+        return [f for f in self.findings if f["severity"] == "blocker"]
+
+
+class ProfessionalDecision(models.Model):
+    """The human professional's decision on an advice record — only
+    possible after the expert panel has reviewed it. This is what makes
+    the adviser-of-record boundary operational: the system never releases
+    advice; the professional does, on the panel's evidence.
+    """
+
+    class Decision(models.TextChoices):
+        APPROVED = "approved", "Approved for client"
+        REJECTED = "rejected", "Rejected"
+        NEEDS_REVISION = "needs_revision", "Needs revision / another way"
+
+    firm = models.ForeignKey(Firm, on_delete=models.PROTECT, related_name="decisions")
+    advice_record = models.ForeignKey(
+        AdviceRecord, on_delete=models.PROTECT, related_name="decisions"
+    )
+    panel_review = models.ForeignKey(
+        PanelReview, on_delete=models.PROTECT, related_name="decisions"
+    )
+    decision = models.CharField(max_length=20, choices=Decision.choices)
+    notes = models.TextField(
+        blank=True,
+        help_text="Required when approving over blockers, rejecting, or requesting revision.",
+    )
+    decided_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="advice_decisions"
+    )
+    decided_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-decided_at"]
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("ProfessionalDecision is append-only; record a new decision instead.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("ProfessionalDecision cannot be deleted; it is part of the audit record.")

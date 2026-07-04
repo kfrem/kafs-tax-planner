@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}UK Tax Planner{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f4f6f8; color: #1a1a1a; }
+        header { background: #0b3d59; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        header a { color: white; text-decoration: none; margin-left: 1rem; }
+        main { max-width: 960px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; font-size: 0.9rem; }
+        th { background: #eef2f5; }
+        .messages { list-style: none; padding: 0; }
+        .messages li { padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 0.5rem; }
+        .messages .success { background: #dff6dd; }
+        .messages .error { background: #fde2e2; }
+        .flag { display: inline-block; background: #c0392b; color: white; padding: 0.1rem 0.5rem; border-radius: 3px; font-size: 0.75rem; }
+        .btn { display: inline-block; background: #0b3d59; color: white; padding: 0.4rem 0.9rem; border-radius: 4px; text-decoration: none; border: none; cursor: pointer; font-size: 0.9rem; }
+        fieldset { border: 1px solid #ccc; margin-bottom: 1rem; }
+        label { display: block; margin: 0.4rem 0 0.1rem; font-size: 0.85rem; }
+        .disclaimer { background: #fff8e1; border: 1px solid #f0c36d; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div><strong>UK Tax Planner</strong> — decision support for {{ request.user.firm.name|default:"" }}</div>
+        <nav>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'clients:client-list' %}">Clients</a>
+                <a href="{% url 'clients:csv-import' %}">Import CSV</a>
+                {% if request.user.is_superuser %}<a href="/admin/">Rule Base Admin</a>{% endif %}
+                <a href="{% url 'firms:logout' %}">Log out ({{ request.user.username }})</a>
+            {% else %}
+                <a href="{% url 'firms:login' %}">Log in</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
