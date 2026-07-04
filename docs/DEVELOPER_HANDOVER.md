@@ -132,22 +132,24 @@ Cross-cutting:
 
 ## 6. Remaining work (ordered)
 
-1. **git + GitHub Actions CI** — suite on every push; block merge on
-   failure. (Agreed next step.)
-2. **PDF presentation** — nested quantification dicts render raw;
-   accountant-facing tables needed. Same data, better template.
-3. **Property/CGT module** — remaining Phase 2 domain (CGT with reliefs,
-   PPR, SDLT considerations).
-4. **Change-monitoring watchers** (§5.4) — legislation.gov.uk API, HMRC
+Done since first draft of this list: git + GitHub Actions CI (item 1),
+accountant-grade presentation (item 2), property/CGT module (item 3).
+
+1. **Change-monitoring watchers** (§5.4) — legislation.gov.uk API, HMRC
    manual page diffs, Find Case Law feed → editorial review queue. The
    releases/golden/impact machinery they feed already works.
-5. **Editorial queue UI** — currently Django Admin only.
-6. **Case-law workflow** (see §7).
-7. Ops/compliance items before real firms: real SECRET_KEY/env handling,
+2. **Editorial queue UI** — currently Django Admin only.
+3. **Case-law workflow** (see §7).
+4. **CGT/SDLT depth** — 2024/25 intra-year CGT rates (needs intra-year
+   effective ranges), BADR, letting relief edge cases, Scottish
+   LBTT/Welsh LTT variants, disposal composition with the salary/dividend
+   whole-income picture.
+5. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
-8. Phase 2+: MTD API integration; LLM narrative layer with validator
-   (architecture doc §8 guardrails).
+6. Phase 2+: MTD API integration; LLM narrative layer with validator
+   (architecture doc §8 guardrails); LLM voices for the expert panel
+   (explain-only, per §8).
 
 ## 7. How case law enters the system
 
