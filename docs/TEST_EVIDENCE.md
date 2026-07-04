@@ -18,12 +18,17 @@ python -m pytest -q --create-db   # force-rebuild the test DB after migrations c
 python -m pytest -q ruleengine/tests/test_iht.py   # one module
 ```
 
-**Expected result: `92 passed`** (≈3 minutes; the seed fixture rebuilds
+**Expected result: `109 passed`** (≈3 minutes; the seed fixture rebuilds
 the rule base per test class, which dominates runtime).
 
-Last full run before handover: **92 passed, 0 failed, 0 skipped** —
-Python 3.13.14, Django 6.0.6, PostgreSQL 16 (Docker), Windows 11,
-4 July 2026.
+The same suite runs in **GitHub Actions on every push and pull request**
+(`.github/workflows/ci.yml`): PostgreSQL 16 service container, a
+non-superuser app role so the RLS tests exercise real enforcement, and
+`pytest -q`. Repository: https://github.com/kfrem/kafs-tax-planner.
+
+Last full run before handover: **109 passed, 0 failed, 0 skipped** —
+locally (Python 3.13.14, Django 6.0.6, PostgreSQL 16/Docker, Windows 11)
+and in CI (ubuntu-latest, Python 3.13), 4 July 2026.
 
 ## 2. Test inventory (92 tests)
 
