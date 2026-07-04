@@ -404,7 +404,41 @@ class Command(BaseCommand):
                     introduced_in_release=release_iht,
                 )
 
-    def _create_strategies(self, release_2024, release_iht, authorities):
+    def _create_property_parameters(self, release_property):
+        # 2025/26 onward only: the 2024/25 CGT year had mid-year rate changes
+        # (30 Oct 2024) that the effective-dating model would need intra-year
+        # ranges to represent honestly; deferred until prior-year CGT
+        # computations are in scope.
+        y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
+
+        rows = [
+            ("cgt.annual_exempt_amount", "CGT annual exempt amount",
+             {"amount": 3000}),
+            ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
+             {"residential": {"lower": 0.18, "higher": 0.24},
+              "other": {"lower": 0.18, "higher": 0.24}}),
+            ("sdlt.residential_bands", "SDLT residential bands, surcharge, FTB relief (England/NI)",
+             {"bands": [
+                 {"upper": 125000, "rate": 0.0},
+                 {"upper": 250000, "rate": 0.02},
+                 {"upper": 925000, "rate": 0.05},
+                 {"upper": 1500000, "rate": 0.10},
+                 {"upper": None, "rate": 0.12},
+             ],
+              "additional_dwelling_surcharge": 0.05,
+              "first_time_buyer": {"relief_threshold": 300000, "cap": 500000,
+                                   "rate_above_threshold": 0.05}}),
+        ]
+        for key, label, payload in rows:
+            TaxParameter.objects.filter(key=key, effective_range=y2025).delete()
+            TaxParameter.objects.create(
+                key=key, label=label, tax_domain=TaxDomain.PROPERTY_TAXES,
+                effective_range=y2025, payload=payload,
+                risk_classification=RiskStatus.SETTLED,
+                introduced_in_release=release_property,
+            )
+
+    def _create_strategies(self, release_2024, release_iht, release_property, authorities):
         open_range = Range(datetime.date(2024, 4, 6), None, bounds="[)")
 
         specs = [
