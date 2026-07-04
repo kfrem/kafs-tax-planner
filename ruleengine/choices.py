@@ -20,4 +20,5 @@ class TaxDomain(models.TextChoices):
     PERSONAL_INCOME_TAX = "personal_income_tax", "Personal Income Tax"
     CORPORATION_TAX = "corporation_tax", "Corporation Tax"
     INHERITANCE_TAX = "inheritance_tax", "Inheritance Tax"
+    PROPERTY_TAXES = "property_taxes", "Property Taxes (CGT/SDLT)"
     CROSS_CUTTING = "cross_cutting", "Cross-cutting"
