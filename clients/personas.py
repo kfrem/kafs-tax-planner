@@ -107,6 +107,18 @@ VICTOR_FACTS = {
         "planned_lifetime_gift": 500000,
         "prior_year_annual_exemption_unused": True,
     },
+    "property": {
+        # Selling a long-held rental flat (never his residence): gain
+        # 150,000. Both spouses are higher-rate, so the spousal transfer
+        # saves only the second annual exempt amount — the tool must say
+        # so honestly rather than oversell the play.
+        "disposal_gain": 150000,
+        "disposal_asset_type": "residential",
+        "ownership_months": 120,
+        "occupied_as_main_residence_months": 0,
+        "spouse_available_for_transfer": True,
+        "purchase_price": 0,
+    },
 }
 
 PERSONAS = [
