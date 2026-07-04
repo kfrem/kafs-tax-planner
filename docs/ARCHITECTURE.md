@@ -121,14 +121,36 @@ approving over a blocker requires a written override note. An LLM
 narrative layer per persona is a Phase 2+ option that may only *explain*
 these findings, never add or remove them.
 
-### 5. Change monitoring — designed, not yet built
-The §5.4 watchers (legislation.gov.uk API, HMRC manual change logs, Find
-Case Law) are **not implemented**. The machinery they feed is: versioned
-releases, effective-dated rows, draft gating, golden regression, impact
-queries. A Budget change is applied today by the tax editor in Django
-Admin: close the old row, add the new one under a draft release, reviewer
-approves, release. This cycle was demonstrated end-to-end (see
-TEST_EVIDENCE.md, "simulated Budget").
+### 5. Change monitoring — `monitoring/` (v1: diff watchers + editorial queue)
+The §5.4 pipeline, first working version:
+
+- `WatchedSource` — one row per primary-source URL, normally the
+  canonical URI of an authority record (25 sources seeded via
+  `seed_watched_sources`, one per authority). Stores the last check's
+  fingerprint and normalised text snapshot.
+- Watcher engine (`monitoring/watchers.py`) — fetches each source
+  (pluggable fetcher; live HTTP by default, stubs in tests), strips
+  markup and collapses whitespace so cosmetic page changes don't false-
+  alert, fingerprints with SHA-256, and files a `ChangeAlert` with a
+  unified diff when the text moved. First check baselines silently.
+  Fetch failures are reported, not fatal — a dead link is itself a
+  finding (this caught a wrong case-law URI on the first live run).
+- `ChangeAlert` — the editorial queue item: status workflow new →
+  under review → actioned/dismissed. Resolution **requires notes**, and
+  "actioned" requires the rule-base release carrying the change. The
+  queue shows each alert's dependent strategies (the §5.3 impact query)
+  so the editor sees blast radius immediately.
+- Editorial queue UI at `/monitoring/`, staff-only (tax editor/reviewer);
+  `run_watchers` management command for scheduling (cron / task queue;
+  Budget days warrant a manual run).
+
+**The watchers never change a rule.** They detect and diff; the human
+edits parameters under a draft release and a second reviewer approves —
+the full cycle (close old row, new row, draft gating, golden regression,
+affected-advice query) demonstrated end-to-end in TEST_EVIDENCE.md.
+Future: feed-specific fetchers (legislation.gov.uk XML API, HMRC manual
+change logs, Find Case Law Atom feed) and LLM triage summaries
+(advisory only, §8) plug into the same pipeline.
 
 ## Multi-tenancy & security — `firms/`
 - `Firm`, custom `User` (role: partner/manager/staff).
