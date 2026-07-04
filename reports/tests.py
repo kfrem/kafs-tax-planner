@@ -33,7 +33,7 @@ class TestQuantTableFilter:
                 ]
             }
         )
-        assert html.count("<th>") >= 3  # outer label + column headers
+        assert html.count("<th") >= 3  # outer label + column headers
         assert "£54,017.50" in html
 
     def test_none_renders_as_dash(self):
