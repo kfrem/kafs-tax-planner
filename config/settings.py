@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "clients",
     "advice",
     "reports",
+    "monitoring",
 ]
 
 MIDDLEWARE = [
