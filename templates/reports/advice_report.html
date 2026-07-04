@@ -10,6 +10,8 @@
     .flag { display: inline-block; background: #c0392b; color: white; padding: 1px 6px; border-radius: 3px; font-size: 8pt; margin-left: 4px; }
     table { border-collapse: collapse; width: 100%; font-size: 9pt; }
     td, th { border: 1px solid #ddd; padding: 4px 6px; }
+    table.quant table.quant { margin: 2px 0; }
+    table.quant th { background: #f4f7f9; font-weight: 600; }
     footer { font-size: 8pt; color: #666; margin-top: 24px; }
 </style>
 </head>
@@ -39,11 +41,7 @@
         </h3>
         <p><em>Timeframe: {{ r.timeframe }}</em></p>
         <p>{{ r.explanation }}</p>
-        <table>
-            {% for key, value in r.quantification.items %}
-            <tr><th>{{ key }}</th><td>{{ value }}</td></tr>
-            {% endfor %}
-        </table>
+        {{ r.quantification|quant_table }}
         <p><strong>Legal basis:</strong>
             {% for a in r.authorities %}{{ a.citation }} ({{ a.status }}){% if not forloop.last %}; {% endif %}{% endfor %}
         </p>
