@@ -121,7 +121,21 @@ class Command(BaseCommand):
                 "reviewer": reviewer if mark_released else None,
             },
         )
-        return release_2024, release_2025, release_iht
+        release_property, _ = RuleBaseRelease.objects.update_or_create(
+            version="2025.3",
+            defaults={
+                "changelog": "Property/CGT module: CGT annual exempt amount and rates "
+                "(post-30 Oct 2024 alignment), SDLT residential bands with the 5% "
+                "additional-dwellings surcharge and first-time buyers' relief; strategies "
+                "for private residence relief, spousal transfer before disposal, and SDLT "
+                "purchase planning.",
+                "effective_date": datetime.date(2026, 7, 4),
+                "status": status,
+                "editor": editor,
+                "reviewer": reviewer if mark_released else None,
+            },
+        )
+        return release_2024, release_2025, release_iht, release_property
 
     def _create_authorities(self) -> dict[str, Authority]:
         specs = [
