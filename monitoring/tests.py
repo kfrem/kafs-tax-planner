@@ -80,6 +80,60 @@ class TestWatcher:
         assert len(summary["errors"]) == 1
 
 
+class TestFeedFetchers:
+    def test_legislation_uses_xml_api_first(self):
+        calls = []
+
+        def http(url):
+            calls.append(url)
+            return "<akomaNtoso>Section text</akomaNtoso>"
+
+        text = fetch_legislation("https://www.legislation.gov.uk/ukpga/1984/51/section/18", http=http)
+        assert calls == ["https://www.legislation.gov.uk/ukpga/1984/51/section/18/data.xml"]
+        assert "Section text" in text
+
+    def test_legislation_falls_back_to_page_on_feed_error(self):
+        def http(url):
+            if url.endswith("/data.xml"):
+                raise OSError("404")
+            return "<html>page text</html>"
+
+        text = fetch_legislation("https://www.legislation.gov.uk/x", http=http)
+        assert "page text" in text
+
+    def test_govuk_uses_content_api_and_extracts_details(self):
+        calls = []
+
+        def http(url):
+            calls.append(url)
+            return '{"details": {"body": "EIM00500 manual text"}, "links": {"ignored": true}}'
+
+        text = fetch_govuk_content("https://www.gov.uk/hmrc-internal-manuals/employment-income-manual/eim00500", http=http)
+        assert calls[0] == "https://www.gov.uk/api/content/hmrc-internal-manuals/employment-income-manual/eim00500"
+        assert "EIM00500 manual text" in text
+        assert "ignored" not in text  # only the substantive details payload
+
+    def test_resolver_picks_fetcher_by_source_type(self, db):
+        legislation = WatchedSource.objects.create(
+            source_type=WatchedSource.SourceType.LEGISLATION,
+            label="L", url="https://www.legislation.gov.uk/x",
+        )
+        calls = []
+        resolve_fetcher(legislation, http=lambda u: calls.append(u) or "x")(legislation.url)
+        assert calls[0].endswith("/data.xml")
+
+    def test_rebaseline_suppresses_representation_change_alerts(self, source):
+        check_source(source, fetcher=fetcher_returning("<html>same law, html scrape</html>"))
+        # Fetch strategy changes: same law arrives as XML. Without
+        # rebaseline this would false-alert; with it, silence.
+        summary = run_all(
+            fetcher=fetcher_returning("<xml>same law, xml feed</xml>"), rebaseline=True
+        )
+        assert summary["alerts"] == 0
+        assert summary["baselined"] == 1
+        assert source.alerts.count() == 0
+
+
 class TestEditorialWorkflow:
     def test_resolution_requires_notes(self, source, staff_user):
         check_source(source, fetcher=fetcher_returning("a"))
