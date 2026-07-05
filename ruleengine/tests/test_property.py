@@ -12,6 +12,7 @@ from ruleengine.calculators import (
     ltt_residential,
     sdlt_residential,
     strategy_cgt_business_asset_disposal_relief,
+    strategy_cgt_lettings_relief,
     strategy_cgt_ppr_relief,
     strategy_cgt_spousal_transfer,
     strategy_lbtt_purchase,
