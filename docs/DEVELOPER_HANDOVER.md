@@ -135,6 +135,12 @@ Property / CGT:
   (two-year ownership, 5% personal-company holding for shares) are assumed
   met, being a matter for the adviser. No composition yet with a
   concurrent non-BADR disposal in the same year.
+- Devolved land taxes cover *residential* purchases only: Scottish LBTT
+  (bands, 8% ADS, FTB relief) and Welsh LTT (main + separate higher-rate
+  table, no FTB). Non-residential/mixed LBTT and LTT, LBTT lease
+  transactions, and LTT multiple-dwellings rules are not yet modelled.
+  Jurisdiction is an entered fact (`property.jurisdiction`); an unset value
+  defaults to England (SDLT).
 
 IHT:
 - No BPR/APR, settled property, foreign assets, GWR detection, or
