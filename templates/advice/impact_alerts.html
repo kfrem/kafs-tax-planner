@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Rule-change impact alerts{% endblock %}
+{% block content %}
+<h1>Rule-change impact alerts</h1>
+<p class="disclaimer">
+    A rule-base release has changed rules that current, un-superseded advice relied
+    on. Review each affected client: regenerate the advice under the new rules, or
+    record why no action is needed. The original advice remains untouched either way.
+</p>
+
+<h2>Open ({{ open_alerts|length }})</h2>
+{% for alert in open_alerts %}
+<section style="border:1px solid #b9770e; border-radius:6px; padding:1rem; margin:0.75rem 0; background:#fffdf5;">
+    <p style="margin-top:0;">
+        <strong><a href="{% url 'advice:advice-detail' alert.advice_record.pk %}">{{ alert.advice_record.client.name }}
+        — {{ alert.advice_record.tax_year }} (advice #{{ alert.advice_record.pk }})</a></strong><br>
+        Release <strong>{{ alert.release.version }}</strong> changed rules behind:
+        {{ alert.affected_strategy_codes|join:", " }}<br>
+        <span style="font-size:0.85rem; color:#555;">Release notes: {{ alert.release.changelog|truncatechars:160 }}</span>
+    </p>
+    <form method="post" action="{% url 'advice:impact-alert-review' alert.pk %}">
+        {% csrf_token %}
+        <input name="note" style="width:70%;" placeholder="Optional note (e.g. regenerated as advice #N / no action because ...)">
+        <button type="submit">Mark reviewed</button>
+    </form>
+</section>
+{% empty %}
+<p>No open impact alerts — no released rule change touches your current advice.</p>
+{% endfor %}
+
+<h2>Recently reviewed</h2>
+<table>
+    <tr><th>Client</th><th>Advice</th><th>Release</th><th>Reviewed by</th><th>Note</th></tr>
+    {% for alert in reviewed_alerts %}
+    <tr>
+        <td>{{ alert.advice_record.client.name }}</td>
+        <td>#{{ alert.advice_record.pk }} ({{ alert.advice_record.tax_year }})</td>
+        <td>{{ alert.release.version }}</td>
+        <td>{{ alert.reviewed_by }} ({{ alert.reviewed_at|date:"d M Y" }})</td>
+        <td>{{ alert.note|truncatechars:80 }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">None yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
