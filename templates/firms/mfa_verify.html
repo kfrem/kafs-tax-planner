@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Enter your authenticator code{% endblock %}
+{% block content %}
+<h1>Two-step verification</h1>
+<p>Enter the 6-digit code from your authenticator app to continue.</p>
+<form method="post">
+    {% csrf_token %}
+    <input name="token" inputmode="numeric" pattern="[0-9]*" maxlength="8"
+           placeholder="123456" autocomplete="one-time-code" autofocus>
+    <button type="submit">Verify</button>
+</form>
+<p><a href="{% url 'firms:logout' %}">Log out</a></p>
+{% endblock %}
