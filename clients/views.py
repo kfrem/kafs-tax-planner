@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -38,7 +39,7 @@ def client_detail(request, pk):
     granted_ids = set()
     if manages_access:
         staff_users = list(
-            type(request.user).objects.filter(firm=request.user.firm, role="staff")
+            get_user_model().objects.filter(firm=request.user.firm, role="staff")
         )
         granted_ids = set(
             client.access_grants.values_list("user_id", flat=True)
@@ -67,7 +68,7 @@ def client_access(request, pk):
         return redirect("clients:client-detail", pk=pk)
 
     selected_ids = {int(uid) for uid in request.POST.getlist("staff")}
-    staff = type(request.user).objects.filter(firm=request.user.firm, role="staff")
+    staff = get_user_model().objects.filter(firm=request.user.firm, role="staff")
     for user in staff:
         if user.pk in selected_ids:
             ClientAccess.objects.get_or_create(
