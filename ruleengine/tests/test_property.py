@@ -90,6 +90,49 @@ class TestPprRelief:
         assert result["cgt_with_relief"] == 0.0
 
 
+class TestLettingsRelief:
+    def test_hs283_shared_occupancy_example(self):
+        # HMRC HS283: gain 60,000, 40% owner-occupied / 60% let. PPR = 40% =
+        # 24,000; letting gain = 60% = 36,000; lettings relief = lowest of
+        # (36,000, 24,000, 40,000) = 24,000; chargeable 36,000 - 24,000 =
+        # 12,000; less 3,000 AEA = 9,000 @ 24% (earned 60,000 fills the band)
+        # = 2,160. Without lettings relief: 36,000 - 3,000 = 33,000 @ 24% =
+        # 7,920, so the relief saves 5,760.
+        result = strategy_cgt_lettings_relief(
+            {"disposal_gain": 60000, "let_fraction": 0.60, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["private_residence_relief"] == approx(24000.0)
+        assert result["letting_gain"] == approx(36000.0)
+        assert result["lettings_relief"] == approx(24000.0)
+        assert result["chargeable_gain_after_reliefs"] == approx(12000.0)
+        assert result["cgt_due"] == approx(2160.0)
+        assert result["lettings_relief_tax_saving"] == approx(5760.0)
+
+    def test_40000_cap_binds(self):
+        # Gain 200,000, 50/50. PPR = 100,000; letting gain = 100,000;
+        # lettings relief = lowest of (100,000, 100,000, 40,000) = 40,000
+        # (the cap binds); chargeable 100,000 - 40,000 = 60,000; less 3,000
+        # AEA = 57,000 @ 24% = 13,680.
+        result = strategy_cgt_lettings_relief(
+            {"disposal_gain": 200000, "let_fraction": 0.50, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["lettings_relief"] == approx(40000.0)
+        assert result["chargeable_gain_after_reliefs"] == approx(60000.0)
+        assert result["cgt_due"] == approx(13680.0)
+
+    def test_ppr_relief_is_the_binding_minimum(self):
+        # Gain 100,000, 90% let / 10% occupied. PPR = 10,000; letting gain =
+        # 90,000; lettings relief = lowest of (90,000, 10,000, 40,000) =
+        # 10,000 (PPR binds); chargeable 90,000 - 10,000 = 80,000; less 3,000
+        # AEA = 77,000 @ 24% = 18,480.
+        result = strategy_cgt_lettings_relief(
+            {"disposal_gain": 100000, "let_fraction": 0.90, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["lettings_relief"] == approx(10000.0)
+        assert result["chargeable_gain_after_reliefs"] == approx(80000.0)
+        assert result["cgt_due"] == approx(18480.0)
+
+
 class TestSpousalTransfer:
     def test_both_higher_rate_saves_only_second_aea(self):
         # Victor's case: both spouses higher-rate. Alone: 147,000 @ 24% =
