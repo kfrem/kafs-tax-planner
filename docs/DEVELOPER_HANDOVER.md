@@ -161,14 +161,20 @@ unresolved alerts. View layer and its staff-only access boundary are
 tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
 `TestOpenAlertBadge`).
 
-1. **CGT/SDLT depth** — **Business Asset Disposal Relief now built**
+1. **CGT/SDLT depth** — done so far: **Business Asset Disposal Relief**
    (`strategy.cgt_business_asset_disposal_relief`: 14% rate + £1m lifetime
-   limit as data, TCGA 1992 ss.169H-169S, golden case + hand-computed
-   tests in `test_property.py::TestBadr`, editorially signed off). Still
-   open: the 6 April 2026 BADR rate rise to 18% (a future data row, on the
+   limit as data, TCGA 1992 ss.169H-169S, `test_property.py::TestBadr`);
+   and **Scottish LBTT + Welsh LTT** (`lbtt_residential` / `ltt_residential`
+   and their `*_purchase_planning` strategies: bands as data, Scotland's 8%
+   ADS and FTB relief, Wales's separate higher-rate table and no FTB, LBTT(S)A
+   2013 s.24 / LTTA 2017 s.24, golden cases + `TestLbtt` / `TestLtt`; the
+   SDLT strategy is now gated to England/NI and `property.jurisdiction`
+   routes the charge). Both editorially signed off. Still open: the
+   6 April 2026 BADR rate rise to 18% (a future data row, on the
    watch-list); 2024/25 intra-year CGT rates (needs intra-year effective
-   ranges); letting-relief edge cases; Scottish LBTT / Welsh LTT variants;
-   disposal composition with the salary/dividend whole-income picture.
+   ranges); letting-relief edge cases; non-residential LBTT/LTT bands and
+   Scottish/Welsh commercial leases; disposal composition with the
+   salary/dividend whole-income picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
