@@ -128,11 +128,17 @@ def check_source(source: WatchedSource, fetcher=None) -> ChangeAlert | None:
     return alert
 
 
-def run_all(fetcher=default_fetcher) -> dict:
+def run_all(fetcher=None, rebaseline=False) -> dict:
     """Check every active source; skip (and report) fetch failures rather
-    than aborting the run — a dead link is itself worth knowing about."""
+    than aborting the run — a dead link is itself worth knowing about.
+    ``rebaseline`` silently re-baselines instead of alerting: use it once
+    after changing fetch strategy, when the *representation* of unchanged
+    content changes (e.g. HTML scrape -> XML feed)."""
     summary = {"checked": 0, "baselined": 0, "alerts": 0, "errors": []}
     for source in WatchedSource.objects.filter(active=True):
+        if rebaseline:
+            source.last_fingerprint = ""
+            source.last_content_snapshot = ""
         had_baseline = bool(source.last_fingerprint)
         try:
             alert = check_source(source, fetcher=fetcher)
