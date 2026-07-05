@@ -84,6 +84,28 @@
     {% endwith %}
 </section>
 
+<section style="border:1px solid #1e8449; border-radius:6px; padding:1rem; margin:1rem 0; background:#f4faf6;">
+    <h2 style="margin-top:0;">Client narrative</h2>
+    {% if narrative %}
+        <p style="font-size:0.85rem; color:#555;">
+            Drafted {{ narrative.created_at|date:"d M Y H:i" }} by {{ narrative.drafter }} —
+            validator confirmed every figure and citation exists in this advice record.
+            Edit in your own voice before issuing; the draft is a starting point, not client-ready.
+        </p>
+        <div style="white-space:pre-wrap; background:white; border:1px solid #ddd; padding:0.75rem; font-size:0.95rem;">{{ narrative.text }}</div>
+        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}" style="margin-top:0.5rem;">
+            {% csrf_token %}<button type="submit">Redraft</button>
+        </form>
+    {% else %}
+        <p>No narrative drafted yet. The drafter composes client-facing prose from the
+           computed figures only, and a validator rejects any draft containing a number
+           or citation not present in this record.</p>
+        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
+            {% csrf_token %}<button type="submit">Draft client narrative</button>
+        </form>
+    {% endif %}
+</section>
+
 {% for r in record.results %}
 <section style="border-top:1px solid #eee; padding-top:1rem; margin-top:1rem;">
     <h2>{{ r.strategy_name }}
