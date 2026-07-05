@@ -475,6 +475,9 @@ class Command(BaseCommand):
             ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
              {"residential": {"lower": 0.18, "higher": 0.24},
               "other": {"lower": 0.18, "higher": 0.24}}),
+            ("cgt.business_asset_disposal_relief",
+             "Business Asset Disposal Relief: reduced CGT rate and lifetime limit",
+             {"rate": 0.14, "lifetime_limit": 1000000}),
             ("sdlt.residential_bands", "SDLT residential bands, surcharge, FTB relief (England/NI)",
              {"bands": [
                  {"upper": 125000, "rate": 0.0},
