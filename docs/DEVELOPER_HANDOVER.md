@@ -104,6 +104,7 @@ expectation in the suite is a hand-computed number, not a snapshot.
 | F4 | Test authoring (twice) | My own hand-computed expectations were wrong (incorporation higher-rate figure; Victor's charity baseline ignoring his existing £50k legacy). The engine was right both times | Corrected with working shown in comments. Process lesson: derive, don't eyeball |
 | F5 | Cleanup attempt | Tried to delete a simulation advice record; the model refused (`AdviceRecord cannot be deleted`) | Not a defect — evidence the audit trail resists even developers. Superseded instead, as designed |
 | F6 | Section A batch, CI run | New view tests passed locally (DEBUG=true) but 301'd in CI (DEBUG=false enables SECURE_SSL_REDIRECT; the test client speaks plain HTTP) — an environment-parity gap, not a code bug | Autouse conftest fixture pins SECURE_SSL_REDIRECT off in tests; suite re-run locally under DEBUG=false before pushing. Lesson: reproduce CI's environment locally when CI disagrees |
+| F7 | Editorial-queue view tests | My own test asserted the authorities page would contain the strategy *code* (`salary-dividend-mix`); the template renders the strategy *name* (`Salary/dividend extraction mix`). The view was right | Assertion corrected to the displayed name, with a comment noting the template lists by name. Same F4 lesson: assert what the rendered artefact actually contains, don't eyeball it |
 
 ## 5. Known simplifications (each needs tax-editor review, §5.6)
 
