@@ -22,6 +22,8 @@ from __future__ import annotations
 
 import datetime
 
+from django.db.models import Q
+
 from authority.models import Authority
 from monitoring.models import WatchedSource
 
@@ -29,13 +31,22 @@ from .engine import CALCULATOR_REGISTRY, calculators_consuming
 from .models import GoldenTestCase, Strategy, TaxParameter
 
 CURRENT_ANCHOR = datetime.date(2025, 4, 6)
+# The review also covers scheduled future-tax-year rows (e.g. the BADR rate
+# rise on 6 April 2026), so a row that is staged but not yet in force is
+# still machine-reviewed and appears in the sign-off pack before its release
+# is approved. A parameter whose open effective range spans both anchors is
+# returned once; a rate that changes across the boundary shows as two rows.
+REVIEW_ANCHORS = (CURRENT_ANCHOR, datetime.date(2026, 4, 6))
 
 
 def _current_parameters():
+    anchors = Q()
+    for anchor in REVIEW_ANCHORS:
+        anchors |= Q(effective_range__contains=anchor)
     return (
-        TaxParameter.objects.filter(effective_range__contains=CURRENT_ANCHOR)
+        TaxParameter.objects.filter(anchors)
         .select_related("introduced_in_release")
-        .order_by("tax_domain", "key")
+        .order_by("tax_domain", "key", "id")
     )
 
 
