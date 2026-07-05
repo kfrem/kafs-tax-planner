@@ -253,6 +253,28 @@ class Command(BaseCommand):
                 "band, and the annual exempt amount (s.1K).",
             ),
             dict(
+                key="lbtt_scotland_act_2013_s24",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Land and Buildings Transaction Tax (Scotland) Act 2013 s.24",
+                canonical_uri="https://www.legislation.gov.uk/asp/2013/11/section/24",
+                verbatim_extract="Empowers the Scottish Ministers to set, by order, the tax "
+                "bands and percentage rates for Land and Buildings Transaction Tax, "
+                "including a nil-rate band for residential transactions; the Additional "
+                "Dwelling Supplement (Schedule 2A) and first-time buyer relief operate "
+                "alongside these rates.",
+            ),
+            dict(
+                key="ltt_wales_act_2017_s24",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Land Transaction Tax and Anti-avoidance of Devolved "
+                "Taxes (Wales) Act 2017 s.24",
+                canonical_uri="https://www.legislation.gov.uk/anaw/2017/1/section/24",
+                verbatim_extract="Empowers the Welsh Ministers to specify, by regulations, "
+                "the tax bands and percentage rates for Land Transaction Tax across three "
+                "categories: residential, higher-rates residential (additional properties), "
+                "and non-residential transactions.",
+            ),
+            dict(
                 key="fa2003_s55",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Finance Act 2003 s.55 and Sch 4ZA",
