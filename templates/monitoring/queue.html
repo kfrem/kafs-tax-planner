@@ -7,6 +7,7 @@
     registry. They never change a rule: assess each alert against the primary source,
     then either action it through a rule-base release or dismiss it with reasons.
 </p>
+<p><a href="{% url 'monitoring:authorities' %}">Authority status workflow (case law) &rarr;</a></p>
 
 <h2>Open alerts ({{ open_alerts|length }})</h2>
 {% for alert in open_alerts %}
