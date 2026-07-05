@@ -269,9 +269,10 @@ class TestEditorialQueueViews:
         response = admin_client.get("/monitoring/authorities/")
         assert response.status_code == 200
         body = response.content.decode()
-        # A seeded authority and one of its dependent strategies are shown.
+        # A seeded authority and one of its dependent strategies are shown
+        # (the template lists strategies by name, not code).
         assert "Jones v Garnett" in body
-        assert "salary-dividend" in body.lower()
+        assert "Salary/dividend extraction mix" in body
 
     def test_action_mark_under_review_via_view(self, source, admin_client):
         alert = _open_alert(source)
