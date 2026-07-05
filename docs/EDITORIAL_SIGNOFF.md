@@ -67,3 +67,35 @@ met) are documented at the calculator and are conservative — see
 **Noted for a future release:** the 18% BADR rate from 6 April 2026 (to be
 seeded as an intra-year/next-year row with its effective date and
 re-reviewed) — already on the monitoring watch-list above.
+
+## Addendum, 5 July 2026 — Devolved land taxes: Scottish LBTT & Welsh LTT
+
+**Reviewing professional:** kfrem.
+
+**Scope:** the devolved land-transaction-tax variants added to the
+property-taxes module — parameters `lbtt.residential_bands` (pack item 19)
+and `ltt.residential_bands` (item 20), strategies
+`lbtt-purchase-planning` (item 32) and `ltt-purchase-planning` (item 33),
+and authorities LBTT(S)A 2013 s.24 and LTTA 2017 s.24. Machine pre-check:
+0 failures across 21 parameters, 13 strategies, 29 authorities; both new
+authorities' primary sources were fetched by the watcher
+(legislation.gov.uk asp/2013/11 s.24 and anaw/2017/1 s.24).
+
+**Figures verified independently against the devolved tax authorities:**
+- **LBTT (Scotland)** residential bands 0% to £145k, 2% to £250k, 5% to
+  £325k, 10% to £750k, 12% above; first-time buyer relief raises the
+  nil-rate band to £175,000 (worth up to £600); Additional Dwelling
+  Supplement **8%** on the whole price (up from 6% for contracts after
+  4 December 2024) — revenue.scot residential-property guidance.
+- **LTT (Wales)** main residential bands 0% to £225k, 6% to £400k, 7.5% to
+  £750k, 10% to £1.5m, 12% above; **separate higher-rate table** for
+  additional dwellings (5% / 8.5% / 10% / 12.5% / 15% / 17%, from
+  11 December 2024) — not a flat surcharge; **no first-time buyer relief**
+  in Wales — gov.wales LTT rates and bands.
+
+**Verdict:** YES. The bands are correct for 2025/26 and are held as data
+(new rows effective 6 April 2025), and the SDLT strategy is now gated to
+England/NI so a Scottish or Welsh purchase routes to the correct devolved
+charge (a property with no jurisdiction recorded still defaults to
+England, unchanged). Both devolved statutes delegate rate-setting to
+secondary legislation, so the data-not-code design mirrors the law.
