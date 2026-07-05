@@ -12,7 +12,8 @@ multi-tenant isolation, wrapped in a server-rendered Django app.
 |---|---|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System **as built**: components, models, engine, invariants |
 | [docs/DEVELOPER_HANDOVER.md](docs/DEVELOPER_HANDOVER.md) | Take-over guide: build log, setup, conventions, defect log, known simplifications, remaining work, case-law roadmap |
-| [docs/TEST_EVIDENCE.md](docs/TEST_EVIDENCE.md) | Full test inventory (80 tests), how to run, expected results, persona suite, manual verification sessions |
+| [docs/TEST_EVIDENCE.md](docs/TEST_EVIDENCE.md) | Full test inventory, how to run, expected results, persona suite, manual verification sessions |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Container usage, required environment, UK hosting comparison |
 | The `.docx` above | The founding design document (pre-build) |
 
 Three canonical test personas (simple / typical / complex —
