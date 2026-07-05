@@ -48,3 +48,12 @@ def other_staff_user(db, other_firm):
     return User.objects.create_user(
         username="other-staffer", password="pw", firm=other_firm, role=User.Role.STAFF
     )
+
+
+@pytest.fixture(autouse=True)
+def _no_ssl_redirect_in_tests(settings):
+    """CI runs with DEBUG=false, which enables the production
+    SECURE_SSL_REDIRECT; the Django test client speaks plain HTTP, so
+    every view test would see 301s. Security headers are exercised by
+    `manage.py check --deploy` in CI instead."""
+    settings.SECURE_SSL_REDIRECT = False
