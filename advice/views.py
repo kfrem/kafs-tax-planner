@@ -73,6 +73,60 @@ def advice_decide(request, pk):
     return redirect("advice:advice-detail", pk=record.pk)
 
 
+class ScenarioForm(forms.Form):
+    """Optional overrides; only supplied values change the scenario facts."""
+
+    OVERRIDE_PATHS = {
+        "company_profit": "company.profit_before_remuneration",
+        "sole_trade_profit": "sole_trade.annual_profit",
+        "employment_income": "personal.employment_income",
+        "other_income": "personal.other_income",
+        "pension_contribution": "pension.desired_contribution",
+        "planned_gift": "estate.planned_lifetime_gift",
+        "disposal_gain": "property.disposal_gain",
+    }
+
+    company_profit = forms.FloatField(required=False, min_value=0)
+    sole_trade_profit = forms.FloatField(required=False, min_value=0)
+    employment_income = forms.FloatField(required=False, min_value=0)
+    other_income = forms.FloatField(required=False, min_value=0)
+    pension_contribution = forms.FloatField(required=False, min_value=0)
+    planned_gift = forms.FloatField(required=False, min_value=0)
+    disposal_gain = forms.FloatField(required=False, min_value=0)
+
+    def overrides(self):
+        return {
+            self.OVERRIDE_PATHS[name]: value
+            for name, value in self.cleaned_data.items()
+            if value is not None
+        }
+
+
+@login_required
+def scenario(request, client_id):
+    client = get_object_or_404(Client, pk=client_id, firm=request.user.firm)
+    fact_set = (
+        client.fact_sets.filter(superseded_by__isnull=True).order_by("-created_at").first()
+    )
+    if fact_set is None:
+        messages.error(request, "Record facts for this client before modelling scenarios.")
+        return redirect("clients:client-detail", pk=client.pk)
+
+    result = None
+    form = ScenarioForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        overrides = form.overrides()
+        if overrides:
+            result = run_scenario(fact_set.facts, fact_set.tax_year, overrides)
+        else:
+            messages.error(request, "Change at least one value to model a scenario.")
+    return render(
+        request,
+        "advice/scenario.html",
+        {"client": client, "fact_set": fact_set, "form": form, "result": result},
+    )
+
+
 @login_required
 def impact_alerts(request):
     alerts = AdviceImpactAlert.objects.filter(firm=request.user.firm).select_related(
