@@ -12,8 +12,10 @@ from __future__ import annotations
 
 import difflib
 import hashlib
+import json
 import re
 import urllib.request
+from urllib.parse import urlparse
 
 from django.utils import timezone
 
@@ -27,11 +29,56 @@ _HTML_RE = re.compile(r"<[^>]+>")
 _WS_RE = re.compile(r"[ \t\f\v]+")
 
 
-def default_fetcher(url: str) -> str:
+def http_get(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=30) as response:
         charset = response.headers.get_content_charset() or "utf-8"
         return response.read().decode(charset, errors="replace")
+
+
+def default_fetcher(url: str) -> str:
+    return http_get(url)
+
+
+# --- Feed-specific fetchers ---------------------------------------------------
+# Structured feeds give cleaner text than scraping rendered pages, so a
+# styling change on the website can never look like a change in the law.
+# Every feed fetcher falls back to the plain page if the feed errors —
+# a degraded check beats a missed check.
+
+
+def fetch_legislation(url: str, http=http_get) -> str:
+    """legislation.gov.uk exposes every provision as XML at <uri>/data.xml
+    (The National Archives' API — architecture doc Appendix)."""
+    try:
+        return http(url.rstrip("/") + "/data.xml")
+    except Exception:
+        return http(url)
+
+
+def fetch_govuk_content(url: str, http=http_get) -> str:
+    """gov.uk (including HMRC manuals) exposes structured JSON at
+    /api/content/<path>; the details payload carries the substantive body
+    without site chrome."""
+    parsed = urlparse(url)
+    if parsed.netloc.endswith("gov.uk"):
+        try:
+            raw = http(f"{parsed.scheme}://{parsed.netloc}/api/content{parsed.path}")
+            payload = json.loads(raw)
+            details = payload.get("details", {})
+            return json.dumps(details, ensure_ascii=False, indent=0, sort_keys=True)
+        except Exception:
+            pass
+    return http(url)
+
+
+def resolve_fetcher(source: WatchedSource, http=http_get):
+    """Pick the feed-appropriate fetcher for a source type."""
+    if source.source_type == WatchedSource.SourceType.LEGISLATION:
+        return lambda url: fetch_legislation(url, http=http)
+    if source.source_type == WatchedSource.SourceType.HMRC_MANUAL:
+        return lambda url: fetch_govuk_content(url, http=http)
+    return http
 
 
 def normalise(raw: str) -> str:
