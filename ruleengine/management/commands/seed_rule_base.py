@@ -859,6 +859,66 @@ class Command(BaseCommand):
                 ]},
                 release=release_property,
             ),
+            dict(
+                code="sdlt-non-residential-purchase",
+                name="SDLT on non-residential purchase (England/NI)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.sdlt_non_residential_purchase",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the SDLT on a planned non-residential or "
+                "mixed-use freehold purchase in England or Northern Ireland. Commercial rates run "
+                "in bands (0% to 150,000, 2% to 250,000, 5% above) and — unlike residential — carry "
+                "no additional-dwelling surcharge and no first-time buyer relief. A mixed-use "
+                "property is charged wholly at these non-residential rates.",
+                authority_keys=["fa2003_s55"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.property_type", "op": "eq", "value": "non_residential"},
+                    {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="lbtt-non-residential-purchase",
+                name="LBTT on non-residential purchase (Scotland)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.lbtt_non_residential_purchase",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the LBTT on a planned non-residential "
+                "freehold purchase in Scotland. Commercial rates run in bands (0% to 150,000, 1% "
+                "to 250,000, 5% above) — a lower middle band than the English SDLT — with no "
+                "Additional Dwelling Supplement and no first-time buyer relief on non-residential "
+                "property.",
+                authority_keys=["lbtt_scotland_act_2013_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.property_type", "op": "eq", "value": "non_residential"},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "scotland"},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="ltt-non-residential-purchase",
+                name="LTT on non-residential purchase (Wales)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.ltt_non_residential_purchase",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the LTT on a planned non-residential "
+                "freehold purchase in Wales. Commercial rates run in bands (0% to 225,000, 1% to "
+                "250,000, 5% to 1,000,000, 6% above), so the Welsh charge has a higher nil-rate "
+                "threshold but a top band the other regimes lack. There is no surcharge or "
+                "first-time buyer relief on non-residential property.",
+                authority_keys=["ltt_wales_act_2017_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.property_type", "op": "eq", "value": "non_residential"},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "wales"},
+                ]},
+                release=release_property,
+            ),
         ]
 
         for spec in specs:
