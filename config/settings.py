@@ -56,6 +56,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # MFA: attaches request.user.is_verified(); the enforcement middleware
+    # below requires verification for any user with a confirmed device.
+    "django_otp.middleware.OTPMiddleware",
+    "firms.mfa.MfaEnforcementMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
