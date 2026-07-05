@@ -153,10 +153,10 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    effective ranges), BADR, letting relief edge cases, Scottish
    LBTT/Welsh LTT variants, disposal composition with the salary/dividend
    whole-income picture.
-5. Ops/compliance items before real firms: real SECRET_KEY/env handling,
+2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
-6. Phase 2+: MTD API integration; LLM narrative layer with validator
+3. Phase 2+: MTD API integration; LLM narrative layer with validator
    (architecture doc §8 guardrails); LLM voices for the expert panel
    (explain-only, per §8).
 
