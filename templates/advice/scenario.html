@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load report_format %}
+{% block title %}Scenario — {{ client.name }}{% endblock %}
+{% block content %}
+<h1>Scenario modelling — {{ client.name }} ({{ fact_set.tax_year }})</h1>
+<p class="disclaimer">
+    Scenarios are scratch work for the reviewing accountant: computed through the
+    same engine and rule base as real advice, but <strong>never stored</strong> and never
+    part of the client's advice record. To turn a scenario into advice, update the
+    client's facts and generate advice properly.
+</p>
+
+<form method="post" style="border:1px solid #ccc; border-radius:6px; padding:1rem; background:#fafafa;">
+    {% csrf_token %}
+    <p style="margin-top:0;">Enter only the values you want to change; everything else stays as recorded.</p>
+    <table style="width:auto;">
+        {% for field in form %}
+        <tr><th style="text-align:left; padding-right:1rem;">{{ field.label }}</th><td>{{ field }}</td></tr>
+        {% endfor %}
+    </table>
+    <button type="submit" style="margin-top:0.5rem;">Run scenario</button>
+</form>
+
+{% if result %}
+<h2>Comparison</h2>
+<p>Overrides applied: {% for path, value in result.overrides.items %}<code>{{ path }}</code> &rarr; {{ value }}{% if not forloop.last %}; {% endif %}{% endfor %}</p>
+<table>
+    <tr><th>Strategy</th><th>Headline</th><th>As recorded</th><th>Scenario</th><th>Change</th></tr>
+    {% for row in result.comparison %}
+    <tr>
+        <td>{{ row.name }}{% if row.only_in %} <em>({{ row.only_in }} only)</em>{% endif %}</td>
+        <td>{{ row.headline }}</td>
+        <td style="text-align:right;">{% if row.base is not None %}£{{ row.base|floatformat:2 }}{% else %}—{% endif %}</td>
+        <td style="text-align:right;">{% if row.scenario is not None %}£{{ row.scenario|floatformat:2 }}{% else %}—{% endif %}</td>
+        <td style="text-align:right; {% if row.delta and row.delta < 0 %}color:#1e8449;{% elif row.delta and row.delta > 0 %}color:#b9770e;{% endif %}">
+            {% if row.delta is not None %}{{ row.delta|floatformat:2 }}{% else %}—{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<p style="font-size:0.85rem; color:#555;">
+    Headline metrics differ per strategy (a fall in "second-death tax" is good; a
+    fall in "net to individual" is not) — read the Change column with the headline.
+</p>
+
+<h2>Scenario detail</h2>
+{% for r in result.scenario_results %}
+<details style="margin:0.5rem 0;">
+    <summary><strong>{{ r.strategy_name }}</strong></summary>
+    <div style="font-size:0.9rem;">{{ r.quantification|quant_table }}</div>
+</details>
+{% endfor %}
+{% endif %}
+{% endblock %}
