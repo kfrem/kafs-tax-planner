@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.postgres",
     "django_htmx",
+    "django_otp",
+    "django_otp.plugins.otp_totp",
     "firms",
     "authority",
     "ruleengine",
