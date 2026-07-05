@@ -82,3 +82,44 @@ class ClientFactSet(models.Model):
     @property
     def is_current(self):
         return self.superseded_by_id is None
+
+
+class ClientAccess(models.Model):
+    """Per-client access grant (architecture doc §7.2 'per-client access
+    controls'): partners and managers see every client in their firm;
+    STAFF users see only clients they have been granted. Enforced through
+    ``accessible_clients()`` in every view that touches client data —
+    on top of (never instead of) the firm-level row-level security."""
+
+    firm = models.ForeignKey(Firm, on_delete=models.CASCADE, related_name="client_access_grants")
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="access_grants")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="client_access_grants"
+    )
+    granted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="client_access_granted"
+    )
+    granted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["client", "user"], name="unique_client_user_access")
+        ]
+
+    def __str__(self):
+        return f"{self.user} -> {self.client}"
+
+
+def accessible_clients(user):
+    """The clients this user may work on. Partners/managers: whole firm.
+    Staff: only granted clients."""
+    base = Client.objects.filter(firm=user.firm, is_active=True)
+    if user.is_superuser or user.role in ("partner", "manager"):
+        return base
+    return base.filter(access_grants__user=user)
+
+
+def get_accessible_client_or_404(user, pk):
+    from django.shortcuts import get_object_or_404
+
+    return get_object_or_404(accessible_clients(user), pk=pk)
