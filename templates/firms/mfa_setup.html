@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Multi-factor authentication{% endblock %}
+{% block content %}
+<h1>Multi-factor authentication</h1>
+{% if already_enabled %}
+<p>MFA is <strong>enabled</strong> on your account. Every login requires your
+authenticator code. To move to a new phone, contact your firm's administrator —
+MFA cannot be switched off from the app.</p>
+{% else %}
+<p>Scan this QR code with any authenticator app (Google Authenticator, Microsoft
+Authenticator, Aegis, 1Password…), then enter the 6-digit code to confirm.</p>
+<p><img src="{{ qr_data_uri }}" alt="TOTP enrolment QR code" width="220" height="220"></p>
+<form method="post">
+    {% csrf_token %}
+    <input name="token" inputmode="numeric" pattern="[0-9]*" maxlength="8"
+           placeholder="123456" autocomplete="one-time-code" autofocus>
+    <button type="submit">Confirm and enable MFA</button>
+</form>
+{% endif %}
+{% endblock %}
