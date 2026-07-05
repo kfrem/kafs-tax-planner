@@ -8,10 +8,14 @@ import pytest
 
 from ruleengine.calculators import (
     cgt_liability,
+    lbtt_residential,
+    ltt_residential,
     sdlt_residential,
     strategy_cgt_business_asset_disposal_relief,
     strategy_cgt_ppr_relief,
     strategy_cgt_spousal_transfer,
+    strategy_lbtt_purchase,
+    strategy_ltt_purchase,
     strategy_sdlt_purchase,
 )
 
