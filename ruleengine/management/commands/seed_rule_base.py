@@ -715,6 +715,27 @@ class Command(BaseCommand):
                 release=release_property,
             ),
             dict(
+                code="cgt-lettings-relief",
+                name="Lettings relief (shared-occupancy let)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_lettings_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Where the owner lets part of their only or main "
+                "residence to a tenant while continuing to live in another part, lettings "
+                "relief reduces the gain on the let portion by the lowest of that letting "
+                "gain, the private residence relief due, and a 40,000 cap. Since 6 April "
+                "2020 the relief is available only for periods of shared occupancy with the "
+                "tenant — the former relief for letting a property after moving out has been "
+                "withdrawn.",
+                authority_keys=["tcga1992_s223b", "tcga1992_s222", "tcga1992_s1h"],
+                eligibility_conditions={"all": [
+                    {"path": "property.disposal_gain", "op": "gt", "value": 0},
+                    {"path": "property.shared_occupancy_let_fraction", "op": "gt", "value": 0},
+                ]},
+                release=release_property,
+            ),
+            dict(
                 code="cgt-spousal-transfer-before-disposal",
                 name="Spousal transfer before disposal",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
