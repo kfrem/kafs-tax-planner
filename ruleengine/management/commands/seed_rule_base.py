@@ -851,6 +851,41 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.incorporation_vs_sole_trade",
+                description="Sole trader at 28,000 profit: Class 4 NIC and the stay/incorporate comparison, 2025/26",
+                source="Hand-computed: IT (28,000-12,570) x 20% = 3,086; Class 4 "
+                "(28,000-12,570) x 6% = 925.80; total 4,011.80 beats the best "
+                "incorporated extraction at this profit level",
+                input_facts={"annual_profit": 28000, "other_personal_income": 0},
+                expected_output={
+                    "sole_trader": {"income_tax": 3086.0, "class4_nic": 925.80,
+                                    "total_tax_and_nic": 4011.80},
+                    "recommendation": "remain_sole_trader",
+                },
+            ),
+            dict(
+                calculator_key="strategy.iht_lifetime_gifting",
+                description="100,000 gift with both annual exemptions, 1.9m estate with full transferred bands",
+                source="Hand-computed: exemptions 2 x 3,000 = 6,000 immediate; PET 94,000; "
+                "estate tax falls 360,000 -> 320,000 if survived 7 years (saving 40,000 at 40%)",
+                input_facts={
+                    "planned_gift": 100000,
+                    "estate_basis_value": 1900000,
+                    "home_equity_value": 600000,
+                    "home_passes_to_direct_descendants": True,
+                    "transferred_nrb_fraction": 1,
+                    "transferred_rnrb_fraction": 1,
+                    "prior_year_annual_exemption_unused": True,
+                },
+                expected_output={
+                    "immediately_exempt_amount": 6000,
+                    "pet_amount": 94000.0,
+                    "estate_tax_before_gift": 360000.0,
+                    "estate_tax_if_survive_7_years": 320000.0,
+                    "saving_if_survive_7_years": 40000.0,
+                },
+            ),
+            dict(
                 calculator_key="strategy.marriage_allowance_transfer",
                 description="Eligible transfer, 2025/26",
                 source="Hand-computed from published 2025/26 rates",
