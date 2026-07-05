@@ -997,6 +997,19 @@ class Command(BaseCommand):
                                  "cgt_without_badr": 119280.0, "saving": 49700.0},
             ),
             dict(
+                calculator_key="strategy.cgt_lettings_relief",
+                description="Shared-occupancy let, 60% let / 40% owner-occupied "
+                "(HS283 example), higher-rate owner, 2025/26",
+                source="Hand-computed (HMRC HS283): gain 60,000, PPR 40% = 24,000, letting "
+                "gain 60% = 36,000; lettings relief = lowest of (36,000, 24,000, 40,000) = "
+                "24,000; chargeable 36,000 - 24,000 = 12,000; less 3,000 AEA = 9,000 at 24% "
+                "(band full at earned 60,000) = 2,160",
+                input_facts={"disposal_gain": 60000, "let_fraction": 0.60, "earned_income": 60000},
+                expected_output={"private_residence_relief": 24000.0, "letting_gain": 36000.0,
+                                 "lettings_relief": 24000.0, "chargeable_gain_after_reliefs": 12000.0,
+                                 "cgt_due": 2160.0},
+            ),
+            dict(
                 calculator_key="sdlt_residential",
                 description="Standard residential purchase at 350,000, 2025/26",
                 source="Hand-computed: 125,000 at 0% + 125,000 at 2% (2,500) + 100,000 at "
