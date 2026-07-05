@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
-from clients.models import Client, ClientFactSet
+from clients.models import Client, ClientFactSet, accessible_clients, get_accessible_client_or_404
 from reports.pdf import render_advice_pdf
 
 from django import forms
@@ -20,6 +20,7 @@ def advice_generate(request, fact_set_id):
         return HttpResponseNotAllowed(["POST"])
 
     fact_set = get_object_or_404(ClientFactSet, pk=fact_set_id, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, fact_set.client_id)
     try:
         record = generate_advice(fact_set.client, fact_set, request.user)
     except NoReleasedRuleBaseError:
@@ -38,6 +39,7 @@ def advice_generate(request, fact_set_id):
 @login_required
 def advice_detail(request, pk):
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, record.client_id)
     return render(request, "advice/advice_detail.html", {"record": record})
 
 
@@ -46,6 +48,7 @@ def panel_deploy(request, pk):
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, record.client_id)
     review = deploy_panel(record, request.user)
     messages.success(
         request,
@@ -60,6 +63,7 @@ def advice_decide(request, pk):
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, record.client_id)
     decision = request.POST.get("decision", "")
     if decision not in ProfessionalDecision.Decision.values:
         messages.error(request, "Choose approve, reject, or needs revision.")
@@ -104,7 +108,7 @@ class ScenarioForm(forms.Form):
 
 @login_required
 def scenario(request, client_id):
-    client = get_object_or_404(Client, pk=client_id, firm=request.user.firm)
+    client = get_accessible_client_or_404(request.user, client_id)
     fact_set = (
         client.fact_sets.filter(superseded_by__isnull=True).order_by("-created_at").first()
     )
@@ -154,6 +158,6 @@ def impact_alert_review(request, pk):
 
 @login_required
 def advice_list(request, client_id):
-    client = get_object_or_404(Client, pk=client_id, firm=request.user.firm)
+    client = get_accessible_client_or_404(request.user, client_id)
     records = client.advice_records.all()
     return render(request, "advice/advice_list.html", {"client": client, "records": records})

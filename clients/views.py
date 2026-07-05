@@ -4,12 +4,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .csv_import import import_client_csv
 from .forms import ClientFactSetForm, ClientForm, CsvImportForm
-from .models import Client, ClientFactSet
+from .models import Client, ClientAccess, ClientFactSet, accessible_clients, get_accessible_client_or_404
 
 
 @login_required
 def client_list(request):
-    clients = Client.objects.filter(firm=request.user.firm, is_active=True)
+    clients = accessible_clients(request.user)
     return render(request, "clients/client_list.html", {"clients": clients})
 
 
@@ -31,16 +31,58 @@ def client_create(request):
 
 @login_required
 def client_detail(request, pk):
-    client = get_object_or_404(Client, pk=pk, firm=request.user.firm)
+    client = get_accessible_client_or_404(request.user, pk)
     fact_sets = client.fact_sets.filter(superseded_by__isnull=True)
+    manages_access = request.user.role in ("partner", "manager") or request.user.is_superuser
+    staff_users = []
+    granted_ids = set()
+    if manages_access:
+        staff_users = list(
+            type(request.user).objects.filter(firm=request.user.firm, role="staff")
+        )
+        granted_ids = set(
+            client.access_grants.values_list("user_id", flat=True)
+        )
     return render(
-        request, "clients/client_detail.html", {"client": client, "fact_sets": fact_sets}
+        request,
+        "clients/client_detail.html",
+        {
+            "client": client,
+            "fact_sets": fact_sets,
+            "manages_access": manages_access,
+            "staff_users": staff_users,
+            "granted_ids": granted_ids,
+        },
     )
 
 
 @login_required
-def client_facts_create(request, pk):
+def client_access(request, pk):
+    """Partner/manager only: set which STAFF users may work on this client."""
+    if not (request.user.role in ("partner", "manager") or request.user.is_superuser):
+        messages.error(request, "Only partners and managers manage client access.")
+        return redirect("clients:client-detail", pk=pk)
     client = get_object_or_404(Client, pk=pk, firm=request.user.firm)
+    if request.method != "POST":
+        return redirect("clients:client-detail", pk=pk)
+
+    selected_ids = {int(uid) for uid in request.POST.getlist("staff")}
+    staff = type(request.user).objects.filter(firm=request.user.firm, role="staff")
+    for user in staff:
+        if user.pk in selected_ids:
+            ClientAccess.objects.get_or_create(
+                client=client, user=user,
+                defaults={"firm": request.user.firm, "granted_by": request.user},
+            )
+        else:
+            ClientAccess.objects.filter(client=client, user=user).delete()
+    messages.success(request, "Client access updated.")
+    return redirect("clients:client-detail", pk=pk)
+
+
+@login_required
+def client_facts_create(request, pk):
+    client = get_accessible_client_or_404(request.user, pk)
     if request.method == "POST":
         form = ClientFactSetForm(request.POST)
         if form.is_valid():

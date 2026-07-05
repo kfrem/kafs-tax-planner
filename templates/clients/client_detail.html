@@ -28,4 +28,19 @@
     {% endfor %}
     </tbody>
 </table>
+{% if manages_access %}
+<h2>Staff access</h2>
+<p style="font-size:0.9rem; color:#555;">Partners and managers see every client;
+STAFF users see only clients ticked for them here.</p>
+<form method="post" action="{% url 'clients:client-access' client.pk %}">
+    {% csrf_token %}
+    {% for u in staff_users %}
+    <label style="display:block;">
+        <input type="checkbox" name="staff" value="{{ u.pk }}"
+               {% if u.pk in granted_ids %}checked{% endif %}> {{ u.username }}
+    </label>
+    {% empty %}<p>No staff-role users in this firm yet.</p>{% endfor %}
+    {% if staff_users %}<button type="submit">Save access</button>{% endif %}
+</form>
+{% endif %}
 {% endblock %}
