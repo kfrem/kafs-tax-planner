@@ -766,6 +766,65 @@ def strategy_cgt_ppr_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.cgt_lettings_relief",
+    consumes=[
+        "cgt.lettings_relief",
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="Lettings relief on a shared-occupancy let (TCGA 1992 s.223B): where part "
+    "of the only or main residence is let as residential accommodation while the owner "
+    "also occupies another part, the let-portion gain is relieved by the lowest of the "
+    "letting gain, the private residence relief, and the 40,000 cap.",
+)
+def strategy_cgt_lettings_relief(facts: dict, tax_year: str) -> dict:
+    """Post-6-April-2020 lettings relief: available ONLY where the owner
+    shares occupancy with the tenant (TCGA 1992 s.223B; the pre-2020
+    let-after-moving-out relief was withdrawn). Modelled as a space-based
+    part-let of a residence occupied throughout ownership, with the let
+    fraction an entered fact. Time-apportioned mixed occupation (letting for
+    only part of the ownership period) is not composed in — see
+    DEVELOPER_HANDOVER §5.
+    """
+    gain = max(0.0, float(facts["disposal_gain"]))
+    let_fraction = min(1.0, max(0.0, float(facts.get("let_fraction", 0))))
+    earned_income = float(facts.get("earned_income", 0))
+
+    cap = get_parameter("cgt.lettings_relief", tax_year)["cap"]
+
+    # PPR covers the owner-occupied part; the let part is chargeable but
+    # reduced by lettings relief = lowest of (letting gain, PPR, cap).
+    ppr_relief = round(gain * (1 - let_fraction), 2)
+    letting_gain = round(gain * let_fraction, 2)
+    lettings_relief = round(min(cap, ppr_relief, letting_gain), 2)
+    chargeable = round(letting_gain - lettings_relief, 2)
+
+    with_relief = cgt_liability(
+        {"chargeable_gain": chargeable, "asset_type": "residential", "earned_income": earned_income},
+        tax_year,
+    )
+    without_lettings = cgt_liability(
+        {"chargeable_gain": letting_gain, "asset_type": "residential", "earned_income": earned_income},
+        tax_year,
+    )
+
+    return {
+        "total_gain": gain,
+        "private_residence_relief": ppr_relief,
+        "letting_gain": letting_gain,
+        "lettings_relief": lettings_relief,
+        "chargeable_gain_after_reliefs": chargeable,
+        "cgt_due": with_relief["tax_due"],
+        "cgt_without_lettings_relief": without_lettings["tax_due"],
+        "lettings_relief_tax_saving": round(
+            without_lettings["tax_due"] - with_relief["tax_due"], 2
+        ),
+    }
+
+
+@register(
     "strategy.cgt_spousal_transfer_before_disposal",
     consumes=[
         "cgt.annual_exempt_amount",
