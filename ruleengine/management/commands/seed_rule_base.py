@@ -673,6 +673,27 @@ class Command(BaseCommand):
                 release=release_property,
             ),
             dict(
+                code="cgt-business-asset-disposal-relief",
+                name="Business Asset Disposal Relief",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_business_asset_disposal_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="On a qualifying disposal of all or part of a "
+                "trading business, or of shares in a personal trading company, gains up to "
+                "a 1,000,000 lifetime limit are taxed at a reduced flat CGT rate (14% for "
+                "2025/26) instead of the standard 18%/24%. The qualifying conditions — a "
+                "two-year minimum ownership period and, for shares, a 5% personal-company "
+                "holding — must be met throughout that period. Gains above the lifetime "
+                "limit are taxed at the normal rate, so the relief is worth up to ten "
+                "percentage points on the first million pounds of qualifying gains.",
+                authority_keys=["tcga1992_s169h", "tcga1992_s1h"],
+                eligibility_conditions={"all": [
+                    {"path": "property.badr_qualifying_gain", "op": "gt", "value": 0},
+                ]},
+                release=release_property,
+            ),
+            dict(
                 code="sdlt-purchase-planning",
                 name="SDLT on planned property purchase",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
