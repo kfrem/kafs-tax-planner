@@ -68,6 +68,7 @@ class ClientFactSetForm(forms.Form):
         return {
             "personal": {
                 "other_income": data.get("other_income") or 0,
+                "employment_income": data.get("employment_income") or 0,
                 "salary_from_own_company": data.get("salary_from_own_company") or 0,
                 "dividends_from_own_company": data.get("dividends_from_own_company") or 0,
                 "spouse_income": data.get("spouse_income") or 0,
