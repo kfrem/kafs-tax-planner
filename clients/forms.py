@@ -12,7 +12,14 @@ class ClientForm(forms.ModelForm):
 class ClientFactSetForm(forms.Form):
     tax_year = forms.CharField(initial="2025/26", help_text="e.g. 2025/26")
 
-    other_income = forms.FloatField(initial=0, min_value=0, required=False)
+    other_income = forms.FloatField(
+        initial=0, min_value=0, required=False,
+        help_text="Non-employment income: rent, savings interest, etc.",
+    )
+    employment_income = forms.FloatField(
+        initial=0, min_value=0, required=False,
+        help_text="PAYE employment income from third-party employers.",
+    )
     salary_from_own_company = forms.FloatField(initial=0, min_value=0, required=False)
     dividends_from_own_company = forms.FloatField(initial=0, min_value=0, required=False)
     spouse_income = forms.FloatField(initial=0, min_value=0, required=False)
