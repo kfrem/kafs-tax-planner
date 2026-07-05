@@ -54,7 +54,7 @@ class Command(BaseCommand):
         ]
         for parameter in report["parameters"]:
             n += 1
-            lines.append(f"### {n}. {parameter['label']}  \n`{parameter['key']}` — {parameter['domain']} — release {parameter['release']}")
+            lines.append(f"### {n}. {parameter['label']}  \n`{parameter['key']}` — {parameter['domain']} — release {parameter['release']} — effective {parameter['effective']}")
             lines.extend(_fmt_payload(parameter["payload"]))
             for name, ok, detail in parameter["checks"]:
                 lines.append(f"- {'PASS' if ok else '**FAIL**'} — {name}{f' ({detail})' if detail else ''}")
