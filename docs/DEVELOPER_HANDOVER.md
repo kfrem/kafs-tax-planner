@@ -150,10 +150,14 @@ unresolved alerts. View layer and its staff-only access boundary are
 tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
 `TestOpenAlertBadge`).
 
-1. **CGT/SDLT depth** — 2024/25 intra-year CGT rates (needs intra-year
-   effective ranges), BADR, letting relief edge cases, Scottish
-   LBTT/Welsh LTT variants, disposal composition with the salary/dividend
-   whole-income picture.
+1. **CGT/SDLT depth** — **Business Asset Disposal Relief now built**
+   (`strategy.cgt_business_asset_disposal_relief`: 14% rate + £1m lifetime
+   limit as data, TCGA 1992 ss.169H-169S, golden case + hand-computed
+   tests in `test_property.py::TestBadr`, editorially signed off). Still
+   open: the 6 April 2026 BADR rate rise to 18% (a future data row, on the
+   watch-list); 2024/25 intra-year CGT rates (needs intra-year effective
+   ranges); letting-relief edge cases; Scottish LBTT / Welsh LTT variants;
+   disposal composition with the salary/dividend whole-income picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
