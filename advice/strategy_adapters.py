@@ -168,7 +168,8 @@ class MarriageAllowanceAdapter:
 def _earned_income(facts: dict) -> float:
     personal = facts.get("personal", {})
     return (
-        personal.get("other_income", 0)
+        personal.get("employment_income", 0)
+        + personal.get("other_income", 0)
         + personal.get("salary_from_own_company", 0)
         + facts.get("sole_trade", {}).get("annual_profit", 0)
     )
