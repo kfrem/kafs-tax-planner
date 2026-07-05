@@ -136,7 +136,20 @@ class Command(BaseCommand):
                 "reviewer": reviewer if mark_released else None,
             },
         )
-        return release_2024, release_2025, release_iht, release_property
+        release_2026, _ = RuleBaseRelease.objects.update_or_create(
+            version="2026.1",
+            defaults={
+                "changelog": "2026/27 scaffolding: Business Asset Disposal Relief rate rises "
+                "from 14% to 18% for disposals on or after 6 April 2026 (Finance Act 2025). "
+                "First future-tax-year release — other 2025/26 parameters carry forward on "
+                "their open effective ranges until a confirmed 2026/27 figure closes them.",
+                "effective_date": datetime.date(2026, 4, 6),
+                "status": status,
+                "editor": editor,
+                "reviewer": reviewer if mark_released else None,
+            },
+        )
+        return release_2024, release_2025, release_iht, release_property, release_2026
 
     def _create_authorities(self) -> dict[str, Authority]:
         specs = [
