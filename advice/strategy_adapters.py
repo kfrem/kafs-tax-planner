@@ -71,10 +71,12 @@ class SalaryDividendMixAdapter:
     def to_facts(facts: dict) -> dict:
         company = facts.get("company", {})
         personal = facts.get("personal", {})
-        # Whole-income view: sole-trade profit and other income fill the
-        # client's bands/taper before any extraction is layered on top.
+        # Whole-income view: employment income, sole-trade profit and other
+        # income fill the client's bands/taper before any extraction is
+        # layered on top.
         other_income = (
             personal.get("other_income", 0)
+            + personal.get("employment_income", 0)
             + facts.get("sole_trade", {}).get("annual_profit", 0)
         )
         return {
