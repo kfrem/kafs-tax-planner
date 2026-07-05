@@ -357,3 +357,42 @@ class TestEditorialQueueViews:
         assert "/admin/login" in response.url
         alert.refresh_from_db()
         assert alert.status == ChangeAlert.Status.NEW
+
+
+class TestOpenAlertBadge:
+    """The nav badge: a staff-only, cheap count of unresolved alerts, so
+    pending governance work is visible from any page."""
+
+    def _request_with(self, user):
+        return SimpleNamespace(user=user)
+
+    def test_count_for_staff_reflects_open_alerts(self, source, admin_user):
+        _open_alert(source)  # one open alert
+        ctx = open_alert_count(self._request_with(admin_user))
+        assert ctx["open_alert_count"] == 1
+
+    def test_resolved_alerts_are_not_counted(self, source, admin_user, seeded_rule_base):
+        alert = _open_alert(source)
+        alert.resolve(
+            admin_user, ChangeAlert.Status.DISMISSED, "Wording only, no rule impact."
+        )
+        ctx = open_alert_count(self._request_with(admin_user))
+        assert ctx["open_alert_count"] == 0
+
+    def test_zero_for_firm_user(self, source, staff_user):
+        _open_alert(source)  # exists, but a firm user must not see governance state
+        assert staff_user.is_staff is False
+        ctx = open_alert_count(self._request_with(staff_user))
+        assert ctx["open_alert_count"] == 0
+
+    def test_zero_for_anonymous(self, source):
+        _open_alert(source)
+        ctx = open_alert_count(self._request_with(AnonymousUser()))
+        assert ctx["open_alert_count"] == 0
+
+    def test_badge_rendered_in_nav_for_staff(self, source, admin_client):
+        _open_alert(source)
+        response = admin_client.get("/monitoring/")
+        body = response.content.decode()
+        # The count appears in a flag span attached to the Change Queue link.
+        assert 'title="Open editorial alerts">1</span>' in body
