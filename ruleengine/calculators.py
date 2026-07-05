@@ -906,6 +906,142 @@ def strategy_sdlt_purchase(facts: dict, tax_year: str) -> dict:
     }
 
 
+# --- Devolved land transaction taxes: Scotland (LBTT) and Wales (LTT) ---------
+#
+# Scotland and Wales set their own rates and bands under devolved statutes
+# (LBTT(S)A 2013 s.24; LTTA 2017 s.24), so the England/NI SDLT figures do not
+# apply there. LBTT mirrors SDLT's shape (progressive bands + a flat
+# Additional Dwelling Supplement + first-time buyer relief that raises the
+# nil-rate band). Wales charges additional dwellings through a *separate*
+# higher-rate band table rather than a flat surcharge, and has no first-time
+# buyer relief.
+
+
+def _progressive_tax(price: float, bands: list) -> float:
+    """Sum each price slice at its band rate. ``bands`` is a list of
+    ``{"upper": threshold_or_None, "rate": fraction}`` in ascending order;
+    the final band uses ``upper: None`` for 'no ceiling'."""
+    tax = 0.0
+    lower = 0.0
+    for band in bands:
+        upper = band["upper"] if band["upper"] is not None else price
+        if price > lower:
+            tax += (min(price, upper) - lower) * band["rate"]
+        lower = upper
+    return round(tax, 2)
+
+
+@register(
+    "lbtt_residential",
+    consumes=["lbtt.residential_bands"],
+    description="Land and Buildings Transaction Tax on a Scottish residential purchase: "
+    "progressive bands, the Additional Dwelling Supplement on the whole price for "
+    "additional dwellings, and first-time buyer relief which raises the nil-rate band "
+    "(LBTT(S)A 2013 s.24).",
+)
+def lbtt_residential(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts.get("price", 0)))
+    additional = bool(facts.get("additional_dwelling", False))
+    first_time_buyer = bool(facts.get("first_time_buyer", False))
+
+    param = get_parameter("lbtt.residential_bands", tax_year)
+    bands = param["bands"]
+
+    # First-time buyer relief raises the 0% band to the FTB threshold; the
+    # remaining bands are unchanged (worth up to 600 for buyers above it).
+    ftb_applies = first_time_buyer and not additional
+    if ftb_applies:
+        threshold = param["first_time_buyer_nil_rate_threshold"]
+        bands = [{"upper": threshold, "rate": 0.0}] + [
+            b for b in bands if b["upper"] is None or b["upper"] > threshold
+        ]
+
+    banded = _progressive_tax(price, bands)
+    supplement = (
+        round(price * param["additional_dwelling_supplement"], 2) if additional else 0.0
+    )
+
+    return {
+        "price": price,
+        "first_time_buyer_relief_applied": ftb_applies,
+        "banded_lbtt": banded,
+        "additional_dwelling_supplement": supplement,
+        "total_lbtt": round(banded + supplement, 2),
+    }
+
+
+@register(
+    "ltt_residential",
+    consumes=["ltt.residential_bands"],
+    description="Land Transaction Tax on a Welsh residential purchase: the main "
+    "residential bands, or the separate higher-rate bands where the purchase is an "
+    "additional dwelling. Wales has no first-time buyer relief (LTTA 2017 s.24).",
+)
+def ltt_residential(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts.get("price", 0)))
+    additional = bool(facts.get("additional_dwelling", False))
+
+    param = get_parameter("ltt.residential_bands", tax_year)
+    bands = param["higher_bands"] if additional else param["main_bands"]
+
+    return {
+        "price": price,
+        "additional_dwelling": additional,
+        "total_ltt": _progressive_tax(price, bands),
+    }
+
+
+@register(
+    "strategy.lbtt_purchase_planning",
+    consumes=["lbtt.residential_bands"],
+    description="LBTT cost of a planned Scottish residential purchase: banded charge, the "
+    "Additional Dwelling Supplement exposure, and first-time buyer relief.",
+)
+def strategy_lbtt_purchase(facts: dict, tax_year: str) -> dict:
+    price = float(facts["price"])
+    additional = bool(facts.get("additional_dwelling", False))
+    first_time_buyer = bool(facts.get("first_time_buyer", False))
+
+    as_planned = lbtt_residential(
+        {"price": price, "additional_dwelling": additional, "first_time_buyer": first_time_buyer},
+        tax_year,
+    )
+    without_supplement = lbtt_residential(
+        {"price": price, "additional_dwelling": False, "first_time_buyer": first_time_buyer},
+        tax_year,
+    )
+
+    return {
+        "as_planned": as_planned,
+        "supplement_cost_of_additional_dwelling": round(
+            as_planned["total_lbtt"] - without_supplement["total_lbtt"], 2
+        ),
+    }
+
+
+@register(
+    "strategy.ltt_purchase_planning",
+    consumes=["ltt.residential_bands"],
+    description="LTT cost of a planned Welsh residential purchase: the main-rate charge "
+    "and, where an additional dwelling, the extra cost of the separate higher-rate bands.",
+)
+def strategy_ltt_purchase(facts: dict, tax_year: str) -> dict:
+    price = float(facts["price"])
+    additional = bool(facts.get("additional_dwelling", False))
+
+    as_planned = ltt_residential(
+        {"price": price, "additional_dwelling": additional}, tax_year
+    )
+    at_main_rates = ltt_residential({"price": price, "additional_dwelling": False}, tax_year)
+
+    return {
+        "as_planned": as_planned,
+        "additional_property_cost": round(
+            as_planned["total_ltt"] - at_main_rates["total_ltt"], 2
+        ),
+    }
+
+
 # --- Inheritance tax ----------------------------------------------------------
 
 
