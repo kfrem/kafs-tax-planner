@@ -978,6 +978,21 @@ class Command(BaseCommand):
                                  "total_sdlt": 25000.0},
             ),
             dict(
+                calculator_key="lbtt_residential",
+                description="Standard Scottish residential purchase at 350,000, 2025/26",
+                source="Hand-computed: 145,000 at 0% + 105,000 at 2% (2,100) + 75,000 at "
+                "5% (3,750) + 25,000 at 10% (2,500) = 8,350",
+                input_facts={"price": 350000},
+                expected_output={"banded_lbtt": 8350.0, "total_lbtt": 8350.0},
+            ),
+            dict(
+                calculator_key="ltt_residential",
+                description="Standard Welsh residential purchase at 400,000, main rates, 2025/26",
+                source="Hand-computed: 225,000 at 0% + 175,000 at 6% (10,500) = 10,500",
+                input_facts={"price": 400000},
+                expected_output={"total_ltt": 10500.0},
+            ),
+            dict(
                 calculator_key="strategy.pension_annual_allowance_carry_forward",
                 description="Owner-manager: desired contribution exceeds relevant earnings; employer route quantified, 2025/26",
                 source="Hand-computed: desired 40,000 vs relevant earnings 28,000 -> relievable "
