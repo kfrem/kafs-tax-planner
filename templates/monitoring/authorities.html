@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Authority status workflow{% endblock %}
+{% block content %}
+<h1>Authority status workflow</h1>
+<p class="disclaimer">
+    When a decision doubts or overrules a cited authority, record it here with the
+    citation of the new decision. The change is logged append-only, every dependent
+    strategy is flagged, an editorial queue item is raised — and the expert panel
+    will block approval of any advice that cites an overruled authority.
+</p>
+<p><a href="{% url 'monitoring:queue' %}">&larr; Editorial change queue</a></p>
+
+<table>
+    <tr><th>Authority</th><th>Type</th><th>Status</th><th>Dependent strategies</th><th>Last change</th><th>Change status</th></tr>
+    {% for row in rows %}
+    <tr {% if row.authority.needs_review %}style="background:#fdf2f2;"{% endif %}>
+        <td><a href="{{ row.authority.canonical_uri }}" target="_blank" rel="noopener">{{ row.authority.canonical_citation }}</a></td>
+        <td>{{ row.authority.get_authority_type_display }}</td>
+        <td><strong>{{ row.authority.get_status_display }}</strong></td>
+        <td>
+            {% for s in row.strategies %}{{ s.name }} [{{ s.risk_status }}]{% if not forloop.last %};<br>{% endif %}{% empty %}—{% endfor %}
+        </td>
+        <td>
+            {% if row.last_change %}
+                {{ row.last_change.old_status }} &rarr; {{ row.last_change.new_status }}
+                ({{ row.last_change.changed_at|date:"d M Y" }}, {{ row.last_change.changed_by }})<br>
+                <em style="font-size:0.8rem;">{{ row.last_change.reason|truncatechars:90 }}</em>
+            {% else %}—{% endif %}
+        </td>
+        <td>
+            <form method="post" action="{% url 'monitoring:authority-status' row.authority.pk %}">
+                {% csrf_token %}
+                <select name="new_status">
+                    {% for value, label in statuses %}
+                    <option value="{{ value }}" {% if value == row.authority.status %}disabled{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select><br>
+                <input name="reason" style="width:100%; margin-top:2px;"
+                       placeholder="Reason + citation of the prompting decision (required)">
+                <button type="submit" style="margin-top:2px;">Record</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
