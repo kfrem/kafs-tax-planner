@@ -225,6 +225,17 @@ class Command(BaseCommand):
                 "from 6 April 2023).",
             ),
             dict(
+                key="tcga1992_s169h",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 ss.169H-169S",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/169H",
+                verbatim_extract="Business Asset Disposal Relief: a qualifying business "
+                "disposal (s.169I) is charged to capital gains tax at the reduced rate in "
+                "s.169N, subject to a 1,000,000 lifetime limit on qualifying gains. The "
+                "reduced rate is 14% for disposals on or after 6 April 2025 (10% before "
+                "that date; 18% from 6 April 2026).",
+            ),
+            dict(
                 key="tcga1992_s222",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Taxation of Chargeable Gains Act 1992 ss.222-223",
