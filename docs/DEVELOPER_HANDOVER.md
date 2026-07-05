@@ -135,6 +135,12 @@ Property / CGT:
   (two-year ownership, 5% personal-company holding for shares) are assumed
   met, being a matter for the adviser. No composition yet with a
   concurrent non-BADR disposal in the same year.
+- Lettings relief models the post-2020 shared-occupancy case as a
+  space-based part-let of a residence occupied throughout ownership (the
+  let fraction is an entered fact). Time-apportioned mixed occupation
+  (letting for only part of the period) and non-shared-occupancy periods
+  are out of scope — the latter correctly attract no relief since 6 April
+  2020.
 - Devolved land taxes cover *residential* purchases only: Scottish LBTT
   (bands, 8% ADS, FTB relief) and Welsh LTT (main + separate higher-rate
   table, no FTB). Non-residential/mixed LBTT and LTT, LBTT lease
