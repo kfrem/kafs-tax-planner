@@ -6,7 +6,6 @@ relief. All expected values hand-computed from published 2025/26 rates.
 
 import pytest
 
-from ruleengine.engine import get_parameter
 from ruleengine.calculators import (
     cgt_liability,
     lbtt_residential,
