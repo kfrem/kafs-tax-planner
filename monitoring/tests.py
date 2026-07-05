@@ -165,6 +165,50 @@ class TestEditorialWorkflow:
         assert alert.resolved_at is not None
 
 
+class TestAuthorityStatusWorkflow:
+    def test_change_requires_reason_and_logs_append_only(self, seeded_rule_base, staff_user):
+        from authority.models import AuthorityStatusChange, record_status_change
+
+        jones = Authority.objects.get(canonical_citation__startswith="Jones v Garnett")
+        with pytest.raises(ValueError, match="requires a reason"):
+            record_status_change(jones, staff_user, Authority.Status.DOUBTED, "  ")
+
+        change = record_status_change(
+            jones, staff_user, Authority.Status.DOUBTED,
+            "Hypothetical UT decision doubting the s.626 exemption scope.",
+        )
+        jones.refresh_from_db()
+        assert jones.status == Authority.Status.DOUBTED
+        assert change.old_status == Authority.Status.IN_FORCE
+        with pytest.raises(ValueError):
+            change.save()  # append-only
+        with pytest.raises(ValueError):
+            change.delete()
+        assert AuthorityStatusChange.objects.count() == 1
+
+    def test_same_status_rejected(self, seeded_rule_base, staff_user):
+        from authority.models import record_status_change
+
+        jones = Authority.objects.get(canonical_citation__startswith="Jones v Garnett")
+        with pytest.raises(ValueError, match="already has that status"):
+            record_status_change(jones, staff_user, Authority.Status.IN_FORCE, "no-op")
+
+    def test_status_change_raises_editorial_alert_via_view(self, seeded_rule_base, admin_client):
+        call_command("seed_watched_sources")
+        jones = Authority.objects.get(canonical_citation__startswith="Jones v Garnett")
+        response = admin_client.post(
+            f"/monitoring/authorities/{jones.pk}/status/",
+            {"new_status": "overruled", "reason": "Hypothetical SC decision [2027] UKSC 1."},
+        )
+        assert response.status_code == 302
+        jones.refresh_from_db()
+        assert jones.status == Authority.Status.OVERRULED
+        alert = ChangeAlert.objects.get(source__authority=jones)
+        assert "overruled" in alert.diff_excerpt
+        codes = {s.code for s in alert.dependent_strategies()}
+        assert "salary-dividend-mix" in codes
+
+
 class TestImpactAndSeeding:
     def test_seed_watched_sources_covers_authorities(self, seeded_rule_base):
         call_command("seed_watched_sources")
