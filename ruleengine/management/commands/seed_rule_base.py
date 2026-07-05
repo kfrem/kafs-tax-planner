@@ -523,7 +523,7 @@ class Command(BaseCommand):
                     introduced_in_release=release_iht,
                 )
 
-    def _create_property_parameters(self, release_property):
+    def _create_property_parameters(self, release_property, release_2026):
         # 2025/26 onward only: the 2024/25 CGT year had mid-year rate changes
         # (30 Oct 2024) that the effective-dating model would need intra-year
         # ranges to represent honestly; deferred until prior-year CGT
@@ -536,9 +536,6 @@ class Command(BaseCommand):
             ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
              {"residential": {"lower": 0.18, "higher": 0.24},
               "other": {"lower": 0.18, "higher": 0.24}}),
-            ("cgt.business_asset_disposal_relief",
-             "Business Asset Disposal Relief: reduced CGT rate and lifetime limit",
-             {"rate": 0.14, "lifetime_limit": 1000000}),
             ("cgt.lettings_relief",
              "Lettings relief cap (shared-occupancy let, TCGA 1992 s.223B)",
              {"cap": 40000}),
