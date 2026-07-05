@@ -9,5 +9,7 @@ urlpatterns = [
     path("<int:pk>/", views.advice_detail, name="advice-detail"),
     path("<int:pk>/panel/", views.panel_deploy, name="panel-deploy"),
     path("<int:pk>/decide/", views.advice_decide, name="advice-decide"),
+    path("impact/", views.impact_alerts, name="impact-alerts"),
+    path("impact/<int:pk>/review/", views.impact_alert_review, name="impact-alert-review"),
     path("client/<int:client_id>/", views.advice_list, name="advice-list"),
 ]
