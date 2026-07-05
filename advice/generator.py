@@ -48,44 +48,52 @@ def _authority_snapshot(strategy: Strategy) -> list[dict]:
     ]
 
 
-def generate_advice(client, fact_set, user) -> AdviceRecord:
-    tax_year = fact_set.tax_year
+def compute_strategy_results(facts: dict, tax_year: str) -> list[dict]:
+    """The pure computation shared by advice generation and scenario
+    modelling: eligibility, quantification, citations, flags. Reads the
+    released rule base; writes nothing."""
     as_of = anchor_date(tax_year)
-    release = _current_rule_base_release()
-
     strategies = Strategy.objects.filter(effective_range__contains=as_of).prefetch_related(
         "authorities"
     )
 
     results = []
+    for strategy in strategies:
+        adapter = ADAPTERS.get(strategy.calculator_key)
+        if adapter is None or not adapter.is_eligible(facts):
+            continue
+
+        calculator = CALCULATOR_REGISTRY.get(strategy.calculator_key)
+        if calculator is None:
+            continue
+
+        calc_facts = adapter.to_facts(facts)
+        with parameter_cache():
+            quantification = calculator(calc_facts, tax_year)
+
+        results.append(
+            {
+                "strategy_code": strategy.code,
+                "strategy_name": strategy.name,
+                "tax_domain": strategy.tax_domain,
+                "explanation": strategy.plain_english_explanation,
+                "timeframe": strategy.timeframe,
+                "risk_status": strategy.risk_status,
+                "dotas_notifiable": strategy.dotas_notifiable,
+                "gaar_exposure": strategy.gaar_exposure,
+                "authorities": _authority_snapshot(strategy),
+                "quantification": quantification,
+            }
+        )
+    return results
+
+
+def generate_advice(client, fact_set, user) -> AdviceRecord:
+    tax_year = fact_set.tax_year
+    release = _current_rule_base_release()
+
     with parameter_provenance() as parameter_log:
-        for strategy in strategies:
-            adapter = ADAPTERS.get(strategy.calculator_key)
-            if adapter is None or not adapter.is_eligible(fact_set.facts):
-                continue
-
-            calculator = CALCULATOR_REGISTRY.get(strategy.calculator_key)
-            if calculator is None:
-                continue
-
-            calc_facts = adapter.to_facts(fact_set.facts)
-            with parameter_cache():
-                quantification = calculator(calc_facts, tax_year)
-
-            results.append(
-                {
-                    "strategy_code": strategy.code,
-                    "strategy_name": strategy.name,
-                    "tax_domain": strategy.tax_domain,
-                    "explanation": strategy.plain_english_explanation,
-                    "timeframe": strategy.timeframe,
-                    "risk_status": strategy.risk_status,
-                    "dotas_notifiable": strategy.dotas_notifiable,
-                    "gaar_exposure": strategy.gaar_exposure,
-                    "authorities": _authority_snapshot(strategy),
-                    "quantification": quantification,
-                }
-            )
+        results = compute_strategy_results(fact_set.facts, tax_year)
 
     parameters_used = sorted(parameter_log.values(), key=lambda m: (m["key"], m["tax_year"]))
 
