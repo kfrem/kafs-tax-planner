@@ -6,6 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
+from authority.models import Authority, record_status_change
 from ruleengine.models import RuleBaseRelease
 
 from .models import ChangeAlert, WatchedSource

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -62,3 +63,65 @@ class Authority(models.Model):
     @property
     def needs_review(self):
         return self.status in (self.Status.OVERRULED, self.Status.DOUBTED, self.Status.SUPERSEDED)
+
+
+class AuthorityStatusChange(models.Model):
+    """Append-only log of authority status changes (the case-law
+    workflow): when a tribunal or court decision doubts or overrules a
+    cited authority, the tax editor records it here with reasons, and
+    every dependent strategy becomes reviewable by query. The change
+    itself never silently alters advice — the expert panel blocks
+    approval of advice citing an overruled authority, and the editorial
+    process re-reviews dependent strategies."""
+
+    authority = models.ForeignKey(
+        Authority, on_delete=models.CASCADE, related_name="status_changes"
+    )
+    old_status = models.CharField(max_length=20, choices=Authority.Status.choices)
+    new_status = models.CharField(max_length=20, choices=Authority.Status.choices)
+    reason = models.TextField(
+        help_text="Required: the decision/instrument prompting the change, with citation."
+    )
+    changed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="authority_status_changes"
+    )
+    changed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-changed_at"]
+
+    def __str__(self):
+        return f"{self.authority}: {self.old_status} -> {self.new_status} ({self.changed_at:%Y-%m-%d})"
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("AuthorityStatusChange is append-only.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("AuthorityStatusChange cannot be deleted; it is audit history.")
+
+
+def record_status_change(authority: Authority, user, new_status: str, reason: str):
+    """The one sanctioned way to change an authority's status: validates,
+    logs append-only, applies. Returns the log entry."""
+    if new_status not in Authority.Status.values:
+        raise ValueError(f"Unknown authority status: {new_status!r}")
+    if not reason.strip():
+        raise ValueError(
+            "A status change requires a reason citing the decision or instrument "
+            "that prompted it."
+        )
+    if new_status == authority.status:
+        raise ValueError("The authority already has that status.")
+    change = AuthorityStatusChange(
+        authority=authority,
+        old_status=authority.status,
+        new_status=new_status,
+        reason=reason,
+        changed_by=user,
+    )
+    change.save()
+    authority.status = new_status
+    authority.save(update_fields=["status"])
+    return change
