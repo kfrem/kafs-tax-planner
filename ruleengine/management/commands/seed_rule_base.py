@@ -511,6 +511,9 @@ class Command(BaseCommand):
             ("cgt.business_asset_disposal_relief",
              "Business Asset Disposal Relief: reduced CGT rate and lifetime limit",
              {"rate": 0.14, "lifetime_limit": 1000000}),
+            ("cgt.lettings_relief",
+             "Lettings relief cap (shared-occupancy let, TCGA 1992 s.223B)",
+             {"cap": 40000}),
             ("sdlt.residential_bands", "SDLT residential bands, surcharge, FTB relief (England/NI)",
              {"bands": [
                  {"upper": 125000, "rate": 0.0},
