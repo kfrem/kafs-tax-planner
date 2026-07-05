@@ -125,6 +125,17 @@ Pension:
   modelled; the annual-allowance excess is reported as a charge *basis*,
   not converted to a charge at marginal rate.
 
+Property / CGT:
+- Business Asset Disposal Relief: qualifying gains *above* the £1m
+  lifetime limit are charged at the standard higher non-residential rate
+  (24% in 2025/26), not band-split — correct whenever qualifying gains
+  reach the basic-rate band (the normal case) and conservative otherwise;
+  the annual exempt amount is set against the relieved gain (conservative
+  where an unrelieved excess exists); the qualifying conditions
+  (two-year ownership, 5% personal-company holding for shares) are assumed
+  met, being a matter for the adviser. No composition yet with a
+  concurrent non-BADR disposal in the same year.
+
 IHT:
 - No BPR/APR, settled property, foreign assets, GWR detection, or
   s.38 grossing-up; 36% baseline is (net estate − spouse − NRB) without
