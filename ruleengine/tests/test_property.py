@@ -282,6 +282,33 @@ class TestLbtt:
         assert result["as_planned"]["total_lbtt"] == approx(36350.0)
 
 
+class TestNonResidentialLandTax:
+    # A £500,000 commercial freehold, charged three different ways.
+    def test_sdlt_non_residential(self):
+        # England/NI: 150,000 @ 0% + 100,000 @ 2% (2,000) + 250,000 @ 5%
+        # (12,500) = 14,500.
+        result = strategy_sdlt_non_residential_purchase({"price": 500000}, TAX_YEAR)
+        assert result["total_sdlt"] == approx(14500.0)
+
+    def test_lbtt_non_residential(self):
+        # Scotland: 150,000 @ 0% + 100,000 @ 1% (1,000) + 250,000 @ 5%
+        # (12,500) = 13,500 (the 1% middle band undercuts England's 2%).
+        result = strategy_lbtt_non_residential_purchase({"price": 500000}, TAX_YEAR)
+        assert result["total_lbtt"] == approx(13500.0)
+
+    def test_ltt_non_residential(self):
+        # Wales: 225,000 @ 0% + 25,000 @ 1% (250) + 250,000 @ 5% (12,500) =
+        # 12,750 (higher nil-rate threshold).
+        result = strategy_ltt_non_residential_purchase({"price": 500000}, TAX_YEAR)
+        assert result["total_ltt"] == approx(12750.0)
+
+    def test_ltt_non_residential_top_band(self):
+        # Wales at 1,500,000 exercises the 6% top band: 225,000 @ 0% + 25,000
+        # @ 1% (250) + 750,000 @ 5% (37,500) + 500,000 @ 6% (30,000) = 67,750.
+        result = strategy_ltt_non_residential_purchase({"price": 1500000}, TAX_YEAR)
+        assert result["total_ltt"] == approx(67750.0)
+
+
 class TestLtt:
     def test_main_rates_purchase(self):
         # Wales main rates, 400,000: 225,000 @ 0% + 175,000 @ 6% = 10,500.
