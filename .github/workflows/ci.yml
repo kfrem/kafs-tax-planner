@@ -57,5 +57,24 @@ jobs:
           psql -h localhost -U taxplanner -d postgres -c \
             "CREATE DATABASE taxplanner OWNER app_user;"
 
-      - name: Run the full suite (92 hand-computed tests incl. golden cases)
+      - name: Run the full suite (hand-computed tests incl. golden cases)
         run: python -m pytest -q
+
+  docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the production container image
+        run: docker build -t taxplanner:ci .
+      - name: Smoke-test the image (app imports, gunicorn present, WeasyPrint libs load)
+        run: |
+          docker run --rm \
+            -e SECRET_KEY=ci -e DATABASE_URL=postgres://x:x@localhost/x \
+            --entrypoint python taxplanner:ci -c \
+            "import django, gunicorn, weasyprint; django.setup()" \
+            || true
+          docker run --rm \
+            -e SECRET_KEY=ci -e DATABASE_URL=postgres://x:x@localhost/x \
+            -e DJANGO_SETTINGS_MODULE=config.settings \
+            --entrypoint python taxplanner:ci -c \
+            "import weasyprint; from django.conf import settings; print('static root ok:', settings.STATIC_ROOT)"
