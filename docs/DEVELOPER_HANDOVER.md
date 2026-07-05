@@ -175,12 +175,15 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    ADS and FTB relief, Wales's separate higher-rate table and no FTB, LBTT(S)A
    2013 s.24 / LTTA 2017 s.24, golden cases + `TestLbtt` / `TestLtt`; the
    SDLT strategy is now gated to England/NI and `property.jurisdiction`
-   routes the charge). Both editorially signed off. Still open: the
+   routes the charge); and **lettings relief**
+   (`strategy.cgt_lettings_relief`: post-2020 shared-occupancy lowest-of-
+   three with the £40k cap as data, TCGA 1992 s.223B, HS283 golden case +
+   `TestLettingsRelief`). All editorially signed off. Still open: the
    6 April 2026 BADR rate rise to 18% (a future data row, on the
    watch-list); 2024/25 intra-year CGT rates (needs intra-year effective
-   ranges); letting-relief edge cases; non-residential LBTT/LTT bands and
-   Scottish/Welsh commercial leases; disposal composition with the
-   salary/dividend whole-income picture.
+   ranges); non-residential LBTT/LTT bands and Scottish/Welsh commercial
+   leases; disposal composition with the salary/dividend whole-income
+   picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
