@@ -154,6 +154,7 @@ class MarriageAllowanceAdapter:
         personal = facts.get("personal", {})
         transferor_income = (
             personal.get("other_income", 0)
+            + personal.get("employment_income", 0)
             + personal.get("salary_from_own_company", 0)
             + personal.get("dividends_from_own_company", 0)
             + facts.get("sole_trade", {}).get("annual_profit", 0)
