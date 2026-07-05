@@ -307,6 +307,23 @@ class TestFutureYearBadr:
         assert r26["cgt_with_badr"] == approx(89460.0)
         assert r26["saving"] == approx(29820.0)
 
+    def test_unapproved_2026_release_is_invisible_to_the_engine(self):
+        # Four-eyes governance across the year boundary: until the editor
+        # approves the 2026.1 release, the 18% row must not influence advice.
+        # The 2025/26 row is closed at 6 April 2026, so with 2026.1 in draft
+        # there is NO released BADR row for 2026/27 and the engine refuses
+        # rather than silently reusing last year's rate.
+        from ruleengine.engine import RuleNotFoundError
+        from ruleengine.models import RuleBaseRelease
+
+        RuleBaseRelease.objects.filter(version="2026.1").update(
+            status=RuleBaseRelease.Status.DRAFT
+        )
+        with pytest.raises(RuleNotFoundError):
+            get_parameter("cgt.business_asset_disposal_relief", "2026/27")
+        # 2025/26 advice is unaffected.
+        assert get_parameter("cgt.business_asset_disposal_relief", "2025/26")["rate"] == 0.14
+
 
 class TestNonResidentialLandTax:
     # A £500,000 commercial freehold, charged three different ways.
