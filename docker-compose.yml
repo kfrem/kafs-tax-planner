@@ -1,1 +1,43 @@
-> /dev/null
+# Full local/self-hosted stack: the app container plus PostgreSQL 16 with
+# the NON-superuser app role (row-level security depends on the app not
+# connecting as a superuser — see README "Getting started").
+#
+#   docker compose up --build
+#   docker compose exec app python manage.py seed_rule_base --release
+#   docker compose exec app python manage.py seed_watched_sources
+#   -> http://localhost:8000
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: taxplanner
+      POSTGRES_PASSWORD: taxplanner_dev_pw
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/init-app-user.sql:/docker-entrypoint-initdb.d/01-app-user.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxplanner"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://app_user:app_user_dev_pw@db:5432/taxplanner
+      SECRET_KEY: compose-dev-only-change-me
+      DEBUG: "false"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    ports:
+      - "8000:8000"
+    volumes:
+      - media:/app/media
+
+volumes:
+  pgdata:
+  media:
