@@ -309,6 +309,17 @@ class Command(BaseCommand):
                 "the taper threshold.",
             ),
             dict(
+                # Added at editorial review (05/07/2026): s.8A transfers the
+                # ordinary NRB; the parallel RNRB transfer needed citing too.
+                key="ihta1984_s8g",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Inheritance Tax Act 1984 s.8G",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/section/8G",
+                verbatim_extract="Transfer of any unused residence nil-rate amount to a "
+                "surviving spouse or civil partner, by claim, mirroring the s.8A transfer "
+                "of the ordinary nil-rate band.",
+            ),
+            dict(
                 key="ihta1984_s19",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Inheritance Tax Act 1984 s.19",
