@@ -228,3 +228,131 @@ class TestImpactAndSeeding:
         alert = check_source(watched, fetcher=fetcher_returning("holding v2"))
         codes = {s.code for s in alert.dependent_strategies()}
         assert "salary-dividend-mix" in codes
+
+
+def _open_alert(source):
+    """Baseline then change a source so it carries exactly one open alert."""
+    check_source(source, fetcher=fetcher_returning("baseline text"))
+    return check_source(source, fetcher=fetcher_returning("changed text"))
+
+
+class TestEditorialQueueViews:
+    """The HTTP layer of the editorial queue: rendering, the resolve
+    workflow driven through the form, its failure modes surfaced as
+    messages rather than exceptions, and the staff-only access boundary
+    (this is rule-base governance, not firm workspace)."""
+
+    def test_queue_renders_open_alert_for_staff(self, source, admin_client):
+        _open_alert(source)
+        response = admin_client.get("/monitoring/")
+        assert response.status_code == 200
+        body = response.content.decode()
+        # Header count reflects exactly the one open alert we created.
+        assert "Open alerts (1)" in body
+        assert source.label in body
+
+    def test_queue_hidden_from_firm_user(self, client, staff_user):
+        # A firm staff member (role STAFF, is_staff False) is not the
+        # rule-base reviewer: staff_member_required must bounce them.
+        assert staff_user.is_staff is False
+        client.force_login(staff_user)
+        response = client.get("/monitoring/")
+        assert response.status_code == 302
+        assert "/admin/login" in response.url
+
+    def test_queue_redirects_anonymous(self, client):
+        response = client.get("/monitoring/")
+        assert response.status_code == 302
+        assert "/admin/login" in response.url
+
+    def test_authorities_page_renders_for_staff(self, seeded_rule_base, admin_client):
+        response = admin_client.get("/monitoring/authorities/")
+        assert response.status_code == 200
+        body = response.content.decode()
+        # A seeded authority and one of its dependent strategies are shown.
+        assert "Jones v Garnett" in body
+        assert "salary-dividend" in body.lower()
+
+    def test_action_mark_under_review_via_view(self, source, admin_client):
+        alert = _open_alert(source)
+        response = admin_client.post(
+            f"/monitoring/alert/{alert.pk}/action/", {"action": "under_review"}
+        )
+        assert response.status_code == 302
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.UNDER_REVIEW
+        assert alert.reviewed_by is not None
+
+    def test_action_dismiss_with_notes_via_view(self, source, admin_client):
+        alert = _open_alert(source)
+        response = admin_client.post(
+            f"/monitoring/alert/{alert.pk}/action/",
+            {"action": "dismissed", "notes": "Checked source: wording change only, no rule impact."},
+            follow=True,
+        )
+        assert response.status_code == 200
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.DISMISSED
+        assert alert.resolved_at is not None
+
+    def test_action_dismiss_without_notes_is_refused_via_view(self, source, admin_client):
+        # C3 failure mode through the view: the model's notes requirement
+        # must surface as an error message, not a 500, and leave the alert
+        # open.
+        alert = _open_alert(source)
+        response = admin_client.post(
+            f"/monitoring/alert/{alert.pk}/action/",
+            {"action": "dismissed", "notes": "   "},
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert b"requires notes" in response.content
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.NEW
+
+    def test_action_actioned_records_release_via_view(self, source, seeded_rule_base, admin_client):
+        alert = _open_alert(source)
+        release = RuleBaseRelease.objects.first()
+        response = admin_client.post(
+            f"/monitoring/alert/{alert.pk}/action/",
+            {
+                "action": "actioned",
+                "notes": "Rate corrected under this release after checking legislation.gov.uk.",
+                "release": str(release.pk),
+            },
+            follow=True,
+        )
+        assert response.status_code == 200
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.ACTIONED
+        assert alert.actioned_in_release == release
+
+    def test_action_actioned_without_release_is_refused_via_view(self, source, admin_client):
+        # An actioned alert must name the release that carries the change;
+        # omitting it is refused and the alert stays open.
+        alert = _open_alert(source)
+        response = admin_client.post(
+            f"/monitoring/alert/{alert.pk}/action/",
+            {"action": "actioned", "notes": "Verified, fix pending."},
+            follow=True,
+        )
+        assert response.status_code == 200
+        assert b"release" in response.content
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.NEW
+
+    def test_alert_action_rejects_get(self, source, admin_client):
+        alert = _open_alert(source)
+        response = admin_client.get(f"/monitoring/alert/{alert.pk}/action/")
+        assert response.status_code == 405
+
+    def test_alert_action_hidden_from_firm_user(self, source, client, staff_user):
+        alert = _open_alert(source)
+        client.force_login(staff_user)
+        response = client.post(
+            f"/monitoring/alert/{alert.pk}/action/", {"action": "under_review"}
+        )
+        assert response.status_code == 302
+        assert "/admin/login" in response.url
+        alert.refresh_from_db()
+        assert alert.status == ChangeAlert.Status.NEW
