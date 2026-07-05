@@ -216,6 +216,22 @@ class CgtSpousalTransferAdapter:
         }
 
 
+@adapter("strategy.cgt_business_asset_disposal_relief")
+class CgtBadrAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("property", {}).get("badr_qualifying_gain", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "disposal_gain": prop.get("badr_qualifying_gain", 0),
+            "earned_income": _earned_income(facts),
+            "badr_lifetime_limit_used": prop.get("badr_lifetime_limit_used", 0),
+        }
+
+
 @adapter("strategy.sdlt_purchase_planning")
 class SdltPurchasePlanningAdapter:
     @staticmethod
