@@ -1,6 +1,6 @@
 # Rule-base review pack — editorial sign-off
 
-Generated 05 July 2026. Machine pre-check: **0 failed checks** across 18 parameters, 10 strategies, 25 authorities.
+Generated 05 July 2026. Machine pre-check: **0 failed checks** across 18 parameters, 10 strategies, 26 authorities.
 
 **How to approve:** read each numbered item; the primary source is one
 click away. Reply YES to approve all items, or list the item numbers you
@@ -89,7 +89,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
-- Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
 ### 8. Dividend allowance  
 `dividend_tax.allowance` — personal_income_tax — release 2025.1
@@ -143,7 +143,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
-- Source cross-reference: 100,000 appears in: Income Tax Act 2007 s.35; Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 100,000 appears in: Income Tax Act 2007 s.35; Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
 ### 13. Class 4 NIC (self-employed)  
 `national_insurance.class4` — personal_income_tax — release 2025.1
@@ -289,9 +289,10 @@ rule-base release, with your name and the date.
 - Authority: [Inheritance Tax Act 1984 s.18](https://www.legislation.gov.uk/ukpga/1984/51/section/18) (in_force)
 - Authority: [Inheritance Tax Act 1984 s.8A](https://www.legislation.gov.uk/ukpga/1984/51/section/8A) (in_force)
 - Authority: [Inheritance Tax Act 1984 s.8D](https://www.legislation.gov.uk/ukpga/1984/51/section/8D) (in_force)
+- Authority: [Inheritance Tax Act 1984 s.8G](https://www.legislation.gov.uk/ukpga/1984/51/section/8G) (in_force)
 - PASS — calculator registered (strategy.iht_spousal_transfer_nil_rate_bands)
 - PASS — adapter registered
-- PASS — has legal authorities (3 cited)
+- PASS — has legal authorities (4 cited)
 - PASS — plain-English explanation present (502 chars)
 - PASS — risk status set (settled)
 - PASS — timeframe set (long)
@@ -299,7 +300,7 @@ rule-base release, with your name and the date.
 ### 24. Marriage Allowance transfer  
 `marriage-allowance-transfer` — personal_income_tax — risk **settled**, timeframe short
 > Where one spouse or civil partner does not use their full personal allowance and the other is a basic-rate taxpayer, 10% of the unused allowance can be transferred, reducing the recipient's tax bill by a fixed amount.
-- Authority: [Income Tax Act 2007 ss.55B-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55B) (in_force)
+- Authority: [Income Tax Act 2007 ss.55A-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55A) (in_force)
 - PASS — calculator registered (strategy.marriage_allowance_transfer)
 - PASS — adapter registered
 - PASS — has legal authorities (1 cited)
@@ -334,13 +335,13 @@ rule-base release, with your name and the date.
 
 ### 27. Spousal transfer before disposal  
 `cgt-spousal-transfer-before-disposal` — property_taxes — risk **settled**, timeframe short
-> Transfers between spouses or civil partners living together are at no gain/no loss, so a half share transferred before an arm's-length disposal uses both annual exempt amounts and both basic-rate bands. The transfer must be an outright gift of beneficial ownership made before any unconditional contract to sell exists.
+> Transfers between spouses or civil partners are at no gain/no loss, so a half share transferred before an arm's-length disposal uses both annual exempt amounts and both basic-rate bands. Since 6 April 2023 (F(No.2)A 2023 s.41) this treatment also covers separated couples until the end of the third tax year after the tax year of separation, and without time limit under a formal divorce agreement or court order. The transfer must be an outright gift of beneficial ownership made before any unconditional contract to sell exists.
 - Authority: [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) (in_force)
 - Authority: [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) (in_force)
 - PASS — calculator registered (strategy.cgt_spousal_transfer_before_disposal)
 - PASS — adapter registered
 - PASS — has legal authorities (2 cited)
-- PASS — plain-English explanation present (319 chars)
+- PASS — plain-English explanation present (530 chars)
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
@@ -422,10 +423,10 @@ rule-base release, with your name and the date.
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 38. [Income Tax Act 2007 ss.55B-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55B) — Statute
+### 38. [Income Tax Act 2007 ss.55A-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55A) — Statute
 > Transferable tax allowance for married couples and civil partners (Marriage Allowance), inserted by Finance Act 2014 s.11.
-- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/55B)
-- PASS — primary source fetched by watcher (6,900 chars of source text on file)
+- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/55A)
+- PASS — primary source fetched by watcher (1,632 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
@@ -471,63 +472,70 @@ rule-base release, with your name and the date.
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 45. [Inheritance Tax Act 1984 Sch 1A](https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A) — Statute
+### 45. [Inheritance Tax Act 1984 s.8G](https://www.legislation.gov.uk/ukpga/1984/51/section/8G) — Statute
+> Transfer of any unused residence nil-rate amount to a surviving spouse or civil partner, by claim, mirroring the s.8A transfer of the ordinary nil-rate band.
+- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/8G)
+- PASS — primary source fetched by watcher (2,334 chars of source text on file)
+- PASS — status is in force (in_force)
+- PASS — verbatim extract on file
+
+### 46. [Inheritance Tax Act 1984 Sch 1A](https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A) — Statute
 > Where at least 10% of the baseline amount passes to charity, inheritance tax is charged at 36% instead of 40%.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A)
 - PASS — primary source fetched by watcher (8,527 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 46. [ITTOIA 2005 s.383](https://www.legislation.gov.uk/ukpga/2005/5/section/383) — Statute
+### 47. [ITTOIA 2005 s.383](https://www.legislation.gov.uk/ukpga/2005/5/section/383) — Statute
 > Charge to tax on dividends and other distributions of a UK resident company.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2005/5/section/383)
 - PASS — primary source fetched by watcher (1,484 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 47. [Jones v Garnett (Arctic Systems) [2007] UKHL 35](https://www.bailii.org/uk/cases/UKHL/2007/35.html) — Court Judgment
+### 48. [Jones v Garnett (Arctic Systems) [2007] UKHL 35](https://www.bailii.org/uk/cases/UKHL/2007/35.html) — Court Judgment
 > The House of Lords held that the ordinary-share arrangement between spouses was a settlement within ITTOIA 2005 s.620, but fell within the s.626 outright-gifts-between-spouses exemption because the shares were not wholly or substantially a right to income. Dividend income splitting through ordinary shares held by a spouse therefore stands, subject to the arrangement involving full ordinary shares rather than income-only rights.
 - PASS — canonical URI recorded (https://www.bailii.org/uk/cases/UKHL/2007/35.html)
 - PASS — primary source fetched by watcher (80,451 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 48. [National Insurance Contributions Act 2014 s.1](https://www.legislation.gov.uk/ukpga/2014/7/section/1) — Statute
+### 49. [National Insurance Contributions Act 2014 s.1](https://www.legislation.gov.uk/ukpga/2014/7/section/1) — Statute
 > Employment Allowance against employer Class 1 NIC liability, subject to the excluded-companies regulations (SI 2016/344), which exclude a company whose sole employee is also a director.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2014/7/section/1)
 - PASS — primary source fetched by watcher (1,837 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 49. [Social Security Contributions and Benefits Act 1992 s.15](https://www.legislation.gov.uk/ukpga/1992/4/section/15) — Statute
+### 50. [Social Security Contributions and Benefits Act 1992 s.15](https://www.legislation.gov.uk/ukpga/1992/4/section/15) — Statute
 > Class 4 National Insurance contributions on profits of a trade, profession or vocation carried on by a self-employed earner.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/4/section/15)
 - PASS — primary source fetched by watcher (14,848 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 50. [Social Security Contributions and Benefits Act 1992 s.6](https://www.legislation.gov.uk/ukpga/1992/4/section/6) — Statute
+### 51. [Social Security Contributions and Benefits Act 1992 s.6](https://www.legislation.gov.uk/ukpga/1992/4/section/6) — Statute
 > Liability for Class 1 primary and secondary National Insurance contributions on earnings from employment.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/4/section/6)
 - PASS — primary source fetched by watcher (11,910 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 51. [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) — Statute
-> Disposals between spouses or civil partners living together are treated as made for a consideration giving neither gain nor loss.
+### 52. [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) — Statute
+> Disposals between spouses or civil partners are on a no-gain/no-loss basis: while living together; where separated, until the end of the third tax year after the tax year of separation; and without time limit where made under a formal divorce/dissolution agreement or court order (as substituted by Finance (No.2) Act 2023 s.41 for disposals from 6 April 2023).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/58)
 - PASS — primary source fetched by watcher (6,329 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 52. [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) — Statute
+### 53. [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) — Statute
 > Rates of capital gains tax by reference to unused basic-rate band, and the annual exempt amount (s.1K).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/1H)
 - PASS — primary source fetched by watcher (7,522 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 53. [Taxation of Chargeable Gains Act 1992 ss.222-223](https://www.legislation.gov.uk/ukpga/1992/12/section/222) — Statute
+### 54. [Taxation of Chargeable Gains Act 1992 ss.222-223](https://www.legislation.gov.uk/ukpga/1992/12/section/222) — Statute
 > Relief on disposal of a dwelling-house that is or has been the individual's only or main residence; s.223(2) treats the final nine months of ownership as qualifying in any event.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/222)
 - PASS — primary source fetched by watcher (14,352 chars of source text on file)
@@ -544,4 +552,4 @@ rule-base content under §5.6 of the architecture document.
 
 | Item range | Reviewer | Decision | Date |
 |---|---|---|---|
-| 1–53 | _(name)_ | _(YES / exceptions)_ | _(date)_ |
+| 1–54 | kfrem (reviewing professional) | YES to all 53 items of the 05/07/2026 pack; 3 corrections applied same day and re-verified (items renumbered to 54 after s.8G added) — see docs/EDITORIAL_SIGNOFF.md | 5 July 2026 |
