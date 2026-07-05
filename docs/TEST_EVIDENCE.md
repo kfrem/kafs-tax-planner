@@ -35,7 +35,7 @@ and in CI (ubuntu-latest, Python 3.13), 5 July 2026.
 | File | Tests | What it proves |
 |---|---|---|
 | `ruleengine/tests/test_calculators.py` | 14 | Layer 2 calculators against hand-computed 2025/26 values: income tax incl. PA taper, dividend tax, employee/employer NIC (incl. 2025/26 threshold change + Employment Allowance), Class 4, CT marginal relief, pension AA taper |
-| `ruleengine/tests/test_golden_cases.py` | 2 (data-driven) | Executes all **13 GoldenTestCase rows stored in the rule base itself** — the §5.5 release gate. Adding a golden case to the seed automatically adds coverage |
+| `ruleengine/tests/test_golden_cases.py` | 2 (data-driven) | Executes all **19 GoldenTestCase rows stored in the rule base itself** — the §5.5 release gate. Adding a golden case to the seed automatically adds coverage |
 | `ruleengine/tests/test_income_interaction.py` | 11 | Whole-income interaction: PA taper triggered by dividends, PA remainder sheltering dividends, Sarah's exact scenario to the penny, optimiser (interior optimum at £5,000; £12,570 confirmed optimal when no other income; affordability cap £9,347 from £10,000 profit) |
 | `ruleengine/tests/test_pension_relief.py` | 6 | RAS band extension (40% relief case), taper restoration (60% effective relief case), FA 2004 s.190 earnings cap, £3,600 floor, AA charge basis, employer-route CT saving |
 | `ruleengine/tests/test_iht.py` | 12 | Estate calculator (NRB/RNRB, home-equity cap, descendants condition, £2m taper, spouse exemption, 36% boundary) and all three IHT strategies incl. RNRB-restoration-by-gift |
