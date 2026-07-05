@@ -127,3 +127,32 @@ fraction, so it cannot fire on a buy-to-let never lived in (e.g. the
 Victor persona). Documented simplification: a space-based part-let
 occupied throughout ownership; time-apportioned mixed occupation is not
 composed in (DEVELOPER_HANDOVER §5).
+
+## Addendum, 5 July 2026 — Non-residential (commercial) land taxes
+
+**Reviewing professional:** kfrem.
+
+**Scope:** commercial freehold coverage across all three UK regimes —
+parameters `sdlt.non_residential_bands`, `lbtt.non_residential_bands`,
+`ltt.non_residential_bands`, and strategies
+`{sdlt,lbtt,ltt}-non-residential-purchase`, each citing the same
+enabling statute as its residential counterpart (FA 2003 s.55, LBTT(S)A
+2013 s.24, LTTA 2017 s.24 — no new authorities). Machine pre-check: 0
+failures across 25 parameters, 17 strategies, 30 authorities.
+
+**Freehold bands verified against the tax authorities:**
+- **SDLT (England/NI):** 0% to £150k, 2% to £250k, 5% above — gov.uk
+  non-residential rates.
+- **LBTT (Scotland):** 0% to £150k, **1%** to £250k, 5% above — the 1%
+  middle band undercuts England's 2% — revenue.scot non-residential.
+- **LTT (Wales):** 0% to £225k, 1% to £250k, 5% to £1m, **6%** above —
+  gov.wales non-residential.
+- Cross-checked on a £500,000 freehold: SDLT £14,500, LBTT £13,500, LTT
+  £12,750 (the three golden cases).
+
+**Verdict:** YES. Bands are correct for 2025/26 and held as data; the
+residential purchase strategies are now gated on `property.property_type`
+so a commercial purchase (type `non_residential`) routes to the correct
+regime while an unset type still defaults to residential. Scope:
+freehold consideration only — leases (charged on rent NPV) and the
+mixed-use apportionment rules are not modelled (DEVELOPER_HANDOVER §5).
