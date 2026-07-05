@@ -750,12 +750,56 @@ class Command(BaseCommand):
                 calculator_key="strategy.sdlt_purchase_planning",
                 timeframe=Timeframe.SHORT,
                 risk_status=RiskStatus.SETTLED,
-                plain_english_explanation="Quantifies the SDLT on a planned residential purchase, including the "
-                "5% additional-dwellings surcharge and first-time buyers' relief. Where the "
-                "purchase replaces a main residence sold within three years, the surcharge is "
-                "recoverable — timing the sale matters as much as the price.",
+                plain_english_explanation="Quantifies the SDLT on a planned residential purchase in "
+                "England or Northern Ireland, including the 5% additional-dwellings surcharge and "
+                "first-time buyers' relief. Where the purchase replaces a main residence sold "
+                "within three years, the surcharge is recoverable — timing the sale matters as "
+                "much as the price. Scotland (LBTT) and Wales (LTT) set their own rates.",
                 authority_keys=["fa2003_s55", "fa2003_sch6za"],
-                eligibility_conditions={"all": [{"path": "property.purchase_price", "op": "gt", "value": 0}]},
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="lbtt-purchase-planning",
+                name="LBTT on planned property purchase (Scotland)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.lbtt_purchase_planning",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies Land and Buildings Transaction Tax on a "
+                "planned Scottish residential purchase, including the 8% Additional Dwelling "
+                "Supplement on the whole price where a second dwelling is bought, and first-time "
+                "buyer relief, which raises the nil-rate band to 175,000 and is worth up to 600. "
+                "Scotland sets its own rates and bands, so the English SDLT figures do not apply "
+                "north of the border.",
+                authority_keys=["lbtt_scotland_act_2013_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "scotland"},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="ltt-purchase-planning",
+                name="LTT on planned property purchase (Wales)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.ltt_purchase_planning",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies Land Transaction Tax on a planned Welsh "
+                "residential purchase. Wales applies a separate set of higher-rate bands to "
+                "additional dwellings rather than a flat surcharge, and has no first-time buyer "
+                "relief; the main residential nil-rate band runs to 225,000. The devolved rates "
+                "differ from both English SDLT and Scottish LBTT, so the property's jurisdiction "
+                "governs the charge.",
+                authority_keys=["ltt_wales_act_2017_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "wales"},
+                ]},
                 release=release_property,
             ),
         ]
