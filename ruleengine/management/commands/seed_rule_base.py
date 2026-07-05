@@ -217,8 +217,12 @@ class Command(BaseCommand):
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Taxation of Chargeable Gains Act 1992 s.58",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/58",
-                verbatim_extract="Disposals between spouses or civil partners living together "
-                "are treated as made for a consideration giving neither gain nor loss.",
+                verbatim_extract="Disposals between spouses or civil partners are on a "
+                "no-gain/no-loss basis: while living together; where separated, until the "
+                "end of the third tax year after the tax year of separation; and without "
+                "time limit where made under a formal divorce/dissolution agreement or "
+                "court order (as substituted by Finance (No.2) Act 2023 s.41 for disposals "
+                "from 6 April 2023).",
             ),
             dict(
                 key="tcga1992_s222",
@@ -357,8 +361,8 @@ class Command(BaseCommand):
             dict(
                 key="ita2007_s55b",
                 authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Income Tax Act 2007 ss.55B-55E",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/section/55B",
+                canonical_citation="Income Tax Act 2007 ss.55A-55E",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/section/55A",
                 verbatim_extract="Transferable tax allowance for married couples and civil partners "
                 "(Marriage Allowance), inserted by Finance Act 2014 s.11.",
             ),
@@ -572,7 +576,7 @@ class Command(BaseCommand):
                 "£650,000 plus £350,000 where the home passes to direct descendants) shelter the "
                 "combined estate. The transferred bands must be claimed by the survivor's personal "
                 "representatives within two years.",
-                authority_keys=["ihta1984_s18", "ihta1984_s8a", "ihta1984_s8d"],
+                authority_keys=["ihta1984_s18", "ihta1984_s8a", "ihta1984_s8g", "ihta1984_s8d"],
                 eligibility_conditions={"all": [{"path": "estate.combined_estate_second_death", "op": "gt", "value": 0}]},
                 release=release_iht,
             ),
@@ -639,11 +643,14 @@ class Command(BaseCommand):
                 calculator_key="strategy.cgt_spousal_transfer_before_disposal",
                 timeframe=Timeframe.SHORT,
                 risk_status=RiskStatus.SETTLED,
-                plain_english_explanation="Transfers between spouses or civil partners living together are at "
-                "no gain/no loss, so a half share transferred before an arm's-length disposal "
-                "uses both annual exempt amounts and both basic-rate bands. The transfer must "
-                "be an outright gift of beneficial ownership made before any unconditional "
-                "contract to sell exists.",
+                plain_english_explanation="Transfers between spouses or civil partners are at no gain/no loss, "
+                "so a half share transferred before an arm's-length disposal uses both annual "
+                "exempt amounts and both basic-rate bands. Since 6 April 2023 (F(No.2)A 2023 "
+                "s.41) this treatment also covers separated couples until the end of the third "
+                "tax year after the tax year of separation, and without time limit under a "
+                "formal divorce agreement or court order. The transfer must be an outright "
+                "gift of beneficial ownership made before any unconditional contract to sell "
+                "exists.",
                 authority_keys=["tcga1992_s58", "tcga1992_s1h"],
                 eligibility_conditions={"all": [
                     {"path": "property.disposal_gain", "op": "gt", "value": 0},
