@@ -121,6 +121,51 @@ class TestSpousalTransfer:
         assert result["saving"] == approx(2536.20)
 
 
+class TestBadr:
+    def test_qualifying_gain_within_lifetime_limit(self):
+        # Gain 500,000 - 3,000 AEA = 497,000, all within the 1m limit at 14%
+        # = 69,580. Without relief: earned 60,000 -> taxable income 47,430,
+        # above the 37,700 basic limit, so all 497,000 at 24% = 119,280.
+        # Saving 49,700.
+        result = strategy_cgt_business_asset_disposal_relief(
+            {"disposal_gain": 500000, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["gain_at_badr_rate"] == approx(497000.0)
+        assert result["cgt_with_badr"] == approx(69580.0)
+        assert result["cgt_without_badr"] == approx(119280.0)
+        assert result["saving"] == approx(49700.0)
+
+    def test_gain_above_lifetime_limit_excess_at_standard_rate(self):
+        # Gain 1,200,000 - 3,000 AEA = 1,197,000. First 1,000,000 at 14% =
+        # 140,000; excess 197,000 at 24% = 47,280; total 187,280. Without
+        # relief 1,197,000 at 24% = 287,280. Saving 100,000 (1m x 10 pts).
+        result = strategy_cgt_business_asset_disposal_relief(
+            {"disposal_gain": 1200000, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["gain_at_badr_rate"] == approx(1000000.0)
+        assert result["gain_above_lifetime_limit"] == approx(197000.0)
+        assert result["cgt_with_badr"] == approx(187280.0)
+        assert result["saving"] == approx(100000.0)
+
+    def test_prior_claims_reduce_remaining_limit(self):
+        # 700,000 of the 1m limit already used -> 300,000 remains. Gain
+        # 600,000 - 3,000 AEA = 597,000: 300,000 at 14% (42,000) + 297,000 at
+        # 24% (71,280) = 113,280. Without relief 597,000 at 24% = 143,280.
+        # Saving 30,000 (300,000 x 10 pts).
+        result = strategy_cgt_business_asset_disposal_relief(
+            {
+                "disposal_gain": 600000,
+                "earned_income": 60000,
+                "badr_lifetime_limit_used": 700000,
+            },
+            TAX_YEAR,
+        )
+        assert result["remaining_lifetime_limit"] == approx(300000.0)
+        assert result["gain_at_badr_rate"] == approx(300000.0)
+        assert result["cgt_with_badr"] == approx(113280.0)
+        assert result["saving"] == approx(30000.0)
+
+
 class TestSdlt:
     def test_standard_purchase(self):
         result = sdlt_residential({"price": 350000}, TAX_YEAR)
