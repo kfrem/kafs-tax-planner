@@ -60,8 +60,10 @@ class TestEmmaSimple:
         assert q["estimated_annual_tax_saving"] == approx(252.0)
 
     def test_small_pension_gets_basic_credit_only(self, make_advice):
-        # No relevant UK earnings recorded -> £3,600 floor covers the 2,000
-        # contribution; relief is the 20% credit (400); no employer route.
+        # Emma's 9,000 employment income counts as relevant UK earnings, so
+        # the 2,000 contribution is fully relievable; she is below the
+        # personal allowance, so relief is the 20% credit (400) only; no
+        # employer route (no company).
         record, _, _ = make_advice("H001", "Emma Hughes", EMMA_FACTS)
         q = _result(record, "pension-annual-allowance-carry-forward")["quantification"]
         assert q["personal_route"]["relievable_gross"] == approx(2000.0)
