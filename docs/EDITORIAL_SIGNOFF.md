@@ -156,3 +156,36 @@ so a commercial purchase (type `non_residential`) routes to the correct
 regime while an unset type still defaults to residential. Scope:
 freehold consideration only — leases (charged on rent NPV) and the
 mixed-use apportionment rules are not modelled (DEVELOPER_HANDOVER §5).
+
+## Addendum, 5 July 2026 — 2026/27 release scaffolding (BADR 18%)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** the first future-tax-year release, `2026.1` (effective
+6 April 2026), and the Business Asset Disposal Relief rate row it carries.
+BADR is now two non-overlapping effective-dated rows: 14% for
+[2025-04-06, 2026-04-06) under 2025.3, and **18%** for [2026-04-06, open)
+under 2026.1. Machine pre-check: 0 failures across 26 parameters, 17
+strategies, 30 authorities; the editorial pre-check now reviews both the
+2025/26 and 2026/27 anchors, so the future row appears in this pack with
+its effective range.
+
+**Verified against HMRC and the legislation:**
+- BADR rate **18%** for disposals on or after 6 April 2026 (14% for
+  6 April 2025 to 5 April 2026; 10% before) — HMRC CG64174 / HS275,
+  Finance Act 2025 amending TCGA 1992 s.169N. The £1,000,000 lifetime
+  limit is unchanged.
+- Reconciled: a £500,000 higher-rate disposal gives £69,580 CGT in
+  2025/26 (14%) and £89,460 in 2026/27 (18%) — the two BADR golden cases.
+
+**Governance verified:** while release 2026.1 is DRAFT (its real state
+until a second reviewer approves it), the engine returns NO BADR figure
+for 2026/27 and refuses rather than reusing the 2025/26 rate — pinned by
+`test_property.py::TestFutureYearBadr::test_unapproved_2026_release_is_invisible_to_the_engine`.
+So this YES records approval of the *content*; setting 2026.1 to Released
+in Admin remains the separate four-eyes act.
+
+**Verdict:** YES on the 18% row. Scaffolding note: only BADR has a
+distinct 2026/27 row; all other parameters carry forward on their open
+2025/26 ranges and must be closed with a confirmed 2026/27 figure (and
+re-reviewed) before that year's advice relies on them.
