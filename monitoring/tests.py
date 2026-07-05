@@ -4,10 +4,14 @@ diffs, false-alert suppression on cosmetic changes, the editorial workflow
 dependent strategies. Fetchers are stubbed — no network in tests.
 """
 
+from types import SimpleNamespace
+
 import pytest
+from django.contrib.auth.models import AnonymousUser
 from django.core.management import call_command
 
 from authority.models import Authority
+from monitoring.context_processors import open_alert_count
 from monitoring.models import ChangeAlert, WatchedSource
 from monitoring.watchers import (
     check_source,
