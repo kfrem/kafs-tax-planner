@@ -32,14 +32,6 @@ class MfaEnforcementMiddleware:
 
     def __call__(self, request):
         user = getattr(request, "user", None)
-        if (
-            user is not None
-            and user.is_authenticated
-            and not user.is_verified()
-            and TOTPDevice.objects.devices_for_user(user, confirmed=True).exists()
-            and request.resolver_match is None  # resolve lazily below
-        ):
-            pass
         if user is not None and user.is_authenticated and not user.is_verified():
             if TOTPDevice.objects.devices_for_user(user, confirmed=True).exists():
                 path = request.path
