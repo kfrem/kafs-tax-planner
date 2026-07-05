@@ -106,12 +106,18 @@ def precheck() -> dict:
         released = parameter.introduced_in_release.status == "released"
         checks.append(("belongs to a released rule-base version", released,
                        parameter.introduced_in_release.version))
+        effective_range = parameter.effective_range
+        effective = "{} to {}".format(
+            effective_range.lower.isoformat(),
+            effective_range.upper.isoformat() if effective_range.upper else "open",
+        )
         report["parameters"].append({
             "key": parameter.key,
             "label": parameter.label,
             "domain": parameter.tax_domain,
             "payload": parameter.payload,
             "release": parameter.introduced_in_release.version,
+            "effective": effective,
             "checks": checks,
             "source_evidence": _source_evidence(parameter),
         })
