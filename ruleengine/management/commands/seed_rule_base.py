@@ -564,6 +564,28 @@ class Command(BaseCommand):
                  {"upper": 1500000, "rate": 0.15},
                  {"upper": None, "rate": 0.17},
              ]}),
+            ("sdlt.non_residential_bands",
+             "SDLT non-residential/mixed freehold bands (England/NI)",
+             {"bands": [
+                 {"upper": 150000, "rate": 0.0},
+                 {"upper": 250000, "rate": 0.02},
+                 {"upper": None, "rate": 0.05},
+             ]}),
+            ("lbtt.non_residential_bands",
+             "LBTT non-residential freehold bands (Scotland)",
+             {"bands": [
+                 {"upper": 150000, "rate": 0.0},
+                 {"upper": 250000, "rate": 0.01},
+                 {"upper": None, "rate": 0.05},
+             ]}),
+            ("ltt.non_residential_bands",
+             "LTT non-residential freehold bands (Wales)",
+             {"bands": [
+                 {"upper": 225000, "rate": 0.0},
+                 {"upper": 250000, "rate": 0.01},
+                 {"upper": 1000000, "rate": 0.05},
+                 {"upper": None, "rate": 0.06},
+             ]}),
         ]
         for key, label, payload in rows:
             TaxParameter.objects.filter(key=key, effective_range=y2025).delete()
