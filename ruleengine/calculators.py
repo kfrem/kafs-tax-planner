@@ -810,6 +810,73 @@ def strategy_cgt_spousal_transfer(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.cgt_business_asset_disposal_relief",
+    consumes=[
+        "cgt.business_asset_disposal_relief",
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="Business Asset Disposal Relief (TCGA 1992 ss.169H-169N): qualifying "
+    "gains up to the lifetime limit at the reduced BADR rate, any excess at the "
+    "standard rate, compared with the same disposal taxed without the relief.",
+)
+def strategy_cgt_business_asset_disposal_relief(facts: dict, tax_year: str) -> dict:
+    """Simplifications documented for editorial review (Section 5.6): BADR-
+    qualifying gains are charged before other gains and, up to the 1,000,000
+    lifetime limit, occupy the whole basic-rate band, so any qualifying gain
+    *above* the limit is modelled at the standard higher rate for non-
+    residential assets (24% in 2025/26) rather than band-split — correct
+    whenever qualifying gains reach the basic-rate band, and conservative
+    (never understating tax) otherwise. The annual exempt amount is set
+    against the relieved gain, which is conservative where an unrelieved
+    excess exists. Qualifying conditions (two-year ownership; 5% personal-
+    company holding for shares) are assumed met — the eligibility of the
+    disposal is a matter for the adviser, not this calculator.
+    """
+    gain = max(0.0, float(facts["disposal_gain"]))
+    earned_income = max(0.0, float(facts.get("earned_income", 0)))
+    prior_badr_used = max(0.0, float(facts.get("badr_lifetime_limit_used", 0)))
+
+    badr_param = get_parameter("cgt.business_asset_disposal_relief", tax_year)
+    aea_param = get_parameter("cgt.annual_exempt_amount", tax_year)
+    other_rates = get_parameter("cgt.rates", tax_year)["other"]
+
+    badr_rate = badr_param["rate"]
+    remaining_limit = max(0.0, badr_param["lifetime_limit"] - prior_badr_used)
+
+    aea_used = min(aea_param["amount"], gain)
+    taxable_gain = round(gain - aea_used, 2)
+
+    at_badr_rate = min(taxable_gain, remaining_limit)
+    above_limit = round(taxable_gain - at_badr_rate, 2)
+    badr_tax = round(at_badr_rate * badr_rate, 2)
+    excess_tax = round(above_limit * other_rates["higher"], 2)
+    cgt_with_badr = round(badr_tax + excess_tax, 2)
+
+    # The same disposal with no relief: a normal non-residential ("other")
+    # gain, band-split against the client's income.
+    without = cgt_liability(
+        {"chargeable_gain": gain, "asset_type": "other", "earned_income": earned_income},
+        tax_year,
+    )
+
+    return {
+        "qualifying_gain": gain,
+        "annual_exempt_amount_used": round(aea_used, 2),
+        "taxable_gain": taxable_gain,
+        "remaining_lifetime_limit": round(remaining_limit, 2),
+        "gain_at_badr_rate": round(at_badr_rate, 2),
+        "badr_rate": badr_rate,
+        "gain_above_lifetime_limit": above_limit,
+        "cgt_with_badr": cgt_with_badr,
+        "cgt_without_badr": without["tax_due"],
+        "saving": round(without["tax_due"] - cgt_with_badr, 2),
+    }
+
+
+@register(
     "strategy.sdlt_purchase_planning",
     consumes=["sdlt.residential_bands"],
     description="SDLT cost of a planned residential purchase: banded charge, the 5% "
