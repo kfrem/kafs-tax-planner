@@ -46,13 +46,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with transaction.atomic():
             editor, reviewer = self._get_or_create_editorial_users()
-            release_2024, release_2025, release_iht, release_property = self._create_releases(
-                editor, reviewer, options["release"]
-            )
+            (
+                release_2024,
+                release_2025,
+                release_iht,
+                release_property,
+                release_2026,
+            ) = self._create_releases(editor, reviewer, options["release"])
             authorities = self._create_authorities()
             self._create_parameters(release_2024, release_2025)
             self._create_iht_parameters(release_iht)
-            self._create_property_parameters(release_property)
+            self._create_property_parameters(release_property, release_2026)
             self._create_strategies(release_2024, release_iht, release_property, authorities)
             self._create_golden_cases()
 
