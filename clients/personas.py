@@ -20,7 +20,8 @@ VICTOR (complex)— additional-rate taxpayer: large company, £85k sole trade,
 
 EMMA_FACTS = {
     "personal": {
-        "other_income": 9000,
+        "other_income": 0,
+        "employment_income": 9000,  # part-time PAYE job
         "salary_from_own_company": 0,
         "dividends_from_own_company": 0,
         "spouse_income": 30000,
