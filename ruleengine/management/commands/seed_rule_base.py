@@ -245,6 +245,17 @@ class Command(BaseCommand):
                 "months of ownership as qualifying in any event.",
             ),
             dict(
+                key="tcga1992_s223b",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.223B",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/223B",
+                verbatim_extract="Additional relief where part of the dwelling-house is the "
+                "individual's only or main residence and another part is let as residential "
+                "accommodation: the let-portion gain is relieved by the lowest of that gain, "
+                "the s.223 private residence relief, and 40,000. For disposals from 6 April "
+                "2020 the relief requires shared occupancy with the tenant.",
+            ),
+            dict(
                 key="tcga1992_s1h",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Taxation of Chargeable Gains Act 1992 ss.1H-1K",
