@@ -1123,6 +1123,30 @@ class Command(BaseCommand):
                 expected_output={"total_ltt": 10500.0},
             ),
             dict(
+                calculator_key="strategy.sdlt_non_residential_purchase",
+                description="Non-residential freehold at 500,000, England/NI, 2025/26",
+                source="Hand-computed: 150,000 at 0% + 100,000 at 2% (2,000) + 250,000 at "
+                "5% (12,500) = 14,500",
+                input_facts={"price": 500000},
+                expected_output={"total_sdlt": 14500.0},
+            ),
+            dict(
+                calculator_key="strategy.lbtt_non_residential_purchase",
+                description="Non-residential freehold at 500,000, Scotland, 2025/26",
+                source="Hand-computed: 150,000 at 0% + 100,000 at 1% (1,000) + 250,000 at "
+                "5% (12,500) = 13,500",
+                input_facts={"price": 500000},
+                expected_output={"total_lbtt": 13500.0},
+            ),
+            dict(
+                calculator_key="strategy.ltt_non_residential_purchase",
+                description="Non-residential freehold at 500,000, Wales, 2025/26",
+                source="Hand-computed: 225,000 at 0% + 25,000 at 1% (250) + 250,000 at "
+                "5% (12,500) = 12,750",
+                input_facts={"price": 500000},
+                expected_output={"total_ltt": 12750.0},
+            ),
+            dict(
                 calculator_key="strategy.pension_annual_allowance_carry_forward",
                 description="Owner-manager: desired contribution exceeds relevant earnings; employer route quantified, 2025/26",
                 source="Hand-computed: desired 40,000 vs relevant earnings 28,000 -> relievable "
