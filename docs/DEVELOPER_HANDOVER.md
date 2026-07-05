@@ -184,12 +184,16 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    routes the charge); and **lettings relief**
    (`strategy.cgt_lettings_relief`: post-2020 shared-occupancy lowest-of-
    three with the £40k cap as data, TCGA 1992 s.223B, HS283 golden case +
-   `TestLettingsRelief`). All editorially signed off. Still open: the
-   6 April 2026 BADR rate rise to 18% (a future data row, on the
-   watch-list); 2024/25 intra-year CGT rates (needs intra-year effective
-   ranges); non-residential LBTT/LTT bands and Scottish/Welsh commercial
-   leases; disposal composition with the salary/dividend whole-income
-   picture.
+   `TestLettingsRelief`); and **non-residential (commercial) land taxes**
+   for all three regimes (`strategy.{sdlt,lbtt,ltt}_non_residential_purchase`:
+   freehold bands as data, reusing the existing FA 2003 s.55 / LBTT s.24 /
+   LTT s.24 authorities, golden cases + `TestNonResidentialLandTax`; the
+   purchase strategies are gated on `property.property_type`). All
+   editorially signed off. Still open: the 6 April 2026 BADR rate rise to
+   18% (a future data row, on the watch-list); 2024/25 intra-year CGT rates
+   (needs intra-year effective ranges); land-tax *leases* (charged on rent
+   NPV) and mixed-use apportionment; disposal composition with the
+   salary/dividend whole-income picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
