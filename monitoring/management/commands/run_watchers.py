@@ -11,8 +11,17 @@ from monitoring.watchers import run_all
 class Command(BaseCommand):
     help = "Fetch all watched sources and raise change alerts into the editorial queue."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--rebaseline",
+            action="store_true",
+            help="Silently re-baseline all sources instead of alerting. Use once "
+            "after a fetch-strategy change, when unchanged content is merely "
+            "REPRESENTED differently (e.g. HTML scrape -> XML feed).",
+        )
+
     def handle(self, *args, **options):
-        summary = run_all()
+        summary = run_all(rebaseline=options["rebaseline"])
         self.stdout.write(
             f"checked={summary['checked']} baselined={summary['baselined']} "
             f"alerts={summary['alerts']} errors={len(summary['errors'])}"
