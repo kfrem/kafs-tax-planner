@@ -137,15 +137,19 @@ Cross-cutting:
 
 ## 6. Remaining work (ordered)
 
-Done since first draft of this list: git + GitHub Actions CI (item 1),
-accountant-grade presentation (item 2), property/CGT module (item 3).
+Done since first draft of this list: git + GitHub Actions CI, accountant-
+grade presentation, property/CGT module, **change-monitoring watchers**
+(§5.4: legislation.gov.uk/gov.uk feeds → editorial review queue),
+**case-law workflow** (§7, proven with *Jones v Garnett*), and the
+**editorial queue UI** — a staff-only web surface at `/monitoring/`
+(no longer Django Admin only): the change queue with per-alert
+resolve/dismiss forms, notes-and-release enforcement surfaced as
+messages, the authority status workflow page, and a nav badge counting
+unresolved alerts. View layer and its staff-only access boundary are
+tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
+`TestOpenAlertBadge`).
 
-1. **Change-monitoring watchers** (§5.4) — legislation.gov.uk API, HMRC
-   manual page diffs, Find Case Law feed → editorial review queue. The
-   releases/golden/impact machinery they feed already works.
-2. **Editorial queue UI** — currently Django Admin only.
-3. **Case-law workflow** (see §7).
-4. **CGT/SDLT depth** — 2024/25 intra-year CGT rates (needs intra-year
+1. **CGT/SDLT depth** — 2024/25 intra-year CGT rates (needs intra-year
    effective ranges), BADR, letting relief edge cases, Scottish
    LBTT/Welsh LTT variants, disposal composition with the salary/dividend
    whole-income picture.
