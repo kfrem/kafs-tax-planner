@@ -199,3 +199,60 @@ class TestSdlt:
         )
         assert result["surcharge_cost_of_additional_dwelling"] == approx(17500.0)
         assert result["as_planned"]["total_sdlt"] == approx(25000.0)
+
+
+class TestLbtt:
+    def test_standard_purchase(self):
+        # Scotland, 350,000: 145,000 @ 0% + 105,000 @ 2% (2,100) + 75,000 @
+        # 5% (3,750) + 25,000 @ 10% (2,500) = 8,350. (SDLT on the same price
+        # is 7,500 — the devolved charge genuinely differs.)
+        result = lbtt_residential({"price": 350000}, TAX_YEAR)
+        assert result["banded_lbtt"] == approx(8350.0)
+        assert result["total_lbtt"] == approx(8350.0)
+
+    def test_first_time_buyer_relief_worth_600(self):
+        # FTB nil band raised to 175,000. At 200,000: 175,000 @ 0% + 25,000 @
+        # 2% = 500. Without relief: 145,000 @ 0% + 55,000 @ 2% = 1,100.
+        # Relief worth 600.
+        relieved = lbtt_residential({"price": 200000, "first_time_buyer": True}, TAX_YEAR)
+        normal = lbtt_residential({"price": 200000}, TAX_YEAR)
+        assert relieved["first_time_buyer_relief_applied"] is True
+        assert relieved["total_lbtt"] == approx(500.0)
+        assert normal["total_lbtt"] - relieved["total_lbtt"] == approx(600.0)
+
+    def test_additional_dwelling_supplement_on_whole_price(self):
+        # ADS is 8% of the whole 350,000 = 28,000, on top of the 8,350 banded
+        # charge = 36,350.
+        result = lbtt_residential({"price": 350000, "additional_dwelling": True}, TAX_YEAR)
+        assert result["additional_dwelling_supplement"] == approx(28000.0)
+        assert result["total_lbtt"] == approx(36350.0)
+
+    def test_purchase_strategy_isolates_supplement(self):
+        result = strategy_lbtt_purchase(
+            {"price": 350000, "additional_dwelling": True}, TAX_YEAR
+        )
+        assert result["supplement_cost_of_additional_dwelling"] == approx(28000.0)
+        assert result["as_planned"]["total_lbtt"] == approx(36350.0)
+
+
+class TestLtt:
+    def test_main_rates_purchase(self):
+        # Wales main rates, 400,000: 225,000 @ 0% + 175,000 @ 6% = 10,500.
+        result = ltt_residential({"price": 400000}, TAX_YEAR)
+        assert result["total_ltt"] == approx(10500.0)
+
+    def test_higher_rates_additional_property(self):
+        # Additional dwelling uses the separate higher-rate table: 180,000 @
+        # 5% (9,000) + 70,000 @ 8.5% (5,950) + 150,000 @ 10% (15,000) =
+        # 29,950.
+        result = ltt_residential({"price": 400000, "additional_dwelling": True}, TAX_YEAR)
+        assert result["total_ltt"] == approx(29950.0)
+
+    def test_purchase_strategy_isolates_additional_property_cost(self):
+        # Extra cost of buying as an additional property: 29,950 - 10,500 =
+        # 19,450.
+        result = strategy_ltt_purchase(
+            {"price": 400000, "additional_dwelling": True}, TAX_YEAR
+        )
+        assert result["additional_property_cost"] == approx(19450.0)
+        assert result["as_planned"]["total_ltt"] == approx(29950.0)
