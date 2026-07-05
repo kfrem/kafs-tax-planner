@@ -1,6 +1,6 @@
 # Rule-base review pack — editorial sign-off
 
-Generated 05 July 2026. Machine pre-check: **2 failed checks** across 18 parameters, 10 strategies, 25 authorities.
+Generated 05 July 2026. Machine pre-check: **0 failed checks** across 18 parameters, 10 strategies, 25 authorities.
 
 **How to approve:** read each numbered item; the primary source is one
 click away. Reply YES to approve all items, or list the item numbers you
@@ -18,7 +18,7 @@ rule-base release, with your name and the date.
 - small_profits_limit: **50,000**
 - marginal_relief_fraction: **0.015**
 - PASS — consumed by a registered calculator (corporation_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (corporation_tax, strategy.pension_annual_allowance_carry_forward)
+- PASS — figure exercised by golden test cases (corporation_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 50,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
@@ -28,7 +28,7 @@ rule-base release, with your name and the date.
 - rate: **0.15**
 - secondary_threshold: **5,000**
 - PASS — consumed by a registered calculator (employer_class1_nic, strategy.salary_dividend_mix, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (employer_class1_nic)
+- PASS — figure exercised by golden test cases (employer_class1_nic, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 5,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D; Jones v Garnett (Arctic Systems) [2007] UKHL 35
 
@@ -36,7 +36,7 @@ rule-base release, with your name and the date.
 `national_insurance.employment_allowance` — corporation_tax — release 2025.1
 - amount: **10,500**
 - PASS — consumed by a registered calculator (employer_class1_nic, strategy.salary_dividend_mix, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (employer_class1_nic)
+- PASS — figure exercised by golden test cases (employer_class1_nic, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 10,500 appears in: National Insurance Contributions Act 2014 s.1
 
@@ -58,7 +58,7 @@ rule-base release, with your name and the date.
 - annual_exemption: **3,000**
 - small_gift_exemption: **250**
 - PASS — consumed by a registered calculator (strategy.iht_lifetime_gifting)
-- **FAIL** — figure exercised by golden test cases (no direct golden case)
+- PASS — figure exercised by golden test cases (strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 - Source cross-reference: 250 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 - Source cross-reference: 3,000 appears in: Inheritance Tax Act 1984 s.19
@@ -67,7 +67,7 @@ rule-base release, with your name and the date.
 `iht.nil_rate_band` — inheritance_tax — release 2025.2
 - amount: **325,000**
 - PASS — consumed by a registered calculator (iht_estate_liability, strategy.iht_spousal_transfer_nil_rate_bands, strategy.iht_lifetime_gifting, strategy.iht_charitable_legacy_reduced_rate)
-- PASS — figure exercised by golden test cases (iht_estate_liability)
+- PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 
 ### 6. IHT rates: death, reduced charitable, lifetime CLT  
@@ -77,7 +77,7 @@ rule-base release, with your name and the date.
 - reduced_charity_rate: **0.36**
 - charity_baseline_fraction: **0.1**
 - PASS — consumed by a registered calculator (iht_estate_liability, strategy.iht_spousal_transfer_nil_rate_bands, strategy.iht_lifetime_gifting, strategy.iht_charitable_legacy_reduced_rate)
-- PASS — figure exercised by golden test cases (iht_estate_liability)
+- PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 
 ### 7. IHT residence nil-rate band and taper  
@@ -86,7 +86,7 @@ rule-base release, with your name and the date.
 - taper_rate: **0.5**
 - taper_threshold: **2,000,000**
 - PASS — consumed by a registered calculator (iht_estate_liability, strategy.iht_spousal_transfer_nil_rate_bands, strategy.iht_lifetime_gifting, strategy.iht_charitable_legacy_reduced_rate)
-- PASS — figure exercised by golden test cases (iht_estate_liability)
+- PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D
@@ -95,7 +95,7 @@ rule-base release, with your name and the date.
 `dividend_tax.allowance` — personal_income_tax — release 2025.1
 - amount: **500**
 - PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 500 appears in: Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA; Income Tax Act 2007 s.13A
 
@@ -109,7 +109,7 @@ rule-base release, with your name and the date.
   - rate: **0.3935**
   - upper: **None**
 - PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
@@ -123,7 +123,7 @@ rule-base release, with your name and the date.
   - rate: **0.45**
   - upper: **None**
 - PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_ppr_relief, strategy.cgt_spousal_transfer_before_disposal)
-- PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, cgt_liability)
+- PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
@@ -140,7 +140,7 @@ rule-base release, with your name and the date.
 - taper_rate: **0.5**
 - taper_threshold: **100,000**
 - PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability, strategy.cgt_ppr_relief, strategy.cgt_spousal_transfer_before_disposal)
-- PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.marriage_allowance_transfer, cgt_liability)
+- PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 100,000 appears in: Income Tax Act 2007 s.35; Inheritance Tax Act 1984 s.8D
@@ -152,7 +152,7 @@ rule-base release, with your name and the date.
 - lower_profits_limit: **12,570**
 - upper_profits_limit: **50,270**
 - PASS — consumed by a registered calculator (strategy.incorporation_vs_sole_trade)
-- **FAIL** — figure exercised by golden test cases (no direct golden case)
+- PASS — figure exercised by golden test cases (strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 50,270 appears in: Social Security Contributions and Benefits Act 1992 s.15
@@ -164,7 +164,7 @@ rule-base release, with your name and the date.
 - primary_threshold: **12,570**
 - upper_earnings_limit: **50,270**
 - PASS — consumed by a registered calculator (employee_class1_nic, strategy.salary_dividend_mix, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (employee_class1_nic)
+- PASS — figure exercised by golden test cases (employee_class1_nic, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 50,270 appears in: Social Security Contributions and Benefits Act 1992 s.15
