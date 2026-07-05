@@ -98,10 +98,11 @@ class PensionCarryForwardAdapter:
         pension = facts.get("pension", {})
         sole_trade_profit = facts.get("sole_trade", {}).get("annual_profit", 0)
         salary = personal.get("salary_from_own_company", 0)
+        employment = personal.get("employment_income", 0)
         # Relevant UK earnings (FA 2004 s.190): employment and trading income
         # only — dividends and 'other' income (which may be rent/savings) are
         # excluded from the personal-contribution relief cap.
-        relevant_uk_earnings = salary + sole_trade_profit
+        relevant_uk_earnings = salary + sole_trade_profit + employment
         earned_income = personal.get("other_income", 0) + relevant_uk_earnings
         return {
             "desired_contribution": pension.get("desired_contribution", 0),
