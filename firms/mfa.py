@@ -18,7 +18,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django_otp import devices_for_user, login as otp_login
+from django_otp import devices_for_user
+from django_otp import login as otp_login
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
 EXEMPT_URL_NAMES = {"firms:mfa-verify", "firms:logout", "firms:login"}

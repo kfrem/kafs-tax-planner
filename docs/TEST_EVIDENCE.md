@@ -18,7 +18,7 @@ python -m pytest -q --create-db   # force-rebuild the test DB after migrations c
 python -m pytest -q ruleengine/tests/test_iht.py   # one module
 ```
 
-**Expected result: `119 passed`** (≈3½ minutes; the seed fixture rebuilds
+**Expected result: `162 passed`** (≈3½ minutes; the seed fixture rebuilds
 the rule base per test class, which dominates runtime).
 
 The same suite runs in **GitHub Actions on every push and pull request**
@@ -26,11 +26,11 @@ The same suite runs in **GitHub Actions on every push and pull request**
 non-superuser app role so the RLS tests exercise real enforcement, and
 `pytest -q`. Repository: https://github.com/kfrem/kafs-tax-planner.
 
-Last full run before handover: **119 passed, 0 failed, 0 skipped** —
+Last full run before handover: **162 passed, 0 failed, 0 skipped** —
 locally (Python 3.13.14, Django 6.0.6, PostgreSQL 16/Docker, Windows 11)
 and in CI (ubuntu-latest, Python 3.13), 4 July 2026.
 
-## 2. Test inventory (119 tests)
+## 2. Test inventory (162 tests)
 
 | File | Tests | What it proves |
 |---|---|---|
@@ -41,9 +41,15 @@ and in CI (ubuntu-latest, Python 3.13), 4 July 2026.
 | `ruleengine/tests/test_iht.py` | 12 | Estate calculator (NRB/RNRB, home-equity cap, descendants condition, £2m taper, spouse exemption, 36% boundary) and all three IHT strategies incl. RNRB-restoration-by-gift |
 | `ruleengine/tests/test_provenance.py` | 5 | Draft releases never influence calculations; released rows do; provenance logs exact row ids/releases and survives cache hits |
 | `ruleengine/tests/test_property.py` | 12 | CGT band straddling, AEA, PPR relief with the final-9-months rule, spousal transfer (both the honest £720 both-higher-rate case and the basic-rate-spouse case), SDLT bands, 5% surcharge, FTB relief and its price cap |
-| `monitoring/tests.py` | 10 | Change watchers: baseline-then-detect with unified diffs, cosmetic-markup changes suppressed, fetch failures skipped not fatal; editorial workflow (notes required, actioned requires a release); watched-source seeding idempotent; alert → dependent-strategies impact link |
+| `monitoring/tests.py` | 18 | Change watchers: baseline-then-detect with unified diffs, cosmetic-markup changes suppressed, fetch failures skipped not fatal; feed-specific fetchers (legislation.gov.uk XML API first with page fallback, gov.uk content API extraction, per-type resolver, --rebaseline for representation changes); authority status workflow (append-only log, reason required, editorial alert raised); editorial workflow (notes required, actioned requires a release); watched-source seeding idempotent; alert → dependent-strategies impact link |
 | `advice/tests/test_generator.py` | 5 | Generator pipeline: eligibility, immutability (save/delete refusal), supersession, release stamping |
-| `advice/tests/test_personas.py` | 17 | **The consistency suite** — see §3 |
+| `advice/tests/test_personas.py` | 19 | **The consistency suite** — see §3 |
+| `advice/tests/test_adapters.py` | 5 | Fact-schema fields reach the right calculator inputs; employment income counts as relevant UK earnings, 'other income' (rent/savings) does not |
+| `advice/tests/test_impact.py` | 6 | Release impact alerts: strategy overlap detection, effective-dating scoping (a 2026/27 change never alerts 2025/26 advice), idempotency, superseded advice excluded, review workflow |
+| `advice/tests/test_scenarios.py` | 5 | Scenario modelling: overrides applied without mutating the record, deltas correct (hand-computed), NOTHING persisted, and the base leg byte-identical to real advice |
+| `advice/tests/test_narrative.py` | 8 | Narrative drafter + §8 validator: draft carries the record's headline figures and risk disclosures; fabricated numbers/citations rejected; rejected drafts cannot be stored; panel persona voices re-express findings verbatim, never add |
+| `firms/test_mfa.py` | 7 | TOTP MFA: QR enrolment, wrong-token refusal, enforcement for device holders, verification unlock, logout always reachable, no prompt for non-enrolled users |
+| `clients/test_access.py` | 4 | Per-client access: partners see all, staff only granted clients (list, detail, advice, scenario views all enforce), grant management partner-only |
 | `advice/tests/test_panel.py` | 12 | **Expert panel**: per-persona verdicts across all three personas (Emma clear, Sarah/Victor attention with specific finding codes); blockers on rule drift (independent recomputation) and on an overruled authority; decision workflow gating (no decision without a review, blocker override needs a written note, reject/revise need notes); panel reviews append-only |
 | `clients/tests.py` | 4 | Fact-set versioning, CSV import |
 | `firms/tests.py` | 3 | Row-level security: cross-firm reads/writes blocked at the database |

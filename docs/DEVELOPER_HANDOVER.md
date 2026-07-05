@@ -42,7 +42,8 @@ green at every checkpoint. Test count shows cumulative growth.
 | 27 | **Property/CGT module**: CGT (AEA, band-straddling rates) and SDLT (bands, 5% surcharge, FTB relief) calculators; PPR relief with final-9-months rule, spousal transfer before disposal, SDLT purchase planning strategies; release 2025.3, 5 TCGA/FA 2003 authorities, 3 golden cases; Victor persona extended with a rental disposal | 109 tests |
 | 28 | **Change-monitoring pipeline v1** (§5.4): `monitoring` app — WatchedSource per authority URI, diff watchers with pluggable fetchers and markup normalisation, ChangeAlert editorial queue (notes + release requirements), staff-only queue UI, `seed_watched_sources`/`run_watchers` commands. Live-baselined against all 25 real primary sources; the first run caught a wrong case-law URI (fixed to BAILII) | 119 tests |
 | 29 | **Containerised**: production Dockerfile (python:3.13-slim + Pango for WeasyPrint, gunicorn, WhiteNoise, non-root user), docker-compose stack that provisions the non-superuser DB role automatically, CI `docker-image` job building the image on every push, docs/DEPLOYMENT.md with the UK hosting comparison | 119 tests + image build in CI |
-| 30 | **Engineering playbook + zero-cost hardening**: docs/ENGINEERING_PLAYBOOK.md (shareable standards for any AI-assisted accounting build); ruff lint (10 findings fixed) and pip-audit (0 known CVEs) added as a CI `lint` job; `manage.py check --deploy` in the test job | **119 tests, 3 CI jobs** |
+| 30 | **Engineering playbook + zero-cost hardening**: docs/ENGINEERING_PLAYBOOK.md (shareable standards for any AI-assisted accounting build); ruff lint (10 findings fixed) and pip-audit (0 known CVEs) added as a CI `lint` job; `manage.py check --deploy` in the test job | 119 tests, 3 CI jobs |
+| 31 | **Section A batch** (executed autonomously): employment-income field wired through every adapter (relevant-UK-earnings distinction preserved); feed-specific watchers (legislation.gov.uk XML API, gov.uk content API, per-type resolver, `run_watchers --rebaseline`); authority status workflow UI with append-only `AuthorityStatusChange` log feeding the editorial queue; per-firm `AdviceImpactAlert`s (effective-date-scoped, idempotent, RLS) with review UI + `generate_impact_alerts` command; scenario modelling (ephemeral, same engine path, side-by-side deltas); TOTP MFA (django-otp, QR enrolment, middleware enforcement) and per-client `ClientAccess` grants enforced across every client-touching view; `AdviceNarrative` layer with the §8 validator (fabricated numbers/citations rejected before storage; deterministic drafter now, LLM pluggable through the same gate); explain-only panel persona voices. Local dev DB rebuilt on portable PostgreSQL 16.9 (Docker Desktop unrecoverable without interactive session) | **162 tests** |
 
 ## 2. Standing it up from nothing
 
@@ -65,11 +66,11 @@ python manage.py seed_rule_base --release   # DRAFT by default; --release is dev
 python manage.py seed_demo_clients          # Emma / Sarah / Victor + advice + PDFs
 
 # 4. Verify you reproduce the original results
-python -m pytest -q          # expect: 80 passed
+python -m pytest -q          # expect: 162 passed
 python manage.py runserver   # log in: demo / demo-pass-123
 ```
 
-**The reproduction check is the point**: if `pytest` shows 80 passing you
+**The reproduction check is the point**: if `pytest` shows 162 passing you
 have byte-for-byte the same calculation behaviour this build had — every
 expectation in the suite is a hand-computed number, not a snapshot.
 

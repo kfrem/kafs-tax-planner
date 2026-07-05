@@ -1,12 +1,14 @@
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
-from clients.models import Client, ClientFactSet, accessible_clients, get_accessible_client_or_404
+from clients.models import (
+    ClientFactSet,
+    get_accessible_client_or_404,
+)
 from reports.pdf import render_advice_pdf
-
-from django import forms
 
 from .generator import NoReleasedRuleBaseError, generate_advice
 from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision

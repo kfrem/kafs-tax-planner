@@ -5,7 +5,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .csv_import import import_client_csv
 from .forms import ClientFactSetForm, ClientForm, CsvImportForm
-from .models import Client, ClientAccess, ClientFactSet, accessible_clients, get_accessible_client_or_404
+from .models import (
+    Client,
+    ClientAccess,
+    ClientFactSet,
+    accessible_clients,
+    get_accessible_client_or_404,
+)
 
 
 @login_required
