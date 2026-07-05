@@ -10,7 +10,8 @@ from django import forms
 
 from .generator import NoReleasedRuleBaseError, generate_advice
 from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision
-from .panel import DecisionError, deploy_panel, record_decision
+from .narrative import NarrativeRejected, create_narrative
+from .panel import DecisionError, deploy_panel, persona_summaries, record_decision
 from .scenarios import run_scenario
 
 
@@ -40,7 +41,35 @@ def advice_generate(request, fact_set_id):
 def advice_detail(request, pk):
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
     get_accessible_client_or_404(request.user, record.client_id)
-    return render(request, "advice/advice_detail.html", {"record": record})
+    review = record.latest_panel_review
+    return render(
+        request,
+        "advice/advice_detail.html",
+        {
+            "record": record,
+            "panel_summaries": persona_summaries(review) if review else None,
+            "narrative": record.narratives.order_by("-created_at").first(),
+        },
+    )
+
+
+@login_required
+def narrative_draft(request, pk):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, record.client_id)
+    try:
+        create_narrative(record, request.user)
+    except NarrativeRejected as exc:
+        messages.error(request, str(exc))
+    else:
+        messages.success(
+            request,
+            "Narrative drafted and validated: every figure and citation checked "
+            "against the advice record. Edit before issuing to the client.",
+        )
+    return redirect("advice:advice-detail", pk=record.pk)
 
 
 @login_required

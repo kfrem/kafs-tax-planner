@@ -22,6 +22,17 @@
                 {% elif review.overall == 'attention' %}color:#b9770e;
                 {% else %}color:#1e8449;{% endif %}">{{ review.overall }}</strong>
         </p>
+        {% if panel_summaries %}
+        <div style="margin:0.5rem 0;">
+            {% for s in panel_summaries %}
+            <p style="margin:0.4rem 0;">
+                <strong>{{ s.title }}</strong> — {{ s.lead }}
+                {% for point in s.points %}{% if point.severity != "info" %}
+                    {{ point.message }}{% endif %}{% endfor %}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
         <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
             {% for f in review.findings %}
             <tr style="border-bottom:1px solid #dde;">

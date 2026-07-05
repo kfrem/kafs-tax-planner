@@ -12,5 +12,6 @@ urlpatterns = [
     path("impact/", views.impact_alerts, name="impact-alerts"),
     path("impact/<int:pk>/review/", views.impact_alert_review, name="impact-alert-review"),
     path("scenario/<int:client_id>/", views.scenario, name="scenario"),
+    path("<int:pk>/narrative/", views.narrative_draft, name="narrative-draft"),
     path("client/<int:client_id>/", views.advice_list, name="advice-list"),
 ]

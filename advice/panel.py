@@ -461,3 +461,47 @@ def record_decision(record, user, decision, notes=""):
     )
     professional_decision.save()
     return professional_decision
+
+
+# --- Persona voices (explain-only, architecture doc §8) -----------------------
+
+PERSONA_TITLES = {
+    "tax_accountant": "Tax accountant",
+    "tax_lawyer": "Tax lawyer",
+    "hmrc_consultant": "HMRC consultant",
+    "business_expert": "Business expert",
+}
+
+_VERDICT_PHRASES = {
+    "clear": "raises no concerns",
+    "attention": "asks the professional to consider the following before approving",
+    "blocked": "BLOCKS approval until the following are resolved",
+}
+
+
+def persona_summaries(review) -> list[dict]:
+    """Deterministic prose per reviewer persona, composed ONLY from that
+    persona's stored findings. This is the explain-only boundary an LLM
+    voice would also live behind: a voice may re-express findings, never
+    add, remove, or renumber them."""
+    summaries = []
+    for persona, title in PERSONA_TITLES.items():
+        persona_findings = [f for f in review.findings if f["persona"] == persona]
+        verdict = review.verdicts.get(persona, "clear")
+        lead = f"The {title.lower()} {_VERDICT_PHRASES[verdict]}."
+        ordered = sorted(
+            persona_findings,
+            key=lambda f: {"blocker": 0, "caution": 1, "info": 2}[f["severity"]],
+        )
+        summaries.append(
+            {
+                "persona": persona,
+                "title": title,
+                "verdict": verdict,
+                "lead": lead,
+                "points": [
+                    {"severity": f["severity"], "message": f["message"]} for f in ordered
+                ],
+            }
+        )
+    return summaries
