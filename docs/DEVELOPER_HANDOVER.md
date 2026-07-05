@@ -141,12 +141,14 @@ Property / CGT:
   (letting for only part of the period) and non-shared-occupancy periods
   are out of scope — the latter correctly attract no relief since 6 April
   2020.
-- Devolved land taxes cover *residential* purchases only: Scottish LBTT
-  (bands, 8% ADS, FTB relief) and Welsh LTT (main + separate higher-rate
-  table, no FTB). Non-residential/mixed LBTT and LTT, LBTT lease
-  transactions, and LTT multiple-dwellings rules are not yet modelled.
-  Jurisdiction is an entered fact (`property.jurisdiction`); an unset value
-  defaults to England (SDLT).
+- Land taxes cover *freehold purchases* across all three regimes:
+  residential (SDLT/LBTT/LTT with surcharges and reliefs) and
+  non-residential/commercial (SDLT/LBTT/LTT progressive bands). Not yet
+  modelled: lease transactions (charged on rent NPV), mixed-use
+  apportionment, and LTT multiple-dwellings rules. Jurisdiction and
+  property type are entered facts (`property.jurisdiction`,
+  `property.property_type`); unset values default to England residential
+  (SDLT), preserving prior behaviour.
 
 IHT:
 - No BPR/APR, settled property, foreign assets, GWR detection, or
