@@ -94,9 +94,13 @@ def fingerprint(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def check_source(source: WatchedSource, fetcher=default_fetcher) -> ChangeAlert | None:
+def check_source(source: WatchedSource, fetcher=None) -> ChangeAlert | None:
     """Check one source. Returns the ChangeAlert if a change was detected,
-    None otherwise. First-ever check just baselines the content."""
+    None otherwise. First-ever check just baselines the content. When no
+    explicit fetcher is given, the feed-appropriate one for the source
+    type is used (legislation XML API, gov.uk content API, plain HTML)."""
+    if fetcher is None:
+        fetcher = resolve_fetcher(source)
     text = normalise(fetcher(source.url))
     new_fp = fingerprint(text)
 
