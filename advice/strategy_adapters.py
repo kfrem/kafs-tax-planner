@@ -259,12 +259,15 @@ class SdltPurchasePlanningAdapter:
     @staticmethod
     def is_eligible(facts: dict) -> bool:
         prop = facts.get("property", {})
-        # England/NI only; Scotland (LBTT) and Wales (LTT) have their own
-        # strategies. A property with no jurisdiction recorded defaults to
-        # England, preserving prior behaviour.
-        return prop.get("purchase_price", 0) > 0 and prop.get(
-            "jurisdiction", "england"
-        ) not in ("scotland", "wales")
+        # England/NI residential only; Scotland (LBTT), Wales (LTT) and
+        # non-residential purchases have their own strategies. A property
+        # with no jurisdiction/type recorded defaults to England residential,
+        # preserving prior behaviour.
+        return (
+            prop.get("purchase_price", 0) > 0
+            and prop.get("jurisdiction", "england") not in ("scotland", "wales")
+            and prop.get("property_type", "residential") != "non_residential"
+        )
 
     @staticmethod
     def to_facts(facts: dict) -> dict:
@@ -281,7 +284,11 @@ class LbttPurchasePlanningAdapter:
     @staticmethod
     def is_eligible(facts: dict) -> bool:
         prop = facts.get("property", {})
-        return prop.get("purchase_price", 0) > 0 and prop.get("jurisdiction") == "scotland"
+        return (
+            prop.get("purchase_price", 0) > 0
+            and prop.get("jurisdiction") == "scotland"
+            and prop.get("property_type", "residential") != "non_residential"
+        )
 
     @staticmethod
     def to_facts(facts: dict) -> dict:
@@ -298,7 +305,11 @@ class LttPurchasePlanningAdapter:
     @staticmethod
     def is_eligible(facts: dict) -> bool:
         prop = facts.get("property", {})
-        return prop.get("purchase_price", 0) > 0 and prop.get("jurisdiction") == "wales"
+        return (
+            prop.get("purchase_price", 0) > 0
+            and prop.get("jurisdiction") == "wales"
+            and prop.get("property_type", "residential") != "non_residential"
+        )
 
     @staticmethod
     def to_facts(facts: dict) -> dict:
@@ -307,6 +318,45 @@ class LttPurchasePlanningAdapter:
             "price": prop.get("purchase_price", 0),
             "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
         }
+
+
+def _non_residential_price(facts: dict) -> dict:
+    return {"price": facts.get("property", {}).get("purchase_price", 0)}
+
+
+def _non_residential_eligible(facts: dict, jurisdictions, exclude=False) -> bool:
+    prop = facts.get("property", {})
+    if prop.get("purchase_price", 0) <= 0 or prop.get("property_type") != "non_residential":
+        return False
+    juris = prop.get("jurisdiction", "england")
+    return (juris not in jurisdictions) if exclude else (juris in jurisdictions)
+
+
+@adapter("strategy.sdlt_non_residential_purchase")
+class SdltNonResidentialAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _non_residential_eligible(facts, ("scotland", "wales"), exclude=True)
+
+    to_facts = staticmethod(_non_residential_price)
+
+
+@adapter("strategy.lbtt_non_residential_purchase")
+class LbttNonResidentialAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _non_residential_eligible(facts, ("scotland",))
+
+    to_facts = staticmethod(_non_residential_price)
+
+
+@adapter("strategy.ltt_non_residential_purchase")
+class LttNonResidentialAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _non_residential_eligible(facts, ("wales",))
+
+    to_facts = staticmethod(_non_residential_price)
 
 
 @adapter("strategy.iht_spousal_transfer_nil_rate_bands")
