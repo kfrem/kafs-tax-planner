@@ -9,7 +9,13 @@ from django.core.management import call_command
 
 from authority.models import Authority
 from monitoring.models import ChangeAlert, WatchedSource
-from monitoring.watchers import check_source, run_all
+from monitoring.watchers import (
+    check_source,
+    fetch_govuk_content,
+    fetch_legislation,
+    resolve_fetcher,
+    run_all,
+)
 from ruleengine.models import RuleBaseRelease
 
 pytestmark = pytest.mark.django_db
