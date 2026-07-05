@@ -131,8 +131,10 @@ class IncorporationVsSoleTradeAdapter:
         # earned income in both arms of the comparison. Dividends drawn are
         # not included here because the standard fact set records planned
         # extraction, which the salary/dividend strategy itself determines.
-        other_income = personal.get("other_income", 0) + personal.get(
-            "salary_from_own_company", 0
+        other_income = (
+            personal.get("other_income", 0)
+            + personal.get("employment_income", 0)
+            + personal.get("salary_from_own_company", 0)
         )
         return {
             "annual_profit": facts.get("sole_trade", {}).get("annual_profit", 0),
