@@ -4,7 +4,8 @@
 <h1>{{ client.name }}</h1>
 <p>Reference: {{ client.reference }} &middot; {{ client.get_entity_type_display }}</p>
 <p><a class="btn" href="{% url 'clients:client-facts-create' client.pk %}">+ Record facts for a tax year</a>
-   <a class="btn" href="{% url 'advice:advice-list' client.pk %}">View advice history</a></p>
+   <a class="btn" href="{% url 'advice:advice-list' client.pk %}">View advice history</a>
+   <a class="btn" href="{% url 'advice:scenario' client.pk %}">Model a scenario</a></p>
 
 <h2>Tax year fact sets</h2>
 <table>
