@@ -71,6 +71,31 @@ def advice_decide(request, pk):
 
 
 @login_required
+def impact_alerts(request):
+    alerts = AdviceImpactAlert.objects.filter(firm=request.user.firm).select_related(
+        "advice_record__client", "release", "reviewed_by"
+    )
+    return render(
+        request,
+        "advice/impact_alerts.html",
+        {
+            "open_alerts": [a for a in alerts if a.status == "open"],
+            "reviewed_alerts": [a for a in alerts if a.status == "reviewed"][:25],
+        },
+    )
+
+
+@login_required
+def impact_alert_review(request, pk):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    alert = get_object_or_404(AdviceImpactAlert, pk=pk, firm=request.user.firm)
+    alert.mark_reviewed(request.user, request.POST.get("note", ""))
+    messages.success(request, "Impact alert marked reviewed.")
+    return redirect("advice:impact-alerts")
+
+
+@login_required
 def advice_list(request, client_id):
     client = get_object_or_404(Client, pk=client_id, firm=request.user.firm)
     records = client.advice_records.all()
