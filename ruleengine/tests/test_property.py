@@ -283,6 +283,31 @@ class TestLbtt:
         assert result["as_planned"]["total_lbtt"] == approx(36350.0)
 
 
+class TestFutureYearBadr:
+    """The 2026/27 release scaffolding: BADR's rate rises from 14% to 18%
+    on 6 April 2026 (FA 2025), held as two effective-dated rows, and the
+    engine resolves the right one by tax year."""
+
+    def test_badr_parameter_is_effective_dated_across_years(self):
+        # Same key, two non-overlapping rows: 14% for 2025/26, 18% from
+        # 6 April 2026. The engine picks by the tax year's anchor date.
+        assert get_parameter("cgt.business_asset_disposal_relief", "2025/26")["rate"] == 0.14
+        assert get_parameter("cgt.business_asset_disposal_relief", "2026/27")["rate"] == 0.18
+
+    def test_badr_rate_and_tax_flip_at_the_year_boundary(self):
+        # 500,000 higher-rate disposal, 497,000 taxable after AEA. At 14% =
+        # 69,580; at 18% = 89,460. The unrelieved comparison (497,000 @ 24% =
+        # 119,280) is unchanged, so the 2026/27 saving falls to 29,820.
+        facts = {"disposal_gain": 500000, "earned_income": 60000}
+        r25 = strategy_cgt_business_asset_disposal_relief(facts, "2025/26")
+        r26 = strategy_cgt_business_asset_disposal_relief(facts, "2026/27")
+        assert r25["badr_rate"] == approx(0.14)
+        assert r25["cgt_with_badr"] == approx(69580.0)
+        assert r26["badr_rate"] == approx(0.18)
+        assert r26["cgt_with_badr"] == approx(89460.0)
+        assert r26["saving"] == approx(29820.0)
+
+
 class TestNonResidentialLandTax:
     # A £500,000 commercial freehold, charged three different ways.
     def test_sdlt_non_residential(self):
