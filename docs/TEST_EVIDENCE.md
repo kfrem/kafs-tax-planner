@@ -26,11 +26,11 @@ The same suite runs in **GitHub Actions on every push and pull request**
 non-superuser app role so the RLS tests exercise real enforcement, and
 `pytest -q`. Repository: https://github.com/kfrem/kafs-tax-planner.
 
-Last full run: **197 passed, 0 failed, 0 skipped** —
+Last full run: **200 passed, 0 failed, 0 skipped** —
 locally (Python 3.13.14, Django 6.0.6, PostgreSQL 16/Docker, Windows 11)
-and in CI (ubuntu-latest, Python 3.13), 5 July 2026.
+and in CI (ubuntu-latest, Python 3.13), 6 July 2026.
 
-## 2. Test inventory (197 tests)
+## 2. Test inventory (200 tests)
 
 | File | Tests | What it proves |
 |---|---|---|
