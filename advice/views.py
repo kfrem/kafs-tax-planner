@@ -6,9 +6,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from clients.models import Client, ClientFactSet
 from reports.pdf import render_advice_pdf
 
+from django import forms
+
 from .generator import NoReleasedRuleBaseError, generate_advice
 from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision
 from .panel import DecisionError, deploy_panel, record_decision
+from .scenarios import run_scenario
 
 
 @login_required
