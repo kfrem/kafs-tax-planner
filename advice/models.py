@@ -148,6 +148,57 @@ class PanelReview(models.Model):
         return [f for f in self.findings if f["severity"] == "blocker"]
 
 
+class AdviceImpactAlert(models.Model):
+    """'A rule you relied on has changed': raised per firm, per current
+    advice record, when a rule-base release touches parameters behind
+    strategies in that advice (architecture doc §5.5 — 'the system can
+    list affected clients per firm, enabling firms to proactively
+    revisit advice'). The firm reviews and decides whether to regenerate;
+    the alert never changes the advice itself."""
+
+    class Status(models.TextChoices):
+        OPEN = "open", "Open"
+        REVIEWED = "reviewed", "Reviewed"
+
+    firm = models.ForeignKey(Firm, on_delete=models.PROTECT, related_name="impact_alerts")
+    advice_record = models.ForeignKey(
+        AdviceRecord, on_delete=models.PROTECT, related_name="impact_alerts"
+    )
+    release = models.ForeignKey(
+        RuleBaseRelease, on_delete=models.PROTECT, related_name="impact_alerts"
+    )
+    affected_strategy_codes = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN)
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+        related_name="impact_alerts_reviewed",
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    note = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["release", "advice_record"], name="unique_release_advice_impact"
+            )
+        ]
+
+    def __str__(self):
+        return f"Impact of {self.release.version} on advice {self.advice_record_id} [{self.status}]"
+
+    def mark_reviewed(self, user, note=""):
+        from django.utils import timezone
+
+        self.status = self.Status.REVIEWED
+        self.reviewed_by = user
+        self.reviewed_at = timezone.now()
+        self.note = note
+        self.save(update_fields=["status", "reviewed_by", "reviewed_at", "note"])
+
+
 class ProfessionalDecision(models.Model):
     """The human professional's decision on an advice record — only
     possible after the expert panel has reviewed it. This is what makes
