@@ -1101,6 +1101,48 @@ def strategy_ltt_purchase(facts: dict, tax_year: str) -> dict:
     }
 
 
+# Non-residential / mixed-use freehold purchases. All three regimes charge
+# these on their own progressive bands, distinct from the residential rates
+# and with no additional-dwelling surcharge or first-time buyer relief.
+# Leases (charged on rent NPV) are out of scope — see DEVELOPER_HANDOVER §5.
+
+
+@register(
+    "strategy.sdlt_non_residential_purchase",
+    consumes=["sdlt.non_residential_bands"],
+    description="SDLT on a planned non-residential or mixed-use freehold purchase in "
+    "England/NI: progressive bands (FA 2003 s.55).",
+)
+def strategy_sdlt_non_residential_purchase(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts["price"]))
+    param = get_parameter("sdlt.non_residential_bands", tax_year)
+    return {"price": price, "total_sdlt": _progressive_tax(price, param["bands"])}
+
+
+@register(
+    "strategy.lbtt_non_residential_purchase",
+    consumes=["lbtt.non_residential_bands"],
+    description="LBTT on a planned non-residential freehold purchase in Scotland: "
+    "progressive bands (LBTT(S)A 2013 s.24).",
+)
+def strategy_lbtt_non_residential_purchase(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts["price"]))
+    param = get_parameter("lbtt.non_residential_bands", tax_year)
+    return {"price": price, "total_lbtt": _progressive_tax(price, param["bands"])}
+
+
+@register(
+    "strategy.ltt_non_residential_purchase",
+    consumes=["ltt.non_residential_bands"],
+    description="LTT on a planned non-residential freehold purchase in Wales: progressive "
+    "bands (LTTA 2017 s.24).",
+)
+def strategy_ltt_non_residential_purchase(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts["price"]))
+    param = get_parameter("ltt.non_residential_bands", tax_year)
+    return {"price": price, "total_ltt": _progressive_tax(price, param["bands"])}
+
+
 # --- Inheritance tax ----------------------------------------------------------
 
 
