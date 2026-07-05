@@ -236,7 +236,13 @@ class CgtBadrAdapter:
 class SdltPurchasePlanningAdapter:
     @staticmethod
     def is_eligible(facts: dict) -> bool:
-        return facts.get("property", {}).get("purchase_price", 0) > 0
+        prop = facts.get("property", {})
+        # England/NI only; Scotland (LBTT) and Wales (LTT) have their own
+        # strategies. A property with no jurisdiction recorded defaults to
+        # England, preserving prior behaviour.
+        return prop.get("purchase_price", 0) > 0 and prop.get(
+            "jurisdiction", "england"
+        ) not in ("scotland", "wales")
 
     @staticmethod
     def to_facts(facts: dict) -> dict:
@@ -245,6 +251,39 @@ class SdltPurchasePlanningAdapter:
             "price": prop.get("purchase_price", 0),
             "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
             "first_time_buyer": prop.get("purchase_first_time_buyer", False),
+        }
+
+
+@adapter("strategy.lbtt_purchase_planning")
+class LbttPurchasePlanningAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return prop.get("purchase_price", 0) > 0 and prop.get("jurisdiction") == "scotland"
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "price": prop.get("purchase_price", 0),
+            "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
+            "first_time_buyer": prop.get("purchase_first_time_buyer", False),
+        }
+
+
+@adapter("strategy.ltt_purchase_planning")
+class LttPurchasePlanningAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return prop.get("purchase_price", 0) > 0 and prop.get("jurisdiction") == "wales"
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "price": prop.get("purchase_price", 0),
+            "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
         }
 
 
