@@ -433,7 +433,7 @@ def record_decision(record, user, decision, notes=""):
     """The professional's decision — only possible on the evidence of a
     panel review of this exact record, and blockers can only be approved
     over with a written override note."""
-    from .models import PanelReview, ProfessionalDecision
+    from .models import ProfessionalDecision
 
     review = record.latest_panel_review
     if review is None:

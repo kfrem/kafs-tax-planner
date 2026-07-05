@@ -8,6 +8,7 @@ Architecture reference: Tax_Planner_Architecture_and_Stack_Recommendation.docx
 import os
 import sys
 from pathlib import Path
+
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent

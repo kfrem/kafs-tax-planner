@@ -60,6 +60,24 @@ jobs:
       - name: Run the full suite (hand-computed tests incl. golden cases)
         run: python -m pytest -q
 
+      - name: Django deployment checks
+        run: python manage.py check --deploy --fail-level ERROR
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install dev tooling
+        run: pip install -r requirements-dev.txt
+      - name: Ruff (style + real bug patterns)
+        run: ruff check .
+      - name: pip-audit (known CVEs in pinned dependencies)
+        run: pip-audit -r requirements.txt
+
   docker-image:
     runs-on: ubuntu-latest
     steps:
