@@ -196,6 +196,28 @@ class CgtPprReliefAdapter:
         }
 
 
+@adapter("strategy.cgt_lettings_relief")
+class CgtLettingsReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        # Post-2020 relief needs shared occupancy: an entered let-fraction of
+        # the residence (a lodger / part-let while the owner lives there).
+        return (
+            prop.get("disposal_gain", 0) > 0
+            and prop.get("shared_occupancy_let_fraction", 0) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "disposal_gain": prop.get("disposal_gain", 0),
+            "let_fraction": prop.get("shared_occupancy_let_fraction", 0),
+            "earned_income": _earned_income(facts),
+        }
+
+
 @adapter("strategy.cgt_spousal_transfer_before_disposal")
 class CgtSpousalTransferAdapter:
     @staticmethod
