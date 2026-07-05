@@ -500,6 +500,34 @@ class Command(BaseCommand):
               "additional_dwelling_surcharge": 0.05,
               "first_time_buyer": {"relief_threshold": 300000, "cap": 500000,
                                    "rate_above_threshold": 0.05}}),
+            ("lbtt.residential_bands",
+             "LBTT residential bands, Additional Dwelling Supplement, first-time buyer relief (Scotland)",
+             {"bands": [
+                 {"upper": 145000, "rate": 0.0},
+                 {"upper": 250000, "rate": 0.02},
+                 {"upper": 325000, "rate": 0.05},
+                 {"upper": 750000, "rate": 0.10},
+                 {"upper": None, "rate": 0.12},
+             ],
+              "additional_dwelling_supplement": 0.08,
+              "first_time_buyer_nil_rate_threshold": 175000}),
+            ("ltt.residential_bands",
+             "LTT residential main and higher (additional-property) bands (Wales)",
+             {"main_bands": [
+                 {"upper": 225000, "rate": 0.0},
+                 {"upper": 400000, "rate": 0.06},
+                 {"upper": 750000, "rate": 0.075},
+                 {"upper": 1500000, "rate": 0.10},
+                 {"upper": None, "rate": 0.12},
+             ],
+              "higher_bands": [
+                 {"upper": 180000, "rate": 0.05},
+                 {"upper": 250000, "rate": 0.085},
+                 {"upper": 400000, "rate": 0.10},
+                 {"upper": 750000, "rate": 0.125},
+                 {"upper": 1500000, "rate": 0.15},
+                 {"upper": None, "rate": 0.17},
+             ]}),
         ]
         for key, label, payload in rows:
             TaxParameter.objects.filter(key=key, effective_range=y2025).delete()
