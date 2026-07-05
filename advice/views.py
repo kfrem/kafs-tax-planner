@@ -7,7 +7,7 @@ from clients.models import Client, ClientFactSet
 from reports.pdf import render_advice_pdf
 
 from .generator import NoReleasedRuleBaseError, generate_advice
-from .models import AdviceRecord, ProfessionalDecision
+from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision
 from .panel import DecisionError, deploy_panel, record_decision
 
 
