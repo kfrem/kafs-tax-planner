@@ -857,6 +857,17 @@ class Command(BaseCommand):
                                  "gain_at_higher_rate": 4000.0, "tax_due": 2400.0},
             ),
             dict(
+                calculator_key="strategy.cgt_business_asset_disposal_relief",
+                description="Qualifying business disposal within the lifetime limit, "
+                "higher-rate owner, 2025/26",
+                source="Hand-computed: gain 500,000 - 3,000 AEA = 497,000, all within the "
+                "1,000,000 limit at 14% = 69,580; without relief the same 497,000 at 24% "
+                "(earned 60,000 fills the basic band) = 119,280; saving 49,700",
+                input_facts={"disposal_gain": 500000, "earned_income": 60000},
+                expected_output={"gain_at_badr_rate": 497000.0, "cgt_with_badr": 69580.0,
+                                 "cgt_without_badr": 119280.0, "saving": 49700.0},
+            ),
+            dict(
                 calculator_key="sdlt_residential",
                 description="Standard residential purchase at 350,000, 2025/26",
                 source="Hand-computed: 125,000 at 0% + 125,000 at 2% (2,500) + 100,000 at "
