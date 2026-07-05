@@ -610,6 +610,30 @@ class Command(BaseCommand):
                 introduced_in_release=release_property,
             )
 
+        # Business Asset Disposal Relief: the rate rises from 14% to 18% on
+        # 6 April 2026 (Finance Act 2025). Per A5 a rate change is a NEW row,
+        # so BADR is two non-overlapping effective-dated rows across the
+        # tax-year boundary — the 2025/26 row is CLOSED at 6 April 2026, the
+        # 2026/27 row opens there under the 2026.1 release. This is the first
+        # future-tax-year row and the proof that the engine resolves rates by
+        # tax year. Delete-all-by-key keeps the seed idempotent regardless of
+        # any earlier single-row shape.
+        badr_key = "cgt.business_asset_disposal_relief"
+        badr_label = "Business Asset Disposal Relief: reduced CGT rate and lifetime limit"
+        badr_rows = [
+            (Range(datetime.date(2025, 4, 6), datetime.date(2026, 4, 6), bounds="[)"),
+             {"rate": 0.14, "lifetime_limit": 1000000}, release_property),
+            (Range(datetime.date(2026, 4, 6), None, bounds="[)"),
+             {"rate": 0.18, "lifetime_limit": 1000000}, release_2026),
+        ]
+        TaxParameter.objects.filter(key=badr_key).delete()
+        for effective_range, payload, release in badr_rows:
+            TaxParameter.objects.create(
+                key=badr_key, label=badr_label, tax_domain=TaxDomain.PROPERTY_TAXES,
+                effective_range=effective_range, payload=payload,
+                risk_classification=RiskStatus.SETTLED, introduced_in_release=release,
+            )
+
     def _create_strategies(self, release_2024, release_iht, release_property, authorities):
         open_range = Range(datetime.date(2024, 4, 6), None, bounds="[)")
 
