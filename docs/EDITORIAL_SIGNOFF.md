@@ -37,3 +37,33 @@ pack-based review before their status is set to released. The
 `generate_review_pack` command regenerates the pack; the editorial
 pre-check (`ruleengine/editorial.py`) runs in the test suite, so an
 unwired rule cannot reach a reviewable state.
+
+## Addendum, 5 July 2026 — Business Asset Disposal Relief (CGT depth)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** the new BADR content added to the property-taxes module —
+parameter `cgt.business_asset_disposal_relief` (pack item 17), strategy
+`cgt-business-asset-disposal-relief` (item 27), and authority TCGA 1992
+ss.169H-169S (item 55). Machine pre-check: 0 failures across 19
+parameters, 11 strategies, 27 authorities; the new authority's primary
+source was fetched by the watcher (legislation.gov.uk s.169H).
+
+**Figures verified independently against HMRC guidance:**
+- Reduced rate **14%** for disposals on or after 6 April 2025 (10% before;
+  18% from 6 April 2026) — HMRC CG64174 and helpsheet HS275 (2025/26),
+  statutory basis TCGA 1992 s.169N.
+- **£1,000,000** lifetime limit on qualifying gains — HS275, s.169N.
+- Excess over the lifetime limit charged at the normal CGT rate — HS275.
+
+**Verdict:** YES. The rate and limit are correct for 2025/26 and are held
+as data (a new row, effective 6 April 2025), so the April 2026 move to
+18% is a future row, not a code change. Modelling simplifications
+(qualifying gains above the £1m limit charged at the standard higher
+rate; AEA set against the relieved gain; qualifying conditions assumed
+met) are documented at the calculator and are conservative — see
+`ruleengine/calculators.py` and DEVELOPER_HANDOVER §5.
+
+**Noted for a future release:** the 18% BADR rate from 6 April 2026 (to be
+seeded as an intra-year/next-year row with its effective date and
+re-reviewed) — already on the monitoring watch-list above.
