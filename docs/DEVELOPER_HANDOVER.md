@@ -103,6 +103,7 @@ expectation in the suite is a hand-computed number, not a snapshot.
 | F3 | Simulated-Budget demo | Advice record stamped release 2025.2 while computing from another release's parameter rows; also, rows under a *draft* release would have influenced calculations | Draft gating in `get_parameter` + `parameters_used` provenance on every record; `test_provenance.py` |
 | F4 | Test authoring (twice) | My own hand-computed expectations were wrong (incorporation higher-rate figure; Victor's charity baseline ignoring his existing £50k legacy). The engine was right both times | Corrected with working shown in comments. Process lesson: derive, don't eyeball |
 | F5 | Cleanup attempt | Tried to delete a simulation advice record; the model refused (`AdviceRecord cannot be deleted`) | Not a defect — evidence the audit trail resists even developers. Superseded instead, as designed |
+| F6 | Section A batch, CI run | New view tests passed locally (DEBUG=true) but 301'd in CI (DEBUG=false enables SECURE_SSL_REDIRECT; the test client speaks plain HTTP) — an environment-parity gap, not a code bug | Autouse conftest fixture pins SECURE_SSL_REDIRECT off in tests; suite re-run locally under DEBUG=false before pushing. Lesson: reproduce CI's environment locally when CI disagrees |
 
 ## 5. Known simplifications (each needs tax-editor review, §5.6)
 
