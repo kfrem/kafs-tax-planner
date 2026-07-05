@@ -99,3 +99,31 @@ England/NI so a Scottish or Welsh purchase routes to the correct devolved
 charge (a property with no jurisdiction recorded still defaults to
 England, unchanged). Both devolved statutes delegate rate-setting to
 secondary legislation, so the data-not-code design mirrors the law.
+
+## Addendum, 5 July 2026 — Lettings relief (CGT, shared occupancy)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** parameter `cgt.lettings_relief` (pack item 18), strategy
+`cgt-lettings-relief` (item 31), and authority TCGA 1992 s.223B (item 62).
+Machine pre-check: 0 failures across 22 parameters, 14 strategies, 30
+authorities; the new authority's primary source was fetched by the
+watcher (legislation.gov.uk s.223B).
+
+**Rules verified against HMRC HS283 and TCGA 1992 s.223B:**
+- The relief equals the **lowest of** the gain attributable to the
+  letting, the private residence relief due on the disposal, and
+  **£40,000**.
+- From **6 April 2020** the relief applies **only to periods of shared
+  occupancy** with the tenant — the former relief for letting a property
+  after moving out was withdrawn.
+- Reconciled to the HS283 worked example (60% let / 40% owner-occupied,
+  £60,000 gain → £24,000 PPR, £24,000 lettings relief, £12,000
+  chargeable), which is the golden case.
+
+**Verdict:** YES. The £40,000 cap is held as data; the calculator applies
+the statutory lowest-of-three and is gated on a shared-occupancy let
+fraction, so it cannot fire on a buy-to-let never lived in (e.g. the
+Victor persona). Documented simplification: a space-based part-let
+occupied throughout ownership; time-apportioned mixed occupation is not
+composed in (DEVELOPER_HANDOVER §5).
