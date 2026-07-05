@@ -1117,6 +1117,19 @@ class Command(BaseCommand):
                                  "cgt_without_badr": 119280.0, "saving": 49700.0},
             ),
             dict(
+                calculator_key="strategy.cgt_business_asset_disposal_relief",
+                description="BADR at the 2026/27 rate of 18% (Finance Act 2025), same "
+                "500,000 higher-rate disposal",
+                source="Hand-computed: 497,000 (post-AEA) at 18% = 89,460; without relief "
+                "497,000 at 24% = 119,280; saving 29,820. Proves the 6 April 2026 rate row "
+                "resolves for tax year 2026/27",
+                tax_year="2026/27",
+                input_facts={"disposal_gain": 500000, "earned_income": 60000},
+                expected_output={"gain_at_badr_rate": 497000.0, "badr_rate": 0.18,
+                                 "cgt_with_badr": 89460.0, "cgt_without_badr": 119280.0,
+                                 "saving": 29820.0},
+            ),
+            dict(
                 calculator_key="strategy.cgt_lettings_relief",
                 description="Shared-occupancy let, 60% let / 40% owner-occupied "
                 "(HS283 example), higher-rate owner, 2025/26",
