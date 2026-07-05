@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.github/
+.env
+media/
+staticfiles/
+.pytest_cache/
+*.jpg
+*.pdf
+Tax_Planner_Architecture_and_Stack_Recommendation.docx
