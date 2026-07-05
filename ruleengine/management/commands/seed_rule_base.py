@@ -1277,6 +1277,7 @@ class Command(BaseCommand):
                 description=case["description"],
                 defaults={
                     "source": case["source"],
+                    "tax_year": case.get("tax_year", "2025/26"),
                     "input_facts": case["input_facts"],
                     "expected_output": case["expected_output"],
                 },
