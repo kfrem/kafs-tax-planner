@@ -31,6 +31,7 @@
                 <a href="{% url 'clients:client-list' %}">Clients</a>
                 {% if request.user.firm_id %}<a href="{% url 'advice:impact-alerts' %}">Impact alerts</a>{% endif %}
                 <a href="{% url 'clients:csv-import' %}">Import CSV</a>
+                <a href="{% url 'firms:mfa-setup' %}">MFA</a>
                 {% if request.user.is_staff %}<a href="{% url 'monitoring:queue' %}">Change Queue</a>{% endif %}
                 {% if request.user.is_superuser %}<a href="/admin/">Rule Base Admin</a>{% endif %}
                 <a href="{% url 'firms:logout' %}">Log out ({{ request.user.username }})</a>
