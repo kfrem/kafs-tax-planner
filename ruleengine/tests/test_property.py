@@ -22,6 +22,7 @@ from ruleengine.calculators import (
     strategy_sdlt_non_residential_purchase,
     strategy_sdlt_purchase,
 )
+from ruleengine.engine import get_parameter
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
 
