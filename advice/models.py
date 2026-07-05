@@ -148,6 +148,41 @@ class PanelReview(models.Model):
         return [f for f in self.findings if f["severity"] == "blocker"]
 
 
+class AdviceNarrative(models.Model):
+    """A validated client-facing narrative draft for an advice record.
+    Only drafts that PASSED the §8 validator exist here (create_narrative
+    refuses to store rejected drafts); the professional still edits and
+    issues it — this is a starting draft, never client-ready by itself.
+    Append-only: a redraft is a new row."""
+
+    firm = models.ForeignKey(Firm, on_delete=models.PROTECT, related_name="narratives")
+    advice_record = models.ForeignKey(
+        AdviceRecord, on_delete=models.PROTECT, related_name="narratives"
+    )
+    text = models.TextField()
+    drafter = models.CharField(
+        max_length=50,
+        help_text="What produced the draft, e.g. 'deterministic-v1' or a model id. "
+        "All drafters pass the same validator.",
+    )
+    validation_report = models.JSONField()
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="narratives_created"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("AdviceNarrative is append-only; draft again instead.")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("AdviceNarrative cannot be deleted; it is part of the audit record.")
+
+
 class AdviceImpactAlert(models.Model):
     """'A rule you relied on has changed': raised per firm, per current
     advice record, when a rule-base release touches parameters behind
