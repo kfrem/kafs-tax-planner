@@ -190,12 +190,17 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    for all three regimes (`strategy.{sdlt,lbtt,ltt}_non_residential_purchase`:
    freehold bands as data, reusing the existing FA 2003 s.55 / LBTT s.24 /
    LTT s.24 authorities, golden cases + `TestNonResidentialLandTax`; the
-   purchase strategies are gated on `property.property_type`). All
-   editorially signed off. Still open: the 6 April 2026 BADR rate rise to
-   18% (a future data row, on the watch-list); 2024/25 intra-year CGT rates
-   (needs intra-year effective ranges); land-tax *leases* (charged on rent
-   NPV) and mixed-use apportionment; disposal composition with the
-   salary/dividend whole-income picture.
+   purchase strategies are gated on `property.property_type`); and the
+   **2026/27 release scaffolding** — release `2026.1` carrying the
+   **BADR 18%** row (effective 6 April 2026) as two non-overlapping
+   effective-dated rows, proving the engine resolves rates by tax year;
+   the editorial pre-check now reviews the 2025/26 *and* 2026/27 anchors,
+   and an unapproved 2026.1 is invisible to the engine (four-eyes,
+   `TestFutureYearBadr`). All editorially signed off. Still open: filling
+   out the rest of the 2026/27 figures (only BADR has a distinct 2026/27
+   row so far); 2024/25 intra-year CGT rates (needs intra-year effective
+   ranges); land-tax *leases* (rent NPV) and mixed-use apportionment;
+   disposal composition with the salary/dividend whole-income picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
