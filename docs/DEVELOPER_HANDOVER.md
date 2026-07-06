@@ -220,9 +220,15 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    just recorded) salary/dividend extraction; mixed-use land-tax
    apportionment; and future-Budget changes as they are legislated
    (tracked on the monitoring watch-list).
-2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
-   MFA, per-client access controls, backups, DPIA, Cyber Essentials —
-   architecture doc §7 lists the full set.
+2. Ops/compliance before real firms — see `docs/PRODUCTION_READINESS.md`
+   for the full split of what's done in code vs what the firm/host must
+   sign off. **Done in code:** env-sourced `SECRET_KEY`, production
+   security hardening (`check --deploy` clean under `DEBUG=false`), RLS,
+   MFA, per-client access controls, append-only audit trail + provenance,
+   a `/healthz` probe, and the container/CI. **Firm/host still owns:**
+   DPIA, Cyber Essentials, managed UK Postgres with tested restores, an
+   Art. 28 processor agreement, incident-response procedure, and a
+   four-eyes-released rule base.
 3. Phase 2+: MTD API integration; LLM narrative layer with validator
    (architecture doc §8 guardrails); LLM voices for the expert panel
    (explain-only, per §8).
