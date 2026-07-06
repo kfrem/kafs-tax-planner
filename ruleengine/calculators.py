@@ -756,6 +756,8 @@ def sdlt_residential(facts: dict, tax_year: str) -> dict:
         "cgt.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
     ],
     description="Private residence relief on disposal of a property that has been the "
     "main residence for part of the ownership period, including the final-9-months rule.",
@@ -767,6 +769,7 @@ def strategy_cgt_ppr_relief(facts: dict, tax_year: str) -> dict:
         ownership_months, max(0.0, float(facts.get("occupied_as_main_residence_months", 0)))
     )
     earned_income = float(facts.get("earned_income", 0))
+    dividend_income = float(facts.get("dividend_income", 0))
 
     # TCGA 1992 s.223(2): the final 9 months of ownership always qualify if
     # the property has at some time been the only or main residence.
@@ -777,11 +780,13 @@ def strategy_cgt_ppr_relief(facts: dict, tax_year: str) -> dict:
     chargeable_gain = round(gain - exempt_gain, 2)
 
     with_relief = cgt_liability(
-        {"chargeable_gain": chargeable_gain, "asset_type": "residential", "earned_income": earned_income},
+        {"chargeable_gain": chargeable_gain, "asset_type": "residential",
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
     without_relief = cgt_liability(
-        {"chargeable_gain": gain, "asset_type": "residential", "earned_income": earned_income},
+        {"chargeable_gain": gain, "asset_type": "residential",
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
 
