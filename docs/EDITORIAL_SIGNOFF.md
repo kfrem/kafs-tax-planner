@@ -358,3 +358,23 @@ authority CTA 2010 s.455.
 
 **Verdict:** YES. Rate and mechanism correct; the 33.75% is held as data so
 a future alignment change is a new row, not a code change.
+
+## Addendum, 6 July 2026 — Timing of disposals (Tier-1 build 3/…)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `cgt-timing-of-disposals` (no new parameter or
+authority — reuses the CGT rates/AEA and TCGA 1992 ss.1H-1K).
+
+**Verified:** splitting a *divisible* holding (shares/units) across two tax
+years uses two annual exempt amounts and two basic-rate bands. Reconciled:
+a £15,000 gain (higher-rate boundary) is £2,400 in one year but £1,620 split
+(saving £780 = the second AEA at 18% plus £4,000 kept out of the 24% band);
+a £5,000 gain split falls entirely within two £3,000 exemptions, cutting
+£360 to nil. Gated on `personal.divisible_capital_gain` so it correctly does
+**not** fire on a single indivisible property (Victor persona unaffected).
+
+**Documented assumption:** the second year is modelled at the same rates and
+income position — a reasonable planning estimate, flagged at the calculator.
+
+**Verdict:** YES.
