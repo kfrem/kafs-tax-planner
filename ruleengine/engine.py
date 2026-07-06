@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Callable
 
 from .models import TaxParameter
-from .taxyear import anchor_date
+from .taxyear import anchor_date, tax_year_bounds
 
 
 class RuleNotFoundError(Exception):
