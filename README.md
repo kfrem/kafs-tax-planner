@@ -68,7 +68,10 @@ across the whole client-complexity range; see TEST_EVIDENCE.md §3.
 > relief, PPR, spousal transfer; SDLT/LBTT/LTT residential, commercial and
 > lease-NPV across all three UK jurisdictions), intra-year and future-year
 > effective dating, change-monitoring watchers with an editorial queue UI,
-> MFA, and a `/healthz` probe — 20 strategies, 218 tests. See
+> MFA, and a `/healthz` probe — plus Tier-1/Tier-2 planning (salary
+> sacrifice, both pension routes, group relief, bed-and-ISA, BPR/APR with the
+> April-2026 cap, EIS/SEIS/VCT) and the landlord s.24 restriction —
+> **32 strategies, 256 tests, and an end-to-end self-audit** (above). See
 > [docs/ONBOARDING.md](docs/ONBOARDING.md) §6 for the current picture.
 > Still out of scope (Phase 2/3): HMRC MTD integration, LLM narrative
 > drafting, practice-management integrations.
@@ -186,7 +189,7 @@ year, click "Generate advice".
 ## Tests
 
 ```bash
-python -m pytest        # expect: 253 passed (~7 min); this is the reproduction checkpoint
+python -m pytest        # expect: 256 passed (~7 min); this is the reproduction checkpoint
 ```
 
 Covers: calculator correctness against hand-verified HMRC-rate worked
