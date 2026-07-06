@@ -312,6 +312,36 @@ def corporation_tax(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.directors_loan_s455",
+    consumes=["directors_loan.s455"],
+    description="Directors' loan account: the s.455 charge (CTA 2010 s.455) — a temporary "
+    "corporation-tax charge on the amount of a loan to a participator still outstanding 9 "
+    "months and 1 day after the accounting period end. It is refunded (s.458) when the loan "
+    "is repaid, so repaying within the window avoids it entirely.",
+)
+def strategy_directors_loan_s455(facts: dict, tax_year: str) -> dict:
+    balance = max(0.0, float(facts.get("overdrawn_loan_balance", 0)))
+    repaid_in_time = min(balance, max(0.0, float(facts.get("repaid_within_9_months", 0))))
+
+    param = get_parameter("directors_loan.s455", tax_year)
+    rate = param["rate"]
+
+    outstanding = round(balance - repaid_in_time, 2)
+    charge = round(outstanding * rate, 2)
+    charge_if_none_repaid = round(balance * rate, 2)
+
+    return {
+        "overdrawn_loan_balance": round(balance, 2),
+        "repaid_within_9_months": round(repaid_in_time, 2),
+        "outstanding_after_deadline": outstanding,
+        "s455_charge": charge,
+        "charge_avoided_by_repaying_in_time": round(charge_if_none_repaid - charge, 2),
+        # A beneficial-loan benefit-in-kind can also arise above the threshold.
+        "beneficial_loan_reportable": balance > param["beneficial_loan_threshold"],
+    }
+
+
+@register(
     "pension_available_annual_allowance",
     consumes=["pension.annual_allowance"],
     description="Available pension annual allowance for a tax year including up to 3 years' carry-forward, with tapering for high earners.",
