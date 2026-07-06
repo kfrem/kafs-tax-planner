@@ -197,6 +197,7 @@ def _build_cases():
         ("AUDIT-HOME", "Audit: CGT homeowner", "individual", CGT_HOMEOWNER_FACTS),
         ("AUDIT-LANDLORD", "Audit: mortgaged landlord (s.24)", "individual", LANDLORD_FACTS),
         ("AUDIT-PARTNERSHIP", "Audit: two-partner firm", "partnership", PARTNERSHIP_FACTS),
+        ("AUDIT-TRUST", "Audit: discretionary trust", "trust", TRUST_FACTS),
     ]
     for juris, tag in (("england", "ENG"), ("scotland", "SCO"), ("wales", "WAL")):
         cases.append((f"AUDIT-{tag}-RES", f"Audit: {juris} residential purchase",
