@@ -191,6 +191,52 @@ def combined_personal_tax(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.gift_aid_relief",
+    consumes=[
+        "income_tax.bands",
+        "income_tax.personal_allowance",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Gift Aid relief (ITA 2007 s.414): the donation is grossed up at the basic "
+    "rate, which extends the basic-rate band — giving higher/additional-rate donors relief "
+    "beyond the 20% the charity reclaims — and reduces adjusted net income, which can "
+    "restore the personal allowance lost in the 100,000-125,140 taper.",
+)
+def strategy_gift_aid_relief(facts: dict, tax_year: str) -> dict:
+    earned = max(0.0, float(facts.get("earned_income", 0)))
+    dividends = max(0.0, float(facts.get("dividend_income", 0)))
+    existing_pension = max(0.0, float(facts.get("gross_pension_contribution", 0)))
+    net = max(0.0, float(facts.get("gift_aid_donation", 0)))
+
+    # Gross up at the basic rate: the charity reclaims that slice, and the
+    # donor's basic-rate limit is extended by the gross amount.
+    basic_rate = get_parameter("income_tax.bands", tax_year)["bands"][0]["rate"]
+    gross = round(net / (1 - basic_rate), 2)
+
+    base = {
+        "earned_income": earned,
+        "dividend_income": dividends,
+        "gross_pension_contribution": existing_pension,
+    }
+    baseline = combined_personal_tax(base, tax_year)
+    with_gift = combined_personal_tax({**base, "gross_gift_aid": gross}, tax_year)
+
+    personal_relief = round(baseline["total_tax"] - with_gift["total_tax"], 2)
+    pa_restored = round(with_gift["personal_allowance"] - baseline["personal_allowance"], 2)
+    charity_reclaims = round(gross - net, 2)
+
+    return {
+        "net_donation": round(net, 2),
+        "gross_donation": gross,
+        "charity_reclaims": charity_reclaims,
+        "personal_higher_rate_relief": personal_relief,
+        "personal_allowance_restored": pa_restored,
+        "total_tax_benefit": round(charity_reclaims + personal_relief, 2),
+    }
+
+
+@register(
     "employee_class1_nic",
     consumes=["national_insurance.employee_class1"],
     description="Employee Class 1 NIC on annual salary.",
