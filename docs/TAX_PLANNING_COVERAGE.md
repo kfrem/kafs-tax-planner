@@ -72,7 +72,7 @@ Last updated: 6 July 2026.
 
 | Strategy | Status | Notes / what's needed | Priority |
 |---|---|---|---|
-| Gift Aid | ○ | Same band-extension calc as the Individuals row. | High |
+| Gift Aid | ✓ | `gift-aid-relief` (see Individuals). Charity reclaims 20%; higher-rate donor reclaims the difference. | — |
 | Payroll Giving | ○ | Pre-tax donation from salary. | Low |
 | Gifts of shares / property to charity (IT + CGT relief) | ○ | Relief on the gift's value. | Low–Med |
 | Charitable legacies (10% rule, 40%→36%) | ✓ | `iht-charitable-legacy-reduced-rate` | — |
