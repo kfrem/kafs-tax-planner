@@ -1244,6 +1244,14 @@ class Command(BaseCommand):
                 expected_output={"tax_due": 22750.0, "marginal_relief": 2250.0},
             ),
             dict(
+                calculator_key="strategy.directors_loan_s455",
+                description="Overdrawn director's loan partly repaid in time, 2025/26",
+                source="Hand-computed: 50,000 overdrawn, 20,000 repaid within 9 months -> "
+                "30,000 outstanding at 33.75% = 10,125",
+                input_facts={"overdrawn_loan_balance": 50000, "repaid_within_9_months": 20000},
+                expected_output={"outstanding_after_deadline": 30000.0, "s455_charge": 10125.0},
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
