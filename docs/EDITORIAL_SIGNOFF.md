@@ -222,3 +222,33 @@ parameter is unchanged.
 **Verdict:** YES. Rates and the intra-year boundary are correct for
 2024/25 and held as data; the effective-dating model now spans intra-year,
 year-boundary, and future-year changes.
+
+## Addendum, 6 July 2026 — Land-tax leases (rent NPV)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** the grant of a lease charged on the net present value of rent,
+for all three regimes — parameters `sdlt.lease_npv_bands`,
+`lbtt.lease_npv_bands`, `ltt.lease_npv_bands` and strategies
+`{sdlt,lbtt,ltt}-lease-npv`, each citing the same charging statute as its
+freehold counterpart. Machine pre-check: 0 failures across 29 parameters,
+20 strategies, 30 authorities.
+
+**Method and bands verified against the tax authorities:**
+- NPV = sum of rent / 1.035^i over the term, at the statutory **3.5%**
+  temporal discount rate (FA 2003 Sch 5 / LBTT(S)A Sch 19 / LTTA).
+- **SDLT (Eng/NI):** 0% to £150k NPV, 1% to £5m, 2% above — HMRC SDLTM.
+- **LBTT (Scot):** 0% to £150k, 1% to £2m, 2% above — revenue.scot
+  LBTT6013.
+- **LTT (Wales):** 0% to £225k, 1% to £2m, 2% above — gov.wales.
+- Reconciled: £50,000 rent over 10 years gives NPV £415,830.27, so SDLT
+  and LBTT are £2,658.30 and the Welsh LTT £1,908.30 (higher nil band); a
+  £250,000 rent over 10 years (NPV £2,079,151.33) exercises the LBTT 2%
+  band at £20,083.03 — the three lease golden cases.
+
+**Verdict:** YES. Bands and the 3.5% discount are correct and held as
+data. Documented scope (DEVELOPER_HANDOVER §5): a constant annual rent
+over a whole number of years; stepped/uncertain rent, the five-year
+highest-rent rule, any lease premium (charged separately at the freehold
+rates), Scotland's 3-yearly LBTT lease reviews, and residential leases
+are not modelled.
