@@ -388,3 +388,77 @@ class TestBusinessPropertyRelief:
         assert result["total_relieved_value"] == approx(800000.0)
         assert result["taxable_value_after_relief"] == approx(0.0)
         assert result["iht_saved_by_relief"] == approx(320000.0)
+
+
+class TestVentureCapitalInvestment:
+    def test_eis_30pc_relief_and_gain_deferral(self):
+        # EIS: 100,000 -> 30% = 30,000 relief (within the 50,000 IT bill). A
+        # 40,000 gain reinvested is deferred at the 24% share rate = 9,600.
+        # Net cost 100,000 - 30,000 = 70,000 (the deferred CGT is postponed,
+        # not saved, so it does not reduce the net cost).
+        result = strategy_venture_capital_investment(
+            {
+                "scheme": "eis",
+                "amount_invested": 100000,
+                "income_tax_liability": 50000,
+                "gain_reinvested": 40000,
+                "is_higher_rate": True,
+            },
+            TAX_YEAR,
+        )
+        assert result["income_tax_relief"] == approx(30000.0)
+        assert result["cgt_deferred"] == approx(9600.0)
+        assert result["cgt_permanently_saved"] == approx(0.0)
+        assert result["net_cost_after_relief"] == approx(70000.0)
+
+    def test_seis_50pc_relief_and_reinvestment_exemption(self):
+        # SEIS: 100,000 -> 50% = 50,000 relief. Half of the 40,000 reinvested
+        # gain (20,000) is permanently exempt = 20,000 * 24% = 4,800 CGT saved.
+        # Net cost 100,000 - 50,000 - 4,800 = 45,200.
+        result = strategy_venture_capital_investment(
+            {
+                "scheme": "seis",
+                "amount_invested": 100000,
+                "income_tax_liability": 60000,
+                "gain_reinvested": 40000,
+                "is_higher_rate": True,
+            },
+            TAX_YEAR,
+        )
+        assert result["income_tax_relief"] == approx(50000.0)
+        assert result["cgt_permanently_saved"] == approx(4800.0)
+        assert result["cgt_deferred"] == approx(0.0)
+        assert result["net_cost_after_relief"] == approx(45200.0)
+
+    def test_vct_relief_capped_at_the_income_tax_bill(self):
+        # VCT: 50,000 would give 15,000 relief, but the IT bill is only 10,000
+        # so relief is capped there. Dividends are tax-free; no CGT deferral.
+        result = strategy_venture_capital_investment(
+            {
+                "scheme": "vct",
+                "amount_invested": 50000,
+                "income_tax_liability": 10000,
+                "is_higher_rate": True,
+            },
+            TAX_YEAR,
+        )
+        assert result["income_tax_relief"] == approx(10000.0)
+        assert result["capped_by_income_tax_liability"] is True
+        assert result["tax_free_dividends"] is True
+        assert result["cgt_deferred"] == approx(0.0)
+        assert result["net_cost_after_relief"] == approx(40000.0)
+
+    def test_investment_above_the_annual_limit_is_capped(self):
+        # EIS annual limit is 1,000,000: a 1,200,000 investment is relieved on
+        # 1,000,000 -> 300,000 relief (ample IT bill).
+        result = strategy_venture_capital_investment(
+            {
+                "scheme": "eis",
+                "amount_invested": 1200000,
+                "income_tax_liability": 500000,
+                "is_higher_rate": True,
+            },
+            TAX_YEAR,
+        )
+        assert result["eligible_investment"] == approx(1000000.0)
+        assert result["income_tax_relief"] == approx(300000.0)
