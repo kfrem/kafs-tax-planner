@@ -17,10 +17,13 @@ from ruleengine.calculators import (
     strategy_cgt_lettings_relief,
     strategy_cgt_ppr_relief,
     strategy_cgt_spousal_transfer,
+    strategy_lbtt_lease_npv,
     strategy_lbtt_non_residential_purchase,
     strategy_lbtt_purchase,
+    strategy_ltt_lease_npv,
     strategy_ltt_non_residential_purchase,
     strategy_ltt_purchase,
+    strategy_sdlt_lease_npv,
     strategy_sdlt_non_residential_purchase,
     strategy_sdlt_purchase,
 )
