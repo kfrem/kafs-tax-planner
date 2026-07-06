@@ -492,3 +492,28 @@ BAILII citation-order change only (identical citation set, unchanged judgment)
 — dismissed as no rule impact, recorded in the monitoring queue.
 
 **Verdict:** YES.
+
+## Addendum, 6 July 2026 — Bed-and-ISA (Tier-2 quick win 2)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `isa-bed-and-isa` (`strategy.isa_bed_and_isa`), new
+parameter `isa.allowance` (£20,000) and new authority ITTOIA 2005 s.694 (ISA
+income exemption; gains exemption TCGA 1992 s.151). Reuses the CGT annual
+exempt amount, CGT rates and dividend bands already in the store.
+
+**Verified:** selling unwrapped units and repurchasing inside an ISA shelters
+future dividends and growth; timing the sale within the CGT annual exemption
+avoids CGT on the transfer. Reconciled: a higher-rate investor sheltering the
+full £20,000 with a £2,500 gain (within the £3,000 exemption) pays no CGT and
+saves £270 a year (£800 dividends at the 33.75% upper rate); a £5,000 gain
+crystallises £480 (£2,000 above the exemption at the 24% share rate); the
+amount is capped at the £20,000 subscription limit; and a basic-rate investor
+shelters dividends at the 8.75% ordinary rate (£1,000 → £87.50).
+
+**Documented simplification:** future capital growth inside the ISA is
+CGT-free but is *not* projected (it depends on an assumed growth rate); the
+dividend saving assumes these dividends fall outside the £500 dividend
+allowance (used by other holdings). Bed-and-SIPP is a documented next step.
+
+**Verdict:** YES for the modelled transfer-CGT + annual-dividend scope.
