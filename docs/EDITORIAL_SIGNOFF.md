@@ -517,3 +517,33 @@ dividend saving assumes these dividends fall outside the £500 dividend
 allowance (used by other holdings). Bed-and-SIPP is a documented next step.
 
 **Verdict:** YES for the modelled transfer-CGT + annual-dividend scope.
+
+## Addendum, 6 July 2026 — Business/Agricultural Property Relief + April 2026 £1m cap (Tier-2 quick win 3)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `business-property-relief`
+(`strategy.business_property_relief`), new authority IHTA 1984 ss.103-124C,
+and a new **effective-dated** parameter `iht.business_property_relief` — a
+pre-reform row (unlimited 100%, closed at 6 April 2026 under release 2025.x)
+and a reformed row (£1,000,000 combined 100% cap, 50% above, from 6 April 2026
+under release 2026.1). Per playbook A5 a rate change is a new row, so this
+mirrors the BADR and dividend-rate boundary rows already in the store.
+
+**Verified against Finance Act 2025 / IHTA 1984:** 100% relief on qualifying
+business/agricultural property, capped at a combined £1m from 6 April 2026 with
+50% on the excess. Reconciled across the tax-year boundary using the same
+£2,000,000 business: 2025/26 → wholly relieved, £0 taxable, £800,000 IHT saved;
+2026/27 → £1m at 100% + £1m at 50% = £1,500,000 relieved, £500,000 taxable,
+£600,000 saved — i.e. the reform costs an extra £200,000 of IHT. Confirmed a
+sub-£1m business (£800,000) is unaffected in 2026/27 (still wholly relieved).
+The engine resolves the right regime purely from the tax year, proving the
+effective-dated design once more.
+
+**Documented assumptions/scope:** assumes the rest of the estate has used the
+nil-rate bands (the usual position where seven figures of business property
+arise), so the relief is valued at the 40% death rate; whether specific assets
+qualify (trading vs investment, the two-year ownership test, AIM shares moving
+to 50%) is a judgement flagged for the accountant, not auto-checked.
+
+**Verdict:** YES.
