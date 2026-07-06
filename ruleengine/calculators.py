@@ -967,9 +967,10 @@ def strategy_cgt_business_asset_disposal_relief(facts: dict, tax_year: str) -> d
     cgt_with_badr = round(badr_tax + excess_tax, 2)
 
     # The same disposal with no relief: a normal non-residential ("other")
-    # gain, band-split against the client's income.
+    # gain, band-split against the client's whole income.
     without = cgt_liability(
-        {"chargeable_gain": gain, "asset_type": "other", "earned_income": earned_income},
+        {"chargeable_gain": gain, "asset_type": "other",
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
 
