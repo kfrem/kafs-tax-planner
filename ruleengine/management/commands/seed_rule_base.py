@@ -450,6 +450,17 @@ class Command(BaseCommand):
                 verbatim_extract="Transferable tax allowance for married couples and civil partners "
                 "(Marriage Allowance), inserted by Finance Act 2014 s.11.",
             ),
+            dict(
+                key="ita2007_s414",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax Act 2007 s.414",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/section/414",
+                verbatim_extract="Gift Aid: a qualifying donation is treated as made after "
+                "deduction of basic-rate income tax; the individual's basic-rate limit (and "
+                "higher-rate limit) are increased by the grossed-up amount, giving relief to "
+                "higher and additional-rate taxpayers. The grossed-up gift also reduces "
+                "adjusted net income for the personal-allowance taper.",
+            ),
         ]
         result = {}
         for spec in specs:
