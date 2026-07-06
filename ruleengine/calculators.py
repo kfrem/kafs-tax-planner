@@ -925,6 +925,8 @@ def strategy_cgt_spousal_transfer(facts: dict, tax_year: str) -> dict:
         "cgt.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
     ],
     description="Business Asset Disposal Relief (TCGA 1992 ss.169H-169N): qualifying "
     "gains up to the lifetime limit at the reduced BADR rate, any excess at the "
