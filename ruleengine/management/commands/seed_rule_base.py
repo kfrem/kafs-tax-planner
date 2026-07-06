@@ -1352,6 +1352,30 @@ class Command(BaseCommand):
                 expected_output={"total_ltt": 12750.0},
             ),
             dict(
+                calculator_key="strategy.sdlt_lease_npv",
+                description="Non-residential lease, 50,000 rent over 10 years, England/NI",
+                source="Hand-computed: NPV = sum 50,000/1.035^i (i=1..10) = 415,830.27; "
+                "SDLT = (415,830.27 - 150,000) at 1% = 2,658.30",
+                input_facts={"annual_rent": 50000, "term_years": 10},
+                expected_output={"net_present_value": 415830.27, "total_sdlt": 2658.30},
+            ),
+            dict(
+                calculator_key="strategy.lbtt_lease_npv",
+                description="Lease, 250,000 rent over 10 years, Scotland (exercises the 2% band)",
+                source="Hand-computed: NPV = sum 250,000/1.035^i (i=1..10) = 2,079,151.33; "
+                "LBTT = 1,850,000 at 1% (18,500) + 79,151.33 at 2% (1,583.03) = 20,083.03",
+                input_facts={"annual_rent": 250000, "term_years": 10},
+                expected_output={"net_present_value": 2079151.33, "total_lbtt": 20083.03},
+            ),
+            dict(
+                calculator_key="strategy.ltt_lease_npv",
+                description="Non-residential lease, 50,000 rent over 10 years, Wales",
+                source="Hand-computed: NPV 415,830.27; LTT = (415,830.27 - 225,000) at 1% = "
+                "1,908.30 (Wales's higher nil threshold beats the 2,658.30 English SDLT)",
+                input_facts={"annual_rent": 50000, "term_years": 10},
+                expected_output={"net_present_value": 415830.27, "total_ltt": 1908.30},
+            ),
+            dict(
                 calculator_key="strategy.pension_annual_allowance_carry_forward",
                 description="Owner-manager: desired contribution exceeds relevant earnings; employer route quantified, 2025/26",
                 source="Hand-computed: desired 40,000 vs relevant earnings 28,000 -> relievable "
