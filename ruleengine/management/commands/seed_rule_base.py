@@ -256,6 +256,18 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="cta2010_part5",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Corporation Tax Act 2010 Part 5 (ss.97-188)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2010/4/part/5",
+                verbatim_extract="Group relief: a company may surrender its current-period trading "
+                "losses (and certain other amounts) to another company in the same group, which "
+                "claims them against its total profits of the corresponding period. Companies are "
+                "in a group for this purpose where one is a 75% subsidiary of the other, or both "
+                "are 75% subsidiaries of a third (s.152). The claimant's profits are reduced by the "
+                "amount surrendered, so the loss is relieved at the claimant's marginal rate.",
+            ),
+            dict(
                 key="caa2001_s51a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Capital Allowances Act 2001 s.51A",
