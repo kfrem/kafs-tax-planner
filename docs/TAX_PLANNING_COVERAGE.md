@@ -108,10 +108,11 @@ most-used third; the backlog is breadth, not the hard core.
 pension contribution~~ · ~~employer pension contribution~~ — **all done,
 6 Jul 2026. Tier 1 is complete.** Next is Tier 2.
 
-**Tier 2 — the flagship + common modules:** ~~group & loss relief~~ (done,
-6 Jul 2026) · ISA / Bed-and-ISA · Business Relief / Agricultural Relief ·
-EIS / SEIS / VCT + reinvestment reliefs · property incorporation (the scoped
-landlord flagship). Doing the small self-contained wins first, flagship last.
+**Tier 2 — the flagship + common modules:** ~~group & loss relief~~ ·
+~~ISA / Bed-and-ISA~~ (done, 6 Jul 2026) · Business Relief / Agricultural
+Relief · EIS / SEIS / VCT + reinvestment reliefs · property incorporation
+(the scoped landlord flagship). Doing the small self-contained wins first,
+flagship last.
 
 **Tier 3 — specialist / larger modules:** R&D · EOT · trusts · pension
 death-benefit & life-insurance-in-trust · capital allowances on commercial
