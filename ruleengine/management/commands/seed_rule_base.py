@@ -504,6 +504,8 @@ class Command(BaseCommand):
             ("corporation_tax.rates", "Corporation tax rates and marginal relief", TaxDomain.CORPORATION_TAX,
              {"small_profits_rate": 0.19, "small_profits_limit": 50000, "main_rate": 0.25,
               "main_rate_limit": 250000, "marginal_relief_fraction": 0.015}, None),
+            ("directors_loan.s455", "Directors' loan s.455 charge rate", TaxDomain.CORPORATION_TAX,
+             {"rate": 0.3375, "beneficial_loan_threshold": 10000}, None),
             ("pension.annual_allowance", "Pension annual allowance and taper", TaxDomain.PERSONAL_INCOME_TAX,
              {"standard_amount": 60000, "taper_threshold_income": 200000,
               "taper_adjusted_income_limit": 260000, "minimum_tapered_amount": 10000}, None),
