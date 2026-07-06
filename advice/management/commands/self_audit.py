@@ -169,9 +169,9 @@ class Command(BaseCommand):
 
     # -- real cases -----------------------------------------------------------
 
-    def _context(self):
-        firm = Firm.objects.get(slug="demo-accountants")
-        user = User.objects.get(username="demo")
+    def _context(self, firm_slug, username):
+        firm = Firm.objects.get(slug=firm_slug)
+        user = User.objects.get(username=username)
         with connection.cursor() as c:
             c.execute(f"SET app.current_firm_id = '{firm.id}'")
         return firm, user
