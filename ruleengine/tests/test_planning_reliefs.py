@@ -51,3 +51,33 @@ class TestGiftAid:
         assert result["personal_higher_rate_relief"] == approx(0.0)
         assert result["personal_allowance_restored"] == approx(0.0)
         assert result["charity_reclaims"] == approx(200.0)
+
+
+class TestDirectorsLoanS455:
+    def test_partly_repaid_in_time(self):
+        # 50,000 overdrawn, 20,000 repaid within 9 months -> 30,000 still
+        # outstanding at 33.75% = 10,125. Repaying in time avoided 6,750
+        # (the difference from the 16,875 charge on the full 50,000).
+        result = strategy_directors_loan_s455(
+            {"overdrawn_loan_balance": 50000, "repaid_within_9_months": 20000}, TAX_YEAR
+        )
+        assert result["outstanding_after_deadline"] == approx(30000.0)
+        assert result["s455_charge"] == approx(10125.0)
+        assert result["charge_avoided_by_repaying_in_time"] == approx(6750.0)
+        assert result["beneficial_loan_reportable"] is True
+
+    def test_fully_repaid_in_time_avoids_the_charge(self):
+        # 40,000 overdrawn, all repaid within the window -> no charge; the
+        # full 40,000 x 33.75% = 13,500 was avoided.
+        result = strategy_directors_loan_s455(
+            {"overdrawn_loan_balance": 40000, "repaid_within_9_months": 40000}, TAX_YEAR
+        )
+        assert result["s455_charge"] == approx(0.0)
+        assert result["charge_avoided_by_repaying_in_time"] == approx(13500.0)
+
+    def test_nothing_repaid(self):
+        # 25,000 outstanding at 33.75% = 8,437.50.
+        result = strategy_directors_loan_s455(
+            {"overdrawn_loan_balance": 25000}, TAX_YEAR
+        )
+        assert result["s455_charge"] == approx(8437.50)
