@@ -64,7 +64,7 @@ Last updated: 6 July 2026.
 | Potentially Exempt Transfers (7-year) | ✓ | Taper relief modelled in the gifting strategy | — |
 | Trusts (assets out of estate, retain control) | ○ | Relevant-property regime (entry/10-year/exit charges). Big specialist build; Workstream A7 of the property scope. | Med |
 | Nil-Rate Band / Residence NRB (transferable) | ✓ | `iht-spousal-transfer-and-nil-rate-bands` | — |
-| Business Relief / Agricultural Relief (capped Apr 2026) | ○ | Currently a documented *simplification* (no BPR/APR). Common for business/farm owners; model the relief and the new £1m cap. | Med–High |
+| Business Relief / Agricultural Relief (capped Apr 2026) | ✓ | `business-property-relief` — 100% relief on qualifying business/agricultural property with the **effective-dated April 2026 £1m combined cap** (100% within, 50% above; Finance Act 2025), quantifying the value relieved, the taxable value left and the IHT saved — and, run across the tax-year boundary, the extra IHT the reform costs (IHTA 1984 ss.103-124C). Asset-qualification judgement left to the accountant. | — |
 | Life insurance in trust (covers the IHT bill) | ○ | Advisory calc: policy in trust pays the bill without adding to the estate. | Med |
 | Pension death-benefit planning (Apr 2027 into-estate change) | ○ | Topical; model pre/post April 2027 treatment. | Med |
 
