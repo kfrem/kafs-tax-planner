@@ -545,6 +545,8 @@ class Command(BaseCommand):
             ("pension.annual_allowance", "Pension annual allowance and taper", TaxDomain.PERSONAL_INCOME_TAX,
              {"standard_amount": 60000, "taper_threshold_income": 200000,
               "taper_adjusted_income_limit": 260000, "minimum_tapered_amount": 10000}, None),
+            ("isa.allowance", "ISA annual subscription limit", TaxDomain.PERSONAL_INCOME_TAX,
+             {"amount": 20000}, None),
         ]
 
         for key, label, domain, payload_2024, payload_2025 in rows:
