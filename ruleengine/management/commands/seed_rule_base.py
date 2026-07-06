@@ -256,6 +256,16 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="caa2001_s51a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Capital Allowances Act 2001 s.51A",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2001/2/section/51A",
+                verbatim_extract="Entitlement to the annual investment allowance: 100% relief "
+                "on qualifying expenditure on plant and machinery up to the AIA maximum for "
+                "the chargeable period. Expenditure above the maximum is relieved through the "
+                "capital allowance pools at the writing-down allowance rates (s.56).",
+            ),
+            dict(
                 key="fa2004_s228",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Finance Act 2004 s.228",
