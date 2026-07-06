@@ -136,3 +136,48 @@ class TestCapitalAllowances:
         result = strategy_capital_allowances({"qualifying_spend": 50000}, TAX_YEAR)
         assert result["marginal_rate"] == approx(0.25)
         assert result["tax_saved_year_one"] == approx(12500.0)
+
+
+class TestSalarySacrifice:
+    def test_basic_rate_saver_keeps_it_and_ni(self):
+        # Salary 50,000, sacrifice 5,000 (both years in the 20%/8% bands).
+        # IT: 50,000 -> 7,486; 45,000 -> 6,486 = 1,000 saved (20% of 5,000).
+        # EE NIC: 37,430*8% = 2,994.40; 32,430*8% = 2,594.40 = 400 (8%).
+        # Employee saves 1,400. ER NIC: 45,000*15% = 6,750 vs 40,000*15% =
+        # 6,000 = 750. 5,000 goes into the pension; net cost 3,600.
+        result = strategy_salary_sacrifice(
+            {"salary": 50000, "sacrifice_amount": 5000}, TAX_YEAR
+        )
+        assert result["salary_sacrificed"] == approx(5000.0)
+        assert result["employee_income_tax_and_ni_saved"] == approx(1400.0)
+        assert result["employer_ni_saved"] == approx(750.0)
+        assert result["into_pension"] == approx(5000.0)
+        assert result["net_cost_of_pension_to_employee"] == approx(3600.0)
+        assert result["total_saving"] == approx(2150.0)
+
+    def test_higher_rate_saver_sacrifices_above_the_uel(self):
+        # Salary 70,000, sacrifice 10,000 -> reduced 60,000, all sacrificed
+        # income is above the UEL. IT: 70,000 -> 15,432; 60,000 -> 11,432 =
+        # 4,000 (40% of 10,000). EE NIC on income above the 50,270 UEL is 2%,
+        # so 10,000*2% = 200. Employee saves 4,200. ER NIC 15% of 10,000 =
+        # 1,500. Net cost 10,000 - 4,200 = 5,800.
+        result = strategy_salary_sacrifice(
+            {"salary": 70000, "sacrifice_amount": 10000}, TAX_YEAR
+        )
+        assert result["employee_income_tax_and_ni_saved"] == approx(4200.0)
+        assert result["employer_ni_saved"] == approx(1500.0)
+        assert result["into_pension"] == approx(10000.0)
+        assert result["net_cost_of_pension_to_employee"] == approx(5800.0)
+        assert result["total_saving"] == approx(5700.0)
+
+    def test_sacrifice_is_capped_at_salary_and_never_negative(self):
+        # Sacrifice cannot exceed the salary. 3,000 salary is below every
+        # threshold, so there is no tax/NIC to save, but the full 3,000 still
+        # goes into the pension.
+        result = strategy_salary_sacrifice(
+            {"salary": 3000, "sacrifice_amount": 5000}, TAX_YEAR
+        )
+        assert result["salary_sacrificed"] == approx(3000.0)
+        assert result["employee_income_tax_and_ni_saved"] == approx(0.0)
+        assert result["employer_ni_saved"] == approx(0.0)
+        assert result["into_pension"] == approx(3000.0)
