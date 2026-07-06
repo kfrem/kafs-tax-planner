@@ -29,7 +29,7 @@ Last updated: 6 July 2026.
 | Salary sacrifice (pension / EV / childcare) | ✓ | `salary-sacrifice-into-pension` — swaps salary for an employer pension contribution; quantifies the employee's income tax + Class 1 NIC saving, the employer's secondary NIC saving, the amount into the pension gross and its net cost (SSCBA 1992 s.6). EV/childcare variants follow the same engine. | — |
 | Gift Aid (extends basic-rate band) | ✓ | `gift-aid-relief` — basic-rate gross-up, higher-rate band relief + PA restoration in the taper (ITA 2007 s.414). | — |
 | Dividend vs salary optimisation | ✓ | `salary-dividend-mix` | — |
-| EIS / SEIS / VCT (IT relief + CGT defer/exempt) | ○ | Real module: income-tax relief calc + CGT deferral/exemption. Ties to reinvestment reliefs below. | Med |
+| EIS / SEIS / VCT (IT relief + CGT defer/exempt) | ✓ | `venture-capital-investment` — income-tax relief (EIS 30%/£1m, SEIS 50%/£200k, VCT 30%/£200k), capped at the investor's IT bill, plus the CGT treatment (EIS gain deferral, SEIS 50% reinvestment exemption, VCT tax-free dividends), and the net cost after relief (ITA 2007 Parts 5/5A/6). Parameterised by scheme (rates-as-data). | — |
 | Timing of income (shift between years) | ○ | The engine is multi-tax-year; needs a strategy that compares landing income in year A vs B. | Med |
 
 ## Companies / business owners
