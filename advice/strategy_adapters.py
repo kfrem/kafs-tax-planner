@@ -282,6 +282,26 @@ class EmployerPensionContributionAdapter:
         }
 
 
+@adapter("strategy.group_loss_relief")
+class GroupLossReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        company = facts.get("company", {})
+        return (
+            company.get("surrendering_company_loss", 0) > 0
+            and company.get("claimant_company_profit", 0) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        return {
+            "surrendering_company_loss": company.get("surrendering_company_loss", 0),
+            "claimant_company_profit": company.get("claimant_company_profit", 0),
+            "associated_companies": company.get("associated_companies", 0),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
