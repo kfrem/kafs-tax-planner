@@ -94,8 +94,8 @@ rule-base release, with your name and the date.
 ### 8. Dividend allowance  
 `dividend_tax.allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - amount: **500**
-- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
+- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 500 appears in: Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA; Income Tax Act 2007 s.13A
 
@@ -108,8 +108,8 @@ rule-base release, with your name and the date.
   - upper: **125,140**
   - rate: **0.3935**
   - upper: **None**
-- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
+- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
@@ -864,7 +864,7 @@ rule-base content under §5.6 of the architecture document.
 |---|---|---|---|
 | Personal/CT/IHT + CGT reliefs (BADR, lettings) + all land taxes (residential, commercial, leases) | kfrem (reviewing professional) | YES — every figure verified against HMRC / revenue.scot / gov.wales primary sources — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 | BADR 2026/27 18% row (release 2026.1) | kfrem (reviewing professional) | YES — 18% for disposals on/after 6 April 2026 (HMRC CG64174 / HS275, Finance Act 2025); invisible until 2026.1 is approved | 6 July 2026 |
-| Lease NPV items (SDLT/LBTT/LTT on rent NPV at 3.5%) | kfrem (reviewing professional) | YES — NPV method and bands verified against HMRC SDLTM, revenue.scot LBTT6013 and gov.wales; constant-rent scope documented — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
+| Lease NPV items + CGT whole-income composition (no new rates — a computation change) | kfrem (reviewing professional) | YES — lease NPV bands verified against HMRC SDLTM / revenue.scot / gov.wales; CGT now stacks the gain above earned income and dividends per TCGA 1992 s.1I — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 
 *Prior-year (2024/25) rows, including the 30 October 2024 intra-year CGT
 change (release 2024.2), are validated by golden cases and hand-computed
