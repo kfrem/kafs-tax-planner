@@ -98,7 +98,8 @@ Last updated: 6 July 2026.
 
 ## Coverage tally
 
-Roughly **25 built, 2 partial, ~11 planned** of ~38 mainstream strategies
+Roughly **26 built, 2 partial, ~11 planned** of ~38 mainstream strategies (the
+partnership allocation is a new client-category strategy beyond the original ~38)
 (**Tier 1 complete, 6 Jul 2026**: Gift Aid, directors'-loan/s.455, timing of
 disposals, capital allowances / AIA, salary sacrifice, and the standalone
 personal + employer pension-contribution recommendations. **Tier 2 quick wins
