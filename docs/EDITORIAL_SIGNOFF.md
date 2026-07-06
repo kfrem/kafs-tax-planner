@@ -634,3 +634,30 @@ Full N-partner allocation and salaried-member (LLP) rules are documented next
 steps.
 
 **Verdict:** YES, with the borderline flag carried through to the advice.
+
+## Addendum, 6 July 2026 — Client-type expansion 3: relevant-property trust charges
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `relevant-property-trust-charges`
+(`strategy.relevant_property_trust_charges`), new authority IHTA 1984
+ss.58-69. No new parameter — composes `iht.rates` (the 20% lifetime rate) and
+`iht.nil_rate_band`; the 30% ten-year factor and the 40-quarter cycle are
+statutory constants of the regime, coded with a citation.
+
+**Verified against IHTA 1984 ss.58-69:** the three relevant-property charges.
+Reconciled: £500,000 settled against a £325,000 band → 20% entry charge on the
+£175,000 excess = £35,000; a £600,000 fund at the ten-year point → the charge
+is 30% of the 20% lifetime rate on the £275,000 excess = 6% × £275,000 =
+£16,500, an effective 2.75% of the whole fund; a £100,000 exit 20 quarters (5
+years) into the next cycle → 2.75% × 20/40 × £100,000 = £1,375. Confirmed a
+fund within the nil-rate band bears no entry or ten-year charge (the classic
+nil-rate-band discretionary trust), and that prior chargeable transfers
+reducing the available band to £125,000 raise the entry charge to £75,000.
+
+**Documented scope:** models the standard single-trust base case. Multiple
+trusts / same-day additions (which share one nil-rate band), the pre-2006
+interest-in-possession and bereaved-minor variants, and business/agricultural
+relief inside the trust are documented next steps, flagged for the adviser.
+
+**Verdict:** YES for the modelled single-trust relevant-property charges.
