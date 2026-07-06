@@ -971,6 +971,57 @@ def strategy_property_income_finance_cost(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.partnership_profit_allocation",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+        "national_insurance.class4",
+    ],
+    description="Partnership/LLP profit-share planning: a partnership is tax-transparent, so each "
+    "partner is taxed on their share of the profit as trading income (income tax + Class 4 NIC) on "
+    "top of their other income. Where two partners are in different tax bands, the profit-sharing "
+    "ratio drives the combined tax. This compares the current allocation with a proposed one and "
+    "quantifies the difference. The ratio must reflect the partners' genuine commercial "
+    "contribution — it cannot be set for tax alone — a judgement the adviser confirms.",
+)
+def strategy_partnership_profit_allocation(facts: dict, tax_year: str) -> dict:
+    total_profit = max(0.0, float(facts.get("total_profit", 0)))
+    p1_other = max(0.0, float(facts.get("partner1_other_income", 0)))
+    p2_other = max(0.0, float(facts.get("partner2_other_income", 0)))
+    current_p1 = min(1.0, max(0.0, float(facts.get("current_partner1_share", 0.5))))
+    proposed_p1 = min(1.0, max(0.0, float(facts.get("proposed_partner1_share", current_p1))))
+
+    def _partner_tax(share_profit: float, other_income: float) -> float:
+        income_tax = combined_personal_tax(
+            {"earned_income": other_income + share_profit, "dividend_income": 0}, tax_year
+        )["total_tax"]
+        return round(income_tax + _class4_nic(share_profit, tax_year), 2)
+
+    def _allocation(p1_share: float) -> dict:
+        p1_profit = round(total_profit * p1_share, 2)
+        p2_profit = round(total_profit - p1_profit, 2)
+        t1 = _partner_tax(p1_profit, p1_other)
+        t2 = _partner_tax(p2_profit, p2_other)
+        return {
+            "partner1_profit": p1_profit, "partner2_profit": p2_profit,
+            "partner1_tax": t1, "partner2_tax": t2, "total_tax": round(t1 + t2, 2),
+        }
+
+    current = _allocation(current_p1)
+    proposed = _allocation(proposed_p1)
+    return {
+        "total_profit": round(total_profit, 2),
+        "current_total_tax": current["total_tax"],
+        "proposed_total_tax": proposed["total_tax"],
+        "tax_saving": round(current["total_tax"] - proposed["total_tax"], 2),
+        "current": current,
+        "proposed": proposed,
+    }
+
+
+@register(
     "strategy.venture_capital_investment",
     consumes=["venture_capital.schemes", "cgt.rates"],
     description="EIS / SEIS / VCT investment relief: income tax relief at the scheme rate on the "
