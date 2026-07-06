@@ -52,7 +52,7 @@ and in CI (ubuntu-latest, Python 3.13), 6 July 2026.
 | `clients/test_access.py` | 4 | Per-client access: partners see all, staff only granted clients (list, detail, advice, scenario views all enforce), grant management partner-only |
 | `advice/tests/test_panel.py` | 12 | **Expert panel**: per-persona verdicts across all three personas (Emma clear, Sarah/Victor attention with specific finding codes); blockers on rule drift (independent recomputation) and on an overruled authority; decision workflow gating (no decision without a review, blocker override needs a written note, reject/revise need notes); panel reviews append-only |
 | `clients/tests.py` | 4 | Fact-set versioning, CSV import |
-| `firms/tests.py` | 3 | Row-level security: cross-firm reads/writes blocked at the database |
+| `firms/tests.py` | 4 | Row-level security: cross-firm reads/writes blocked at the database; the `/healthz` probe is public, returns 200, and confirms DB reachability |
 | `reports/tests.py` | 1 | PDF renders and attaches to the record |
 
 Conventions: every numeric expectation is **hand-computed from published
