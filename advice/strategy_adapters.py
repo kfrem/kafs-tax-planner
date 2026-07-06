@@ -339,6 +339,26 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.partnership_profit_allocation")
+class PartnershipProfitAllocationAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("partnership", {}).get("total_profit", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        p = facts.get("partnership", {})
+        return {
+            "total_profit": p.get("total_profit", 0),
+            "partner1_other_income": p.get("partner1_other_income", 0),
+            "partner2_other_income": p.get("partner2_other_income", 0),
+            "current_partner1_share": p.get("current_partner1_share", 0.5),
+            "proposed_partner1_share": p.get(
+                "proposed_partner1_share", p.get("current_partner1_share", 0.5)
+            ),
+        }
+
+
 @adapter("strategy.property_income_finance_cost")
 class PropertyIncomeFinanceCostAdapter:
     @staticmethod
