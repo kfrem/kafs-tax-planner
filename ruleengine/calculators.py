@@ -810,6 +810,8 @@ def strategy_cgt_ppr_relief(facts: dict, tax_year: str) -> dict:
         "cgt.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
     ],
     description="Lettings relief on a shared-occupancy let (TCGA 1992 s.223B): where part "
     "of the only or main residence is let as residential accommodation while the owner "
