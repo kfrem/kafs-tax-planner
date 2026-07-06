@@ -141,14 +141,16 @@ Property / CGT:
   (letting for only part of the period) and non-shared-occupancy periods
   are out of scope — the latter correctly attract no relief since 6 April
   2020.
-- Land taxes cover *freehold purchases* across all three regimes:
-  residential (SDLT/LBTT/LTT with surcharges and reliefs) and
-  non-residential/commercial (SDLT/LBTT/LTT progressive bands). Not yet
-  modelled: lease transactions (charged on rent NPV), mixed-use
-  apportionment, and LTT multiple-dwellings rules. Jurisdiction and
-  property type are entered facts (`property.jurisdiction`,
-  `property.property_type`); unset values default to England residential
-  (SDLT), preserving prior behaviour.
+- Land taxes cover freehold purchases and lease grants across all three
+  regimes: residential/commercial freehold (SDLT/LBTT/LTT bands, surcharges
+  and reliefs) and lease rent charged on its NPV (3.5% discount), modelled
+  for a constant annual rent over a whole number of years. Not yet modelled:
+  stepped/uncertain rent, the five-year highest-rent rule, lease premiums
+  (charged separately at freehold rates), Scotland's 3-yearly LBTT lease
+  reviews, residential leases, mixed-use apportionment, and LTT
+  multiple-dwellings rules. Jurisdiction and property type are entered facts
+  (`property.jurisdiction`, `property.property_type`); unset values default
+  to England residential (SDLT), preserving prior behaviour.
 
 IHT:
 - No BPR/APR, settled property, foreign assets, GWR detection, or
