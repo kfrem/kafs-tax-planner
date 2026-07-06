@@ -211,10 +211,15 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    stacks the gain above the client's *whole* income (earned + dividends)
    and extends the basic-rate band for a gross pension contribution
    (TCGA 1992 s.1I), threaded through all four CGT strategies and their
-   adapters (`TestDisposalComposition`). All editorially signed off. Still
-   open: filling out the rest of the 2026/27 figures (only BADR has a
-   distinct 2026/27 row so far); composing CGT with the *recommended* (not
-   just recorded) salary/dividend extraction; mixed-use apportionment.
+   adapters (`TestDisposalComposition`); and the **2026/27 fill-out** —
+   the confirmed dividend rate rise (+2pp: ordinary 10.75%, upper 35.75%,
+   from 6 April 2026 under release 2026.1) added as a new effective-dated
+   row, with every other modelled parameter verified frozen and carrying
+   forward (`TestFutureYear2026`). All editorially signed off. Remaining
+   (smaller / future) items: composing CGT with the *recommended* (not
+   just recorded) salary/dividend extraction; mixed-use land-tax
+   apportionment; and future-Budget changes as they are legislated
+   (tracked on the monitoring watch-list).
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
