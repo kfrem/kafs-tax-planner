@@ -648,6 +648,30 @@ class Command(BaseCommand):
                  {"upper": 1000000, "rate": 0.05},
                  {"upper": None, "rate": 0.06},
              ]}),
+            ("sdlt.lease_npv_bands",
+             "SDLT non-residential lease: NPV discount rate and bands (England/NI)",
+             {"discount_rate": 0.035,
+              "bands": [
+                  {"upper": 150000, "rate": 0.0},
+                  {"upper": 5000000, "rate": 0.01},
+                  {"upper": None, "rate": 0.02},
+              ]}),
+            ("lbtt.lease_npv_bands",
+             "LBTT lease: NPV discount rate and bands (Scotland)",
+             {"discount_rate": 0.035,
+              "bands": [
+                  {"upper": 150000, "rate": 0.0},
+                  {"upper": 2000000, "rate": 0.01},
+                  {"upper": None, "rate": 0.02},
+              ]}),
+            ("ltt.lease_npv_bands",
+             "LTT non-residential lease: NPV discount rate and bands (Wales)",
+             {"discount_rate": 0.035,
+              "bands": [
+                  {"upper": 225000, "rate": 0.0},
+                  {"upper": 2000000, "rate": 0.01},
+                  {"upper": None, "rate": 0.02},
+              ]}),
         ]
         for key, label, payload in rows:
             TaxParameter.objects.filter(key=key, effective_range=y2025).delete()
