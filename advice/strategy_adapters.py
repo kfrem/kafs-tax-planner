@@ -325,6 +325,20 @@ class IsaBedAndIsaAdapter:
         }
 
 
+@adapter("strategy.business_property_relief")
+class BusinessPropertyReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("estate", {}).get("qualifying_business_property", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        estate = facts.get("estate", {})
+        return {
+            "qualifying_value": estate.get("qualifying_business_property", 0),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
