@@ -178,6 +178,17 @@ unresolved alerts. View layer and its staff-only access boundary are
 tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
 `TestOpenAlertBadge`).
 
+0. **FLAGSHIP NEXT BUILD — Landlord & property planning + guided adaptive
+   intake.** Fully specified in
+   [`SCOPE_landlord_planning_and_guided_intake.md`](SCOPE_landlord_planning_and_guided_intake.md):
+   the personal-vs-company-vs-trust decision for property portfolios
+   (Section 24, s.162 incorporation relief, SDLT-on-transfer, ATED,
+   break-even), plus a questions-as-data intake that asks the follow-ups
+   (married? spouse income? mortgaged? hours managed?) and surfaces its
+   assumptions, so advice is never built on silent guesses. This is the
+   differentiated, high-value use case (UK landlords; no US-tool
+   competition) — start here. Heavy tax-editor involvement required.
+
 1. **CGT/SDLT depth** — done so far: **Business Asset Disposal Relief**
    (`strategy.cgt_business_asset_disposal_relief`: 14% rate + £1m lifetime
    limit as data, TCGA 1992 ss.169H-169S, `test_property.py::TestBadr`);
