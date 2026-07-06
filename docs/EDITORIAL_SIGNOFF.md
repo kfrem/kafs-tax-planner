@@ -401,3 +401,29 @@ coverage map.
 
 **Verdict:** YES for the modelled AIA + WDA scope; full expensing is a
 documented next step.
+
+## Addendum, 6 July 2026 — Salary sacrifice into a pension (Tier-1 build 5/…)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `salary-sacrifice-into-pension` (no new parameter or
+authority — composes the income-tax, employee Class 1 and employer Class 1
+NIC calculators already seeded; authority SSCBA 1992 s.6 for the NIC).
+
+**Verified:** a valid salary sacrifice reduces contractual pay before it is
+earned, so the sacrificed slice bears no income tax and no employee or
+employer Class 1 NIC, and the whole amount goes into the pension gross.
+Reconciled the two-band cases: from a £50,000 salary, sacrificing £5,000
+saves the employee £1,400 (£1,000 IT at 20% + £400 NIC at 8%) and the
+employer £750 (15%); from £70,000, sacrificing £10,000 above the £50,270 UEL
+saves £4,200 (£4,000 IT at 40% + £200 NIC at 2%) and the employer £1,500 —
+net cost to the employee £5,800 for £10,000 invested. The sacrifice is capped
+at salary and never produces a negative saving (third hand-computed test).
+
+**Documented conditions (flagged in the strategy text, not auto-checked):**
+the arrangement must reduce pay before it is earned and keep pay above the
+National Minimum Wage; the employer-NIC saving is shown separately (advice
+may optionally add it to the pension). EV/childcare variants reuse the same
+engine and are not yet separately seeded.
+
+**Verdict:** YES.
