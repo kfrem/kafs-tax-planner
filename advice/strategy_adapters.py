@@ -339,6 +339,25 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.venture_capital_investment")
+class VentureCapitalInvestmentAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("venture_capital_investment", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        total_income = _earned_income(facts) + _dividend_income(facts)
+        return {
+            "scheme": personal.get("venture_capital_scheme", "eis"),
+            "amount_invested": personal.get("venture_capital_investment", 0),
+            "income_tax_liability": personal.get("income_tax_liability", 0),
+            "gain_reinvested": personal.get("venture_capital_gain_reinvested", 0),
+            "is_higher_rate": total_income > 50270,
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
