@@ -111,10 +111,10 @@ pension contribution~~ · ~~employer pension contribution~~ — **all done,
 6 Jul 2026. Tier 1 is complete.** Next is Tier 2.
 
 **Tier 2 — the flagship + common modules:** ~~group & loss relief~~ ·
-~~ISA / Bed-and-ISA~~ · ~~Business Relief / Agricultural Relief~~ (done,
-6 Jul 2026) · EIS / SEIS / VCT + reinvestment reliefs · property incorporation
-(the scoped landlord flagship). Doing the small self-contained wins first,
-flagship last.
+~~ISA / Bed-and-ISA~~ · ~~Business Relief / Agricultural Relief~~ ·
+~~EIS / SEIS / VCT + reinvestment reliefs~~ (all quick wins done, 6 Jul 2026) ·
+**property incorporation (the scoped landlord flagship) — the only Tier-2 item
+left.** Small self-contained wins done first, flagship next.
 
 **Tier 3 — specialist / larger modules:** R&D · EOT · trusts · pension
 death-benefit & life-insurance-in-trust · capital allowances on commercial
