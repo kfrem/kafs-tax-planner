@@ -40,7 +40,7 @@ Last updated: 6 July 2026.
 | Directors' loan account / s.455 (33.75% charge) | ✓ | `directors-loan-s455` — the charge on the balance outstanding after the 9-month window, and the amount avoided by repaying in time (CTA 2010 s.455). | — |
 | Capital allowances / Annual Investment Allowance | ✓ | `capital-allowances-aia` — 100% AIA up to £1m, 18% WDA on the excess, tax saved at the marginal rate (CAA 2001 s.51A). Full expensing not yet added. | — |
 | R&D tax relief | ○ | Valuable, specialist; the merged-scheme rules from April 2024. | Med |
-| Employer pension contributions (CT relief, no NI) | ◐ | The pension strategy already shows the employer-route CT saving; surface it as its own recommendation. | Med |
+| Employer pension contributions (CT relief, no NI) | ✓ | `employer-pension-contribution` — standalone recommendation: corporation-tax saving, employer NIC saved versus paying the same as salary, no relevant-earnings cap, net cost to the company (CTA 2009 s.54 wholly-and-exclusively test flagged for the reviewer). | — |
 | Employee Ownership Trust (EOT) — CGT-free sale | ○ | Specialist, high value; note the Autumn 2024 tightening. | Med |
 | Group relief / loss relief | ○ | Move losses between group companies / carry back/forward. | Med |
 | Patent Box | ○ | Niche (10% CT on patented-product profits). | Low |
