@@ -280,3 +280,35 @@ and their adapters, which now supply the client's dividends.
 owner-managers who take dividends. Documented follow-on: composing the
 gain with the *recommended* (optimiser) extraction, not just the recorded
 dividends, remains future work (as for the incorporation comparison).
+
+## Addendum, 6 July 2026 — 2026/27 fill-out (dividend rates + carry-forward)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** completing the 2026/27 position now that the release scaffolding
+exists. A confirmed rate change was found and added; the remaining modelled
+parameters are frozen and carry forward.
+
+**Confirmed 2026/27 change (added, under release 2026.1):**
+- **Dividend tax rates rise 2 percentage points from 6 April 2026**
+  (Budget 2025): ordinary **8.75% → 10.75%**, upper **33.75% → 35.75%**;
+  the additional rate (39.35%), the band thresholds and the £500 allowance
+  are unchanged. Held as a new effective-dated `dividend_tax.bands` row
+  (the 2025/26 row is closed at 6 April 2026). Verified against the HMRC
+  technical note "Change to tax rates for property, savings and dividend
+  income". Reconciled: 30,000 other income + 20,000 dividends gives
+  £4,781.25 in 2025/26 and £5,171.25 in 2026/27 — the two dividend golden
+  cases. (Property/savings income rate changes are 6 April 2027 and are not
+  modelled — the tool does not separate savings income.)
+
+**Verified as frozen for 2026/27 (carry forward on open rows, no new row):**
+personal allowance £12,570, income tax bands (£37,700 / £125,140), the
+£500 dividend allowance, CGT annual exempt amount £3,000, IHT nil-rate band
+£325,000, and corporation tax 25%/19% — pinned by
+`test_calculators.py::TestFutureYear2026::test_frozen_parameters_carry_forward_to_2026_27`,
+so a future edit cannot silently break the carry-forward.
+
+**Verdict:** YES. With BADR 18% and the dividend rise, the 2026/27 modelled
+parameter set is complete against currently-confirmed law; further changes
+(e.g. a future Budget) are tracked on the monitoring watch-list and become
+new effective-dated rows when legislated.
