@@ -182,9 +182,14 @@ agreement, a four-eyes-released rule base) is in `PRODUCTION_READINESS.md`.
 Key framing for whoever takes this to market: **demos use the three dummy
 personas, so no real client data and no heavy compliance is needed to start
 showing firms.** The compliance pack only applies once a firm signs and real
-data goes on. Cheapest demo hosting under discussion: Railway Hobby (~£5/mo,
-EU) or a Hostinger VPS (~£5/mo, EU/UK, Docker-template friendly); graduate
-to DigitalOcean London / Azure UK for real client data.
+data goes on.
+
+**Costs, the database options (Neon/Supabase/host-managed), how easy it is
+to switch provider as you grow, and the running decision log are all in
+[`HOSTING_AND_COSTS.md`](HOSTING_AND_COSTS.md)** — read it before making any
+hosting choice so you don't re-litigate settled reasoning. In short: ~£5–10/mo
+at demo, ~£10–30/mo at 2–5 firms, ~£30–100/mo at 10+; switching host is a
+Docker redeploy plus a `pg_dump`/`pg_restore` (~half a day), by design.
 
 ## 8. Accounts, environment, and CI
 
