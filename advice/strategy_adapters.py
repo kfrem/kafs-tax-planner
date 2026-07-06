@@ -339,6 +339,26 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.property_income_finance_cost")
+class PropertyIncomeFinanceCostAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return prop.get("rental_income", 0) > 0 and prop.get("finance_costs", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "rental_income": prop.get("rental_income", 0),
+            "allowable_expenses": prop.get("allowable_expenses", 0),
+            "finance_costs": prop.get("finance_costs", 0),
+            # The landlord's other taxable income (salary/trade/other) that
+            # stacks with the rental profit to set the marginal rate.
+            "other_income": _earned_income(facts),
+        }
+
+
 @adapter("strategy.venture_capital_investment")
 class VentureCapitalInvestmentAdapter:
     @staticmethod
