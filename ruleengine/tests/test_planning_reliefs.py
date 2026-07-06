@@ -183,3 +183,78 @@ class TestSalarySacrifice:
         assert result["employee_income_tax_and_ni_saved"] == approx(0.0)
         assert result["employer_ni_saved"] == approx(0.0)
         assert result["into_pension"] == approx(3000.0)
+
+
+class TestPersonalPensionContribution:
+    def test_sixty_percent_relief_inside_the_taper(self):
+        # Earned 110,000, 10,000 gross contribution. Without: PA tapered to
+        # 7,570, tax 33,432. With: 10,000 reduces ANI to 100,000 (PA fully
+        # restored to 12,570) and extends the basic band by 10,000, tax 29,432
+        # = 4,000 saved. Plus the 2,000 basic-rate credit HMRC adds = 6,000
+        # relief on a 10,000 contribution = 60% effective; net cost 4,000.
+        result = strategy_personal_pension_contribution(
+            {"earned_income": 110000, "desired_contribution": 10000}, TAX_YEAR
+        )
+        assert result["relievable_gross"] == approx(10000.0)
+        assert result["basic_rate_credit_to_pension"] == approx(2000.0)
+        assert result["higher_rate_and_taper_saving"] == approx(4000.0)
+        assert result["personal_allowance_restored"] == approx(5000.0)
+        assert result["total_relief_value"] == approx(6000.0)
+        assert result["effective_relief_rate"] == approx(0.60)
+        assert result["net_cost_to_member"] == approx(4000.0)
+
+    def test_basic_rate_taxpayer_gets_only_the_source_relief(self):
+        # Earned 40,000: taxable 27,430 is already inside the basic band, so
+        # extending the band changes no tax. Relief is just the 20% credit
+        # (1,000 on 5,000) = 20% effective; net cost 4,000.
+        result = strategy_personal_pension_contribution(
+            {"earned_income": 40000, "desired_contribution": 5000}, TAX_YEAR
+        )
+        assert result["basic_rate_credit_to_pension"] == approx(1000.0)
+        assert result["higher_rate_and_taper_saving"] == approx(0.0)
+        assert result["personal_allowance_restored"] == approx(0.0)
+        assert result["total_relief_value"] == approx(1000.0)
+        assert result["effective_relief_rate"] == approx(0.20)
+        assert result["net_cost_to_member"] == approx(4000.0)
+
+    def test_relief_capped_at_relevant_earnings_not_dividends(self):
+        # 5,000 earnings but a 10,000 desired contribution: relief is capped at
+        # max(3,600, 5,000) = 5,000; the other 5,000 is unrelieved. Dividends
+        # do not lift the cap (FA 2004 s.190).
+        result = strategy_personal_pension_contribution(
+            {
+                "earned_income": 5000,
+                "dividend_income": 50000,
+                "desired_contribution": 10000,
+                "relevant_uk_earnings": 5000,
+            },
+            TAX_YEAR,
+        )
+        assert result["relievable_gross"] == approx(5000.0)
+        assert result["unrelieved_amount"] == approx(5000.0)
+
+
+class TestEmployerPensionContribution:
+    def test_ct_saving_and_ni_avoided_at_the_main_rate(self):
+        # 300,000 profit is above the 250,000 upper limit -> flat 25%. A 20,000
+        # contribution cuts CT from 75,000 to 70,000 = 5,000. Paying the same
+        # as salary would have cost 20,000*15% = 3,000 employer NIC, which the
+        # pension route avoids. Net cost after CT relief 15,000.
+        result = strategy_employer_pension_contribution(
+            {"company_profit": 300000, "contribution": 20000}, TAX_YEAR
+        )
+        assert result["contribution"] == approx(20000.0)
+        assert result["corporation_tax_saving"] == approx(5000.0)
+        assert result["employer_ni_saved_vs_salary"] == approx(3000.0)
+        assert result["no_relevant_earnings_cap") if False else result["no_relevant_earnings_cap"]
+        assert result["net_cost_to_company"] == approx(15000.0)
+
+    def test_contribution_capped_at_available_profit(self):
+        # A 60,000 contribution against 50,000 profit is capped at 50,000
+        # (the deduction cannot exceed the profit). 50,000 profit is at the
+        # small-profits limit -> 19%, so CT falls 9,500 to nil = 9,500.
+        result = strategy_employer_pension_contribution(
+            {"company_profit": 50000, "contribution": 60000}, TAX_YEAR
+        )
+        assert result["contribution"] == approx(50000.0)
+        assert result["corporation_tax_saving"] == approx(9500.0)
