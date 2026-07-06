@@ -256,6 +256,20 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ita2007_venture_capital",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/part/5",
+                verbatim_extract="Income tax relief for venture-capital investment: the Enterprise "
+                "Investment Scheme gives relief at 30% on up to £1,000,000 a year (£2,000,000 for "
+                "knowledge-intensive companies), the Seed Enterprise Investment Scheme 50% on up "
+                "to £200,000, and Venture Capital Trusts 30% on up to £200,000. Relief cannot "
+                "exceed the investor's income tax liability. EIS also allows unlimited deferral of "
+                "a chargeable gain reinvested in the shares (TCGA 1992 Sch 5B); SEIS exempts 50% "
+                "of a reinvested gain (Sch 5BB); VCT dividends and disposals are tax-free. Gains "
+                "on EIS/SEIS shares held for the minimum period are themselves exempt.",
+            ),
+            dict(
                 key="ihta1984_bpr_apr",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Inheritance Tax Act 1984 ss.103-114 (BPR) and ss.115-124C (APR)",
