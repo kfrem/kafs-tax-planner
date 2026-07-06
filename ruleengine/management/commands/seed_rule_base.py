@@ -512,6 +512,34 @@ class Command(BaseCommand):
                 risk_classification=RiskStatus.SETTLED, introduced_in_release=release_2025,
             )
 
+        # Dividend tax rates rise 2 percentage points on 6 April 2026 (Budget
+        # 2025): ordinary 8.75% -> 10.75%, upper 33.75% -> 35.75%; the
+        # additional rate (39.35%), the band thresholds and the £500 allowance
+        # are unchanged. Per A5 a rate change is a new row, so the 2025/26 row
+        # is CLOSED at 6 April 2026 and the 2026/27 row opens under 2026.1.
+        div_2024_25 = {"bands": [
+            {"upper": 37700, "rate": 0.0875}, {"upper": 125140, "rate": 0.3375},
+            {"upper": None, "rate": 0.3935},
+        ]}
+        div_2026 = {"bands": [
+            {"upper": 37700, "rate": 0.1075}, {"upper": 125140, "rate": 0.3575},
+            {"upper": None, "rate": 0.3935},
+        ]}
+        dividend_rows = [
+            (y2024, div_2024_25, release_2024),
+            (Range(datetime.date(2025, 4, 6), datetime.date(2026, 4, 6), bounds="[)"),
+             div_2024_25, release_2025),
+            (Range(datetime.date(2026, 4, 6), None, bounds="[)"), div_2026, release_2026),
+        ]
+        TaxParameter.objects.filter(key="dividend_tax.bands").delete()
+        for effective_range, payload, release in dividend_rows:
+            TaxParameter.objects.create(
+                key="dividend_tax.bands", label="Dividend tax bands",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX, effective_range=effective_range,
+                payload=payload, risk_classification=RiskStatus.SETTLED,
+                introduced_in_release=release,
+            )
+
     def _create_iht_parameters(self, release_iht):
         y2024 = Range(datetime.date(2024, 4, 6), datetime.date(2025, 4, 6), bounds="[)")
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
