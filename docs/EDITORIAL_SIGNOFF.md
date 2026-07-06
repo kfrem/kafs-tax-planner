@@ -252,3 +252,31 @@ over a whole number of years; stepped/uncertain rent, the five-year
 highest-rent rule, any lease premium (charged separately at the freehold
 rates), Scotland's 3-yearly LBTT lease reviews, and residential leases
 are not modelled.
+
+## Addendum, 6 July 2026 — CGT whole-income composition
+
+**Reviewing professional:** kfrem.
+
+**Scope:** a computation change (no new rates). `cgt_liability` now treats
+the gain as the top slice (TCGA 1992 s.1I): the basic-rate band available
+for the gain is reduced by the client's earned income AND dividends, and
+extended by a gross relief-at-source pension contribution. Threaded
+through all four CGT strategies (PPR, spousal transfer, BADR, lettings)
+and their adapters, which now supply the client's dividends.
+
+**Correctness confirmed:**
+- With no dividends and no pension the result is byte-identical to the
+  prior earned-only behaviour (regression test), so existing golden cases
+  and persona numbers are unchanged (the personas take no dividends where
+  they have a disposal).
+- Reconciled: earned £30,000 + dividends £20,000 leave only £270 of the
+  basic-rate band, so a £17,000 residential gain is £4,063.80 (270 @ 18% +
+  16,730 @ 24%) — versus £3,060 if dividends were ignored. A £10,000 gross
+  pension contribution extends the band and saves £600 of CGT (6% on the
+  £10,000 shifted from 24% to 18%). These are the composition golden case
+  and tests.
+
+**Verdict:** YES. This corrects a prior understatement of CGT for
+owner-managers who take dividends. Documented follow-on: composing the
+gain with the *recommended* (optimiser) extraction, not just the recorded
+dividends, remains future work (as for the incorporation comparison).
