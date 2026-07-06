@@ -246,7 +246,7 @@ class TestEmployerPensionContribution:
         assert result["contribution"] == approx(20000.0)
         assert result["corporation_tax_saving"] == approx(5000.0)
         assert result["employer_ni_saved_vs_salary"] == approx(3000.0)
-        assert result["no_relevant_earnings_cap") if False else result["no_relevant_earnings_cap"]
+        assert result["no_relevant_earnings_cap"] is True
         assert result["net_cost_to_company"] == approx(15000.0)
 
     def test_contribution_capped_at_available_profit(self):
