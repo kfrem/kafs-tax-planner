@@ -175,6 +175,13 @@ def _earned_income(facts: dict) -> float:
     )
 
 
+def _dividend_income(facts: dict) -> float:
+    """Dividends the client actually receives — they sit below a capital gain
+    in the tax bands (TCGA 1992 s.1I), so a disposal composes with them."""
+    personal = facts.get("personal", {})
+    return personal.get("dividends_from_own_company", 0) + personal.get("other_dividends", 0)
+
+
 @adapter("strategy.cgt_ppr_relief")
 class CgtPprReliefAdapter:
     @staticmethod
