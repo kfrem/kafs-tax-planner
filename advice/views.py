@@ -52,6 +52,7 @@ def advice_detail(request, pk):
             "record": record,
             "panel_summaries": persona_summaries(review) if review else None,
             "narrative": record.narratives.order_by("-created_at").first(),
+            "intake_gaps": intake_gaps(record.input_data_snapshot),
         },
     )
 
