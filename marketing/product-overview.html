@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Tax Planner — turn compliance clients into advisory revenue</title>
+<style>
+  :root{
+    --navy:#0b3d59; --navy-2:#0f4d70; --ink:#152935; --muted:#5b6b76;
+    --line:#e2e8ec; --paper:#ffffff; --wash:#f4f7f9; --gold:#b9770e; --gold-bg:#fff6e6;
+    --green:#1a7a53; --green-bg:#e7f5ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);line-height:1.6;background:var(--wash);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;background:var(--paper)}
+  .pad{padding:44px 56px}
+  h1,h2,h3{line-height:1.25;color:var(--navy);font-weight:700;margin:0}
+  h1{font-size:34px} h2{font-size:24px;margin-bottom:6px} h3{font-size:18px}
+  p{margin:10px 0}
+  .lead{font-size:18px;color:var(--muted)}
+  a{color:var(--navy-2)}
+  header{background:var(--navy);color:#fff}
+  header h1{color:#fff}
+  header .pad{padding:40px 56px}
+  .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:600;color:#9ecbe4;margin:0 0 12px}
+  header p{color:#d6e6f0;font-size:19px;max-width:660px}
+  .section{border-top:1px solid var(--line)}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:1fr 1fr} .g3{grid-template-columns:1fr 1fr 1fr}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+  .card h3{margin-bottom:6px;font-size:16.5px}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .ic{width:38px;height:38px;border-radius:9px;background:var(--wash);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .ic svg{width:20px;height:20px;stroke:var(--navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:8px 0 4px}
+  .kpi{background:var(--wash);border-radius:12px;padding:18px 20px}
+  .kpi .n{font-size:28px;font-weight:700;color:var(--navy)}
+  .kpi .l{font-size:13px;color:var(--muted);margin-top:2px}
+  .pill{display:inline-block;background:var(--gold-bg);color:var(--gold);font-size:12.5px;font-weight:600;
+    padding:4px 12px;border-radius:20px;margin-bottom:14px}
+  .calc{background:var(--navy);color:#fff;border-radius:14px;padding:26px 28px}
+  .calc h3{color:#fff;font-size:19px}
+  .calc label{display:block;font-size:13px;color:#bcd6e6;margin:16px 0 6px}
+  .calc input[type=range]{width:100%}
+  .row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:#d6e6f0}
+  .calc .out{background:#0a3консол;}
+  .out{background:rgba(255,255,255,.08);border-radius:10px;padding:16px 18px;margin-top:20px;text-align:center}
+  .out .big{font-size:32px;font-weight:700;color:#fff}
+  .out .sub{font-size:13px;color:#bcd6e6}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--navy);font-weight:600;background:var(--wash)}
+  .steps{counter-reset:s;padding:0;margin:6px 0 0;list-style:none}
+  .steps li{counter-increment:s;position:relative;padding:12px 0 12px 46px;border-bottom:1px solid var(--line)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:11px;width:30px;height:30px;border-radius:50%;
+    background:var(--navy);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .steps b{color:var(--ink)}
+  .cta{background:var(--wash);text-align:center}
+  .btn{display:inline-block;background:var(--gold);color:#fff;font-weight:600;text-decoration:none;
+    padding:13px 30px;border-radius:8px;font-size:16px;margin-top:6px}
+  footer{background:var(--navy);color:#9ecbe4;font-size:12.5px}
+  footer .pad{padding:22px 56px}
+  ul.bullets{margin:6px 0 0;padding-left:20px;color:var(--muted);font-size:14.5px}
+  ul.bullets li{margin:5px 0}
+  @media(max-width:720px){.pad{padding:30px 24px}.g2,.g3,.kpis{grid-template-columns:1fr}h1{font-size:27px}}
+  @media print{body{background:#fff}.wrap{max-width:none}.calc,.cta{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="pad">
+      <p class="eyebrow">UK Tax Planner · for accounting practices</p>
+      <h1>Turn your compliance clients into advisory revenue.</h1>
+      <p>Generate quantified, legislation-cited tax-planning advice in minutes — advice you can defend line-by-line to HMRC — and productise it as a paid service your clients will thank you for.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="pad">
+      <h2>The opportunity most firms are sitting on</h2>
+      <p class="lead">You already hold the data and the trust. You're just not billing for the advice.</p>
+      <p>Every compliance client is an advisory client you haven't converted. Owner-managers overpay tax through the wrong salary/dividend mix, unused pension allowances, mistimed disposals and missed reliefs — and they'd happily pay to fix it. But doing planning by hand is slow, and every figure you put in writing carries professional-indemnity risk. So most firms don't offer it, and leave the fees on the table.</p>
+      <div class="kpis">
+        <div class="kpi"><div class="n">£4.8k–£10k</div><div class="l">what US firms charge per tax plan using comparable software</div></div>
+        <div class="kpi"><div class="n">Minutes</div><div class="l">to produce a client-ready, cited plan, not hours</div></div>
+        <div class="kpi"><div class="n">Every £</div><div class="l">traceable to legislation and reproducible on demand</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="pad">
+      <h2>What it does for you</h2>
+      <p class="lead">Six things that each either make you money or take away risk.</p>
+      <div class="grid g3" style="margin-top:18px">
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 4-6"/></svg></div><h3>Instant quantified advice</h3><p>Salary/dividend mix, pension carry-forward, incorporation, IHT, CGT reliefs (BADR, PPR, lettings), and SDLT/LBTT/LTT across all three UK nations — with the £ saving spelled out.</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Defensible by design</h3><p>Every number cites the exact legislation with an effective date, and can be recomputed years later. An audit trail no one can alter. This is your PI protection.</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><h3>Client-ready reports</h3><p>Branded, plain-English PDF advice you hand straight to the client — the deliverable they pay for, generated from the same figures on screen.</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Always current</h3><p>Rates are dated data, not hard-coded. It handles mid-year and future-year changes, and watches the primary sources so you're never advising on stale law.</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><h3>Secure & multi-client</h3><p>Bank-style isolation between clients, multi-factor login, and records that can't be edited or deleted — built for a real practice, not a spreadsheet.</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-6"/></svg></div><h3>Whole-picture accuracy</h3><p>It composes salary, dividends, sole-trade profit and capital gains together — so the advice reflects the client's real position, not one number in isolation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="pad">
+      <h2>The revenue case</h2>
+      <p class="lead">Move the sliders. This is your pitch to a partner.</p>
+      <div class="grid g2" style="margin-top:18px;align-items:start">
+        <div class="calc">
+          <h3>Your advisory upside</h3>
+          <label>Clients you could offer planning to: <span id="cv">50</span></label>
+          <input type="range" id="clients" min="10" max="500" value="50" step="5">
+          <label>Share who take a paid review: <span id="pv">20</span>%</label>
+          <input type="range" id="pct" min="5" max="60" value="20" step="1">
+          <label>Fee per planning review: £<span id="fv">750</span></label>
+          <input type="range" id="fee" min="250" max="2500" value="750" step="50">
+          <div class="out">
+            <div class="big" id="rev">£7,500</div>
+            <div class="sub">new advisory revenue in year one · <span id="roi">50</span>× the software cost</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:17px">A worked example</h3>
+          <p style="color:var(--muted);font-size:14.5px">A firm on the <b>Practice</b> plan (£149/mo, £1,788/yr) converts 10 of its owner-managed clients to a £750 "profit-extraction review." That's <b>£7,500</b> of new fees from <b>£1,788</b> of software — a return of more than 4×, before the retained-client and referral value.</p>
+          <p style="color:var(--muted);font-size:14.5px">Because the advice is defensible and reproducible, you can stand behind it — and because it's fast, the margin on that £750 is almost all yours.</p>
+          <p style="font-size:13px;color:var(--muted)"><em>Illustrative figures — set your own fee and conversion. Software cost assumes the Practice tier.</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="pad">
+      <h2>Why it beats the alternatives</h2>
+      <table>
+        <tr><th>Instead of…</th><th>The problem</th><th>What you get here</th></tr>
+        <tr><td>Compliance/filing tools (TaxCalc, BTC, IRIS)</td><td>They file returns — they don't tell the client how to pay less.</td><td>Forward-looking advice that earns fees, not just submissions.</td></tr>
+        <tr><td>Reporting/forecasting apps (Fathom, Syft)</td><td>Dashboards and cash-flow — no tax planning.</td><td>Actual quantified UK tax strategies with the saving in £.</td></tr>
+        <tr><td>US planning software (Corvee)</td><td>US tax law; per-plan credit pricing firms dislike.</td><td>Built for UK law; simple flat pricing; no credit meter.</td></tr>
+        <tr><td>Spreadsheets & manual work</td><td>Slow, error-prone, and impossible to defend later.</td><td>Minutes per client, every figure cited and reproducible.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="pad">
+      <h2>How to sell it as a service</h2>
+      <p class="lead">Real ways to package this into paid work — not just software you own.</p>
+      <ul class="steps" style="margin-top:14px">
+        <li><b>Launch a fixed-fee "Profit Extraction Review."</b> £500–£1,500 for owner-managers: the optimal salary/dividend/pension mix, in a branded report. The tool produces it in minutes.</li>
+        <li><b>Run an annual "Tax Health Check."</b> Bolt it onto the year-end cycle for every client — a natural, recurring advisory touchpoint you already have the meeting for.</li>
+        <li><b>Time it to the Budget and tax-year end.</b> Proactive "here's what's changing and what to do before 5 April" outreach converts far better than reactive filing.</li>
+        <li><b>Win new clients with defensibility.</b> "Every recommendation we give you is backed by the exact legislation and can be re-checked any time" is a differentiator prospects remember.</li>
+        <li><b>Ladder your fees.</b> Free initial review to open the door → paid implementation and follow-up. The report is the wedge.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="pad">
+      <h2>See it on your own client scenarios</h2>
+      <p class="lead" style="margin-bottom:4px">A 20-minute demo on three real-world owner-manager cases — no data of yours required.</p>
+      <a class="btn" href="#">Book a demo</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="pad">
+      <p>UK Tax Planner — decision-support software for accounting practices. Figures for tax rates and reliefs are drawn from published HMRC and legislation sources and are reviewed by a qualified tax professional before release. Competitor pricing and revenue examples are indicative and for illustration only. © 2026.</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  var C=document.getElementById('clients'),P=document.getElementById('pct'),F=document.getElementById('fee');
+  var cv=document.getElementById('cv'),pv=document.getElementById('pv'),fv=document.getElementById('fv');
+  var rev=document.getElementById('rev'),roi=document.getElementById('roi');
+  var SOFTWARE=1788;
+  var gbp=function(n){return '£'+Math.round(n).toLocaleString('en-GB');};
+  function calc(){
+    var clients=+C.value, pct=+P.value, fee=+F.value;
+    cv.textContent=clients; pv.textContent=pct; fv.textContent=fee.toLocaleString('en-GB');
+    var revenue=clients*(pct/100)*fee;
+    rev.textContent=gbp(revenue);
+    roi.textContent=Math.max(1,Math.round(revenue/SOFTWARE));
+  }
+  [C,P,F].forEach(function(el){el.addEventListener('input',calc);});
+  calc();
+</script>
+</body>
+</html>
