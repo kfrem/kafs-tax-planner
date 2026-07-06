@@ -338,3 +338,23 @@ backward-compatible (all 218 prior tests unchanged).
 
 **Verdict:** YES. Correct and defensible; the composition with the existing
 band/taper engine is exact.
+
+## Addendum, 6 July 2026 — Directors' loan s.455 (Tier-1 build 2/…)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `directors-loan-s455`, new parameter
+`directors_loan.s455` (rate 0.3375, beneficial-loan threshold 10,000),
+authority CTA 2010 s.455.
+
+**Verified against CTA 2010 s.455 / s.458:**
+- A close company that lends to a participator pays a temporary charge of
+  **33.75%** on the amount still outstanding **9 months and 1 day** after
+  the accounting-period end; it is refunded (s.458) when the loan is repaid.
+- Reconciled: £50,000 overdrawn with £20,000 repaid in time leaves £30,000
+  at 33.75% = £10,125; repaying in full avoids the whole charge (the golden
+  case and hand-computed tests pin all three branches). A beneficial-loan
+  benefit-in-kind above £10,000 is flagged (not quantified).
+
+**Verdict:** YES. Rate and mechanism correct; the 33.75% is held as data so
+a future alignment change is a new row, not a code change.
