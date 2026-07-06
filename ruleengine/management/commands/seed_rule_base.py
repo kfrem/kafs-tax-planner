@@ -1302,6 +1302,15 @@ class Command(BaseCommand):
                 expected_output={"outstanding_after_deadline": 30000.0, "s455_charge": 10125.0},
             ),
             dict(
+                calculator_key="strategy.capital_allowances",
+                description="Qualifying spend within the AIA, company main rate, 2025/26",
+                source="Hand-computed: 50,000 spend is fully within the 1,000,000 AIA -> "
+                "50,000 first-year allowance; at the 25% main CT rate that saves 12,500",
+                input_facts={"qualifying_spend": 50000, "marginal_rate": 0.25},
+                expected_output={"annual_investment_allowance_used": 50000.0,
+                                 "first_year_allowance": 50000.0, "tax_saved_year_one": 12500.0},
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
