@@ -242,7 +242,9 @@ class CgtSpousalTransferAdapter:
             "disposal_gain": prop.get("disposal_gain", 0),
             "asset_type": prop.get("disposal_asset_type", "residential"),
             "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
             "spouse_earned_income": facts.get("personal", {}).get("spouse_income", 0),
+            "spouse_dividend_income": facts.get("personal", {}).get("spouse_dividends", 0),
         }
 
 
