@@ -212,6 +212,32 @@ class CapitalAllowancesAdapter:
         return result
 
 
+@adapter("strategy.salary_sacrifice")
+class SalarySacrificeAdapter:
+    @staticmethod
+    def _salary(facts: dict) -> float:
+        personal = facts.get("personal", {})
+        return personal.get("employment_income", 0) + personal.get(
+            "salary_from_own_company", 0
+        )
+
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        personal = facts.get("personal", {})
+        return (
+            personal.get("salary_sacrifice_amount", 0) > 0
+            and SalarySacrificeAdapter._salary(facts) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        return {
+            "salary": SalarySacrificeAdapter._salary(facts),
+            "sacrifice_amount": personal.get("salary_sacrifice_amount", 0),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
