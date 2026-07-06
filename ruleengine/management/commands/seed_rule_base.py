@@ -570,6 +570,19 @@ class Command(BaseCommand):
               "taper_adjusted_income_limit": 260000, "minimum_tapered_amount": 10000}, None),
             ("isa.allowance", "ISA annual subscription limit", TaxDomain.PERSONAL_INCOME_TAX,
              {"amount": 20000}, None),
+            ("venture_capital.schemes",
+             "EIS/SEIS/VCT income-tax relief rates, annual limits and CGT treatment",
+             TaxDomain.PERSONAL_INCOME_TAX,
+             {"eis": {"relief_rate": 0.30, "annual_limit": 1000000, "min_holding_years": 3,
+                      "cgt_deferral": True, "cgt_reinvestment_relief_rate": 0.0,
+                      "tax_free_dividends": False},
+              "seis": {"relief_rate": 0.50, "annual_limit": 200000, "min_holding_years": 3,
+                       "cgt_deferral": False, "cgt_reinvestment_relief_rate": 0.50,
+                       "tax_free_dividends": False},
+              "vct": {"relief_rate": 0.30, "annual_limit": 200000, "min_holding_years": 5,
+                      "cgt_deferral": False, "cgt_reinvestment_relief_rate": 0.0,
+                      "tax_free_dividends": True}},
+             None),
         ]
 
         for key, label, domain, payload_2024, payload_2025 in rows:
