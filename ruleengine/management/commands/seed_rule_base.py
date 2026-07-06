@@ -1119,6 +1119,28 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="partnership-profit-allocation",
+                name="Partnership / LLP profit-share allocation",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.partnership_profit_allocation",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.BORDERLINE,
+                gaar_exposure=False,
+                plain_english_explanation="A partnership does not pay tax itself — each partner is "
+                "taxed on their share of the profit as trading income (income tax plus Class 4 "
+                "NIC), on top of their other income. When partners are in different tax bands, the "
+                "profit-sharing ratio changes the combined tax bill: shifting profit toward a "
+                "lower-rate partner can reduce it. This compares the current split with a proposed "
+                "one and quantifies the difference. Crucially the ratio must reflect the partners' "
+                "genuine commercial contribution — it cannot be set purely to save tax, and HMRC "
+                "can challenge allocations that divert income (settlements rules) — which is why "
+                "this is flagged as a borderline judgement for the accountant to stand behind.",
+                authority_keys=["ittoia2005_s850"],
+                eligibility_conditions={"all": [
+                    {"path": "partnership.total_profit", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
