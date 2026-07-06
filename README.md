@@ -88,7 +88,7 @@ without doing that review; never use it against real client data.
 
 ## Local setup
 
-Requires: Python 3.11+, Docker (for PostgreSQL), and on Windows, the GTK3
+Requires: Python 3.13, Docker (for PostgreSQL), and on Windows, the GTK3
 runtime for WeasyPrint (`winget install tschoonj.GTKForWindows` — already
 wired into `config/settings.py` via a PATH shim).
 
@@ -97,23 +97,17 @@ python -m venv venv
 source venv/Scripts/activate        # or venv/bin/activate on macOS/Linux
 pip install -r requirements.txt
 
-# PostgreSQL (dev)
-docker run -d --name taxplanner-pg -e POSTGRES_DB=taxplanner \
-  -e POSTGRES_USER=taxplanner -e POSTGRES_PASSWORD=taxplanner_dev_pw \
-  -p 5432:5432 postgres:16
-
-# Create a non-superuser app role so PostgreSQL row-level security is
-# actually enforced (the POSTGRES_USER role above is a superuser and
-# bypasses RLS, so the app must NOT connect as it):
-docker exec -it taxplanner-pg psql -U taxplanner -d postgres -c \
-  "CREATE ROLE app_user WITH LOGIN PASSWORD 'app_user_dev_pw' CREATEDB;"
-docker exec -it taxplanner-pg psql -U taxplanner -d postgres -c \
-  "DROP DATABASE taxplanner; CREATE DATABASE taxplanner OWNER app_user; GRANT ALL ON SCHEMA public TO app_user;"
+# PostgreSQL 16 on host port 5433 (avoids clashing with any other local
+# Postgres on 5432). The compose db service provisions the non-superuser
+# app_user role for you via docker/init-app-user.sql, so RLS is real:
+docker compose up -d db
 ```
 
-Copy `.env.example` to `.env` (dev defaults work with the Docker setup
-above) or set your own
-`DATABASE_URL=postgres://app_user:app_user_dev_pw@localhost:5432/taxplanner`.
+Copy `.env.example` to `.env` (dev defaults expect the DB on port **5433**:
+`DATABASE_URL=postgres://app_user:app_user_dev_pw@localhost:5433/taxplanner`).
+The current dev container is named `taxplanner-pg` (postgres:16) mapped
+`5433->5432`; see [docs/ONBOARDING.md](docs/ONBOARDING.md) §8 for how to
+recreate it keeping the data volume.
 
 ```bash
 python manage.py migrate
