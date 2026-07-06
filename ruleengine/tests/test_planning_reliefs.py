@@ -538,3 +538,37 @@ class TestPartnershipProfitAllocation:
         assert result["current_total_tax"] == approx(19809.60)
         assert result["proposed_total_tax"] == approx(18263.60)
         assert result["tax_saving"] == approx(1546.00)
+
+
+class TestRelevantPropertyTrust:
+    def test_all_three_charges_hand_computed(self):
+        # 500k settled, 325k NRB -> 20% entry on the 175k excess = 35,000.
+        # 600k at the ten-year point -> 6% of the 275k excess = 16,500 (an
+        # effective 2.75% of the whole fund). A 100k exit 20 quarters (5 years)
+        # into the next cycle -> 2.75% x 20/40 x 100k = 1,375.
+        result = strategy_relevant_property_trust_charges(
+            {"amount_settled": 500000, "trust_value": 600000,
+             "amount_distributed": 100000, "quarters_since_last_charge": 20}, TAX_YEAR
+        )
+        assert result["entry_charge"] == approx(35000.0)
+        assert result["ten_year_charge"] == approx(16500.0)
+        assert result["ten_year_effective_rate"] == approx(0.0275)
+        assert result["exit_charge"] == approx(1375.0)
+
+    def test_fund_within_the_nil_rate_band_bears_no_charge(self):
+        # A 300k fund is below the 325k band, so there is no entry or ten-year
+        # charge (the classic "nil-rate band discretionary trust").
+        result = strategy_relevant_property_trust_charges(
+            {"amount_settled": 300000, "trust_value": 300000}, TAX_YEAR
+        )
+        assert result["entry_charge"] == approx(0.0)
+        assert result["ten_year_charge"] == approx(0.0)
+
+    def test_reduced_available_nrb_from_prior_transfers(self):
+        # Prior chargeable transfers cut the available band to 125,000, so the
+        # 20% entry charge bites on 500k - 125k = 375k = 75,000.
+        result = strategy_relevant_property_trust_charges(
+            {"amount_settled": 500000, "trust_value": 500000, "available_nrb": 125000},
+            TAX_YEAR
+        )
+        assert result["entry_charge"] == approx(75000.0)
