@@ -38,7 +38,7 @@ Last updated: 6 July 2026.
 |---|---|---|---|
 | Salary vs dividend mix | ✓ | `salary-dividend-mix` | — |
 | Directors' loan account / s.455 (33.75% charge) | ✓ | `directors-loan-s455` — the charge on the balance outstanding after the 9-month window, and the amount avoided by repaying in time (CTA 2010 s.455). | — |
-| Capital allowances / Annual Investment Allowance | ○ | Very common. AIA 100% up to the limit, full expensing, WDAs. | High |
+| Capital allowances / Annual Investment Allowance | ✓ | `capital-allowances-aia` — 100% AIA up to £1m, 18% WDA on the excess, tax saved at the marginal rate (CAA 2001 s.51A). Full expensing not yet added. | — |
 | R&D tax relief | ○ | Valuable, specialist; the merged-scheme rules from April 2024. | Med |
 | Employer pension contributions (CT relief, no NI) | ◐ | The pension strategy already shows the employer-route CT saving; surface it as its own recommendation. | Med |
 | Employee Ownership Trust (EOT) — CGT-free sale | ○ | Specialist, high value; note the Autumn 2024 tightening. | Med |
