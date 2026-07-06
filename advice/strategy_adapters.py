@@ -348,15 +348,18 @@ class RelevantPropertyTrustAdapter:
     @staticmethod
     def to_facts(facts: dict) -> dict:
         t = facts.get("trust", {})
-        return {
+        mapped = {
             "amount_settled": t.get("amount_settled", 0),
             "trust_value": t.get("trust_value", 0),
             "amount_distributed": t.get("amount_distributed", 0),
             "quarters_since_last_charge": t.get("quarters_since_last_charge", 0),
-            "available_nrb": t.get("available_nrb", None)
-            if t.get("available_nrb") is not None
-            else None,
         }
+        # Only override the settlor's available nil-rate band when the firm has
+        # recorded it (prior chargeable transfers reduce it); else the
+        # calculator uses the full band.
+        if t.get("available_nrb") is not None:
+            mapped["available_nrb"] = t["available_nrb"]
+        return mapped
 
 
 @adapter("strategy.partnership_profit_allocation")
