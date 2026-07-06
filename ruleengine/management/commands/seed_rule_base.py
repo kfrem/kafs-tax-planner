@@ -809,6 +809,24 @@ class Command(BaseCommand):
                 eligibility_conditions={"all": [{"path": "personal.spouse_income", "op": "gt", "value": 0}]},
             ),
             dict(
+                code="gift-aid-relief",
+                name="Gift Aid higher-rate relief",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.gift_aid_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A Gift Aid donation is grossed up at the basic rate, "
+                "which the charity reclaims. For a higher or additional-rate donor the grossed-up "
+                "amount also extends the basic-rate band, giving personal relief of the difference "
+                "between their rate and the basic rate. Where income is in the 100,000-125,140 "
+                "personal-allowance taper, the donation also reduces adjusted net income and can "
+                "restore some or all of the personal allowance.",
+                authority_keys=["ita2007_s414"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.gift_aid_donation", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="iht-spousal-transfer-and-nil-rate-bands",
                 name="Spouse exemption and transferable nil-rate bands",
                 tax_domain=TaxDomain.INHERITANCE_TAX,
