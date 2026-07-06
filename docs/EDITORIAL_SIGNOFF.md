@@ -427,3 +427,38 @@ may optionally add it to the pension). EV/childcare variants reuse the same
 engine and are not yet separately seeded.
 
 **Verdict:** YES.
+
+## Addendum, 6 July 2026 — Standalone pension recommendations (Tier-1 build 6/6, completes Tier 1)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** two strategies — `personal-pension-contribution`
+(`strategy.personal_pension_contribution`, authority FA 2004 s.190) and
+`employer-pension-contribution` (`strategy.employer_pension_contribution`,
+authority CTA 2009 s.54). No new parameters.
+
+**Design decision (single source of truth):** the tax mechanics already
+existed inside `strategy.pension_annual_allowance_carry_forward` /
+`combined_personal_tax`. Rather than fork that maths — which would create two
+places a rate change could diverge — these two strategies **delegate** to the
+existing calculators and only project a focused, standalone recommendation
+that fires on its own client fact (`personal.desired_pension_contribution`
+and `company.desired_employer_pension_contribution`, neither set by any
+persona, so nothing double-fires). This is the correct reading of "surface it
+as its own recommendation" without duplicating the engine.
+
+**Verified — personal route:** reconciled the headline 60% case: £110,000
+earner, £10,000 gross — personal allowance restored £7,570→£12,570 and the
+basic band extended £10,000 cuts tax £33,432→£29,432 (£4,000), plus the
+£2,000 basic-rate credit = £6,000 relief on £10,000 = **60% effective**, net
+cost £4,000. Confirmed a basic-rate taxpayer gets only the 20% source relief
+(no band-extension benefit when already inside the basic band), and that the
+FA 2004 s.190 cap holds relief to relevant UK earnings, excluding dividends.
+
+**Verified — employer route:** £300,000 profit (flat 25%) contributing
+£20,000 saves £5,000 CT and avoids £3,000 employer NIC versus salary; the
+deduction is capped at available profit (£50,000 profit → £9,500 at 19%). The
+wholly-and-exclusively test (CTA 2009 s.54) is flagged in the strategy text
+as the reviewing accountant's judgement, not auto-applied.
+
+**Verdict:** YES. **Tier 1 of the coverage map is now complete.**
