@@ -47,6 +47,12 @@ Last updated: 6 July 2026.
 | Business Asset Disposal Relief | ✓ | `cgt-business-asset-disposal-relief` (10%/14%/18% by year) | — |
 | Holding company structuring | ○ | Structural/advisory; ring-fencing + tax-efficient exit. | Low–Med |
 
+## Partnerships & LLPs
+
+| Strategy | Status | Notes / what's needed | Priority |
+|---|---|---|---|
+| Partnership profit-share allocation | ✓ | `partnership-profit-allocation` — a partnership is tax-transparent; each partner is taxed on their share (income tax + Class 4 NIC) on top of their other income. Compares the current split with a proposed one and quantifies the household tax difference; flagged **borderline** because the ratio must reflect genuine commercial contribution, not tax (ITTOIA 2005 s.850). | — |
+
 ## Property & landlords
 
 | Strategy | Status | Notes / what's needed | Priority |
