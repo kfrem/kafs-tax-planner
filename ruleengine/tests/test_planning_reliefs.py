@@ -259,3 +259,40 @@ class TestEmployerPensionContribution:
         )
         assert result["contribution"] == approx(50000.0)
         assert result["corporation_tax_saving"] == approx(9500.0)
+
+
+class TestGroupLossRelief:
+    def test_surrender_into_the_marginal_band_relieves_at_26_5_percent(self):
+        # 50,000 loss into a 250,000-profit claimant. CT on 250,000 is 62,500
+        # (25% flat at the upper limit); CT on 200,000 is 50,000 - 750 marginal
+        # relief = 49,250. Saved 13,250 = 26.5% on the 50,000 relieved — the
+        # marginal rate, better than a 19%/25% carry-forward.
+        result = strategy_group_loss_relief(
+            {"claimant_company_profit": 250000, "surrendering_company_loss": 50000},
+            TAX_YEAR,
+        )
+        assert result["loss_surrendered"] == approx(50000.0)
+        assert result["corporation_tax_saved"] == approx(13250.0)
+        assert result["effective_relief_rate"] == approx(0.265)
+        assert result["unrelieved_loss_carried_forward"] == approx(0.0)
+
+    def test_surrender_above_the_upper_limit_relieves_at_the_main_rate(self):
+        # 100,000 loss into a 500,000-profit claimant (well above the 250,000
+        # upper limit -> flat 25%). CT 125,000 -> 100,000 = 25,000 saved = 25%.
+        result = strategy_group_loss_relief(
+            {"claimant_company_profit": 500000, "surrendering_company_loss": 100000},
+            TAX_YEAR,
+        )
+        assert result["corporation_tax_saved"] == approx(25000.0)
+        assert result["effective_relief_rate"] == approx(0.25)
+
+    def test_loss_exceeding_claimant_profit_carries_the_balance_forward(self):
+        # 300,000 loss but only 200,000 profit: 200,000 is relieved now (claimant
+        # profit to nil) and 100,000 is carried forward in the loss company.
+        result = strategy_group_loss_relief(
+            {"claimant_company_profit": 200000, "surrendering_company_loss": 300000},
+            TAX_YEAR,
+        )
+        assert result["loss_surrendered"] == approx(200000.0)
+        assert result["claimant_profit_after"] == approx(0.0)
+        assert result["unrelieved_loss_carried_forward"] == approx(100000.0)
