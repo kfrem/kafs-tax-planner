@@ -15,6 +15,7 @@ from ruleengine.calculators import (
     strategy_isa_bed_and_isa,
     strategy_personal_pension_contribution,
     strategy_salary_sacrifice,
+    strategy_venture_capital_investment,
 )
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
