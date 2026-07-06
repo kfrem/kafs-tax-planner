@@ -223,6 +223,7 @@ class CgtLettingsReliefAdapter:
             "disposal_gain": prop.get("disposal_gain", 0),
             "let_fraction": prop.get("shared_occupancy_let_fraction", 0),
             "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
         }
 
 
