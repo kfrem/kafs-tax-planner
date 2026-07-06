@@ -82,3 +82,26 @@ class TestDirectorsLoanS455:
             {"overdrawn_loan_balance": 25000}, TAX_YEAR
         )
         assert result["s455_charge"] == approx(8437.50)
+
+
+class TestTimingOfDisposals:
+    def test_splitting_uses_a_second_exemption_and_band(self):
+        # Share gain 15,000, earned 42,270. Whole year: 12,000 taxable, 8,000
+        # @ 18% + 4,000 @ 24% = 2,400. Split 7,500 each: 4,500 taxable, both
+        # within the basic band @ 18% = 810 each = 1,620. Saving 780.
+        result = strategy_cgt_timing_of_disposals(
+            {"disposal_gain": 15000, "asset_type": "other", "earned_income": 42270}, TAX_YEAR
+        )
+        assert result["cgt_if_sold_in_one_year"] == approx(2400.0)
+        assert result["cgt_if_split_over_two_years"] == approx(1620.0)
+        assert result["saving_from_splitting"] == approx(780.0)
+
+    def test_small_gain_split_falls_entirely_within_two_exemptions(self):
+        # Gain 5,000: whole year 2,000 taxable @ 18% = 360. Split 2,500 each,
+        # both under the 3,000 exemption, so nil CGT — the whole 360 saved.
+        result = strategy_cgt_timing_of_disposals(
+            {"disposal_gain": 5000, "asset_type": "other", "earned_income": 30000}, TAX_YEAR
+        )
+        assert result["cgt_if_sold_in_one_year"] == approx(360.0)
+        assert result["cgt_if_split_over_two_years"] == approx(0.0)
+        assert result["saving_from_splitting"] == approx(360.0)
