@@ -85,7 +85,7 @@ Last updated: 6 July 2026.
 | Bed & ISA / Bed & SIPP | ✓ | Bed-and-ISA built (`isa-bed-and-isa`, see Individuals) — uses the annual CGT exemption on the transfer and shelters future dividends/growth. Bed-and-SIPP follows the same pattern (documented next step). | — |
 | Spousal transfers (use both allowances/bands) | ✓ | `cgt-spousal-transfer-before-disposal` | — |
 | Timing of disposals (split across tax years) | ✓ | `cgt-timing-of-disposals` — splits a divisible gain over two years to use two AEAs + two basic-rate bands; quantifies the saving. | — |
-| Reinvestment reliefs (EIS deferral, rollover) | ○ | Defers the gain into a new qualifying investment; pairs with EIS/SEIS above. | Med |
+| Reinvestment reliefs (EIS deferral, rollover) | ◐ | EIS gain deferral and SEIS 50% reinvestment exemption are built inside `venture-capital-investment` (see Individuals). Business-asset rollover relief (TCGA 1992 s.152) is a documented next step. | Low |
 
 ---
 
