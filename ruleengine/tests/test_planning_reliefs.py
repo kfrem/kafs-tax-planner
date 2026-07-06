@@ -350,3 +350,40 @@ class TestIsaBedAndIsa:
             TAX_YEAR,
         )
         assert result["annual_dividend_tax_saved"] == approx(87.50)
+
+
+class TestBusinessPropertyRelief:
+    def test_pre_reform_unlimited_100pc_relief(self):
+        # 2025/26: a 2,000,000 qualifying business is wholly relieved (no cap),
+        # leaving nothing taxable and saving 800,000 of IHT at 40%.
+        result = strategy_business_property_relief(
+            {"qualifying_value": 2000000}, TAX_YEAR
+        )
+        assert result["full_relief_cap"] is None
+        assert result["total_relieved_value"] == approx(2000000.0)
+        assert result["taxable_value_after_relief"] == approx(0.0)
+        assert result["iht_saved_by_relief"] == approx(800000.0)
+
+    def test_reformed_1m_cap_from_2026_27(self):
+        # 2026/27: the same 2,000,000 gets 100% on the first 1,000,000 and 50%
+        # on the rest = 1,500,000 relieved, 500,000 taxable, 600,000 IHT saved
+        # — 200,000 more IHT than before the cap.
+        result = strategy_business_property_relief(
+            {"qualifying_value": 2000000}, "2026/27"
+        )
+        assert result["full_relief_cap"] == 1000000
+        assert result["value_relieved_at_100pc"] == approx(1000000.0)
+        assert result["value_above_cap"] == approx(1000000.0)
+        assert result["total_relieved_value"] == approx(1500000.0)
+        assert result["taxable_value_after_relief"] == approx(500000.0)
+        assert result["iht_saved_by_relief"] == approx(600000.0)
+
+    def test_business_within_the_cap_is_unaffected_by_the_reform(self):
+        # An 800,000 business is below the 1,000,000 cap, so it is still wholly
+        # relieved in 2026/27 — the reform only bites above 1,000,000.
+        result = strategy_business_property_relief(
+            {"qualifying_value": 800000}, "2026/27"
+        )
+        assert result["total_relieved_value"] == approx(800000.0)
+        assert result["taxable_value_after_relief"] == approx(0.0)
+        assert result["iht_saved_by_relief"] == approx(320000.0)
