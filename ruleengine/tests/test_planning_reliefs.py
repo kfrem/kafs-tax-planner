@@ -4,7 +4,10 @@ shown in the comment."""
 
 import pytest
 
-from ruleengine.calculators import strategy_gift_aid_relief
+from ruleengine.calculators import (
+    strategy_directors_loan_s455,
+    strategy_gift_aid_relief,
+)
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
 
