@@ -864,6 +864,47 @@ def strategy_isa_bed_and_isa(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.business_property_relief",
+    consumes=["iht.business_property_relief", "iht.rates"],
+    description="Business Property Relief / Agricultural Property Relief on death: qualifying "
+    "business and agricultural property is relieved from inheritance tax at 100%, but from "
+    "6 April 2026 the 100% rate is capped at a combined £1,000,000, with 50% relief on the "
+    "excess (Finance Act 2025). Quantifies the value relieved, the taxable value remaining, and "
+    "the IHT saved — and, run across the tax-year boundary, shows the extra IHT the reformed cap "
+    "costs. Assumes the estate is otherwise above the nil-rate band (IHTA 1984 ss.103-124C).",
+)
+def strategy_business_property_relief(facts: dict, tax_year: str) -> dict:
+    as_of = facts.get("as_of")
+    param = get_parameter("iht.business_property_relief", tax_year, as_of=as_of)
+    death_rate = get_parameter("iht.rates", tax_year, as_of=as_of)["death_rate"]
+
+    value = max(0.0, float(facts.get("qualifying_value", 0)))
+    cap = param["full_relief_cap"]
+    rate_above = param["rate_above_cap"]
+
+    if cap is None:
+        value_at_full = value
+        value_above_cap = 0.0
+    else:
+        value_at_full = min(value, cap)
+        value_above_cap = max(0.0, value - cap)
+
+    relieved = round(value_at_full + value_above_cap * rate_above, 2)
+    taxable_after = round(value - relieved, 2)
+    iht_saved = round(relieved * death_rate, 2)
+
+    return {
+        "qualifying_value": round(value, 2),
+        "full_relief_cap": cap,
+        "value_relieved_at_100pc": round(value_at_full, 2),
+        "value_above_cap": round(value_above_cap, 2),
+        "total_relieved_value": relieved,
+        "taxable_value_after_relief": taxable_after,
+        "iht_saved_by_relief": iht_saved,
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
