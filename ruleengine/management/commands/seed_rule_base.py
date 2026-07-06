@@ -1385,6 +1385,37 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.personal_pension_contribution",
+                description="Personal pension contribution in the 60% taper, 2025/26",
+                source="Hand-computed: earned 110,000, 10,000 gross. PA restored 7,570->12,570 "
+                "and basic band extended 10,000: tax 33,432->29,432 = 4,000 saved; plus the "
+                "2,000 basic-rate credit = 6,000 relief on 10,000 = 60% effective.",
+                input_facts={"earned_income": 110000, "desired_contribution": 10000},
+                expected_output={
+                    "relievable_gross": 10000.0,
+                    "basic_rate_credit_to_pension": 2000.0,
+                    "higher_rate_and_taper_saving": 4000.0,
+                    "personal_allowance_restored": 5000.0,
+                    "total_relief_value": 6000.0,
+                    "effective_relief_rate": 0.6,
+                    "net_cost_to_member": 4000.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.employer_pension_contribution",
+                description="Employer pension contribution, company at the CT main rate, 2025/26",
+                source="Hand-computed: 300,000 profit (25% flat) contributing 20,000 -> CT "
+                "75,000->70,000 = 5,000 saved; employer NIC saved vs salary 20,000*15% = 3,000; "
+                "net cost 15,000.",
+                input_facts={"company_profit": 300000, "contribution": 20000},
+                expected_output={
+                    "contribution": 20000.0,
+                    "corporation_tax_saving": 5000.0,
+                    "employer_ni_saved_vs_salary": 3000.0,
+                    "net_cost_to_company": 15000.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
