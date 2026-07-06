@@ -10,9 +10,18 @@ class Client(models.Model):
     FK filter in application code (architecture doc Section 7.2)."""
 
     class EntityType(models.TextChoices):
+        # NB: the entity type is a filing/reporting label only — it does NOT
+        # gate which strategies apply. Eligibility is driven entirely by the
+        # facts recorded for the client (see advice/strategy_adapters.py), so a
+        # client is whatever their facts say. These labels exist so the firm can
+        # categorise and report; adding one never changes the tax planning.
         INDIVIDUAL = "individual", "Individual"
+        SOLE_TRADER = "sole_trader", "Sole trader"
+        PARTNERSHIP = "partnership", "Partnership / LLP"
         COMPANY = "company", "Company"
         INDIVIDUAL_WITH_COMPANY = "individual_with_company", "Individual with own company"
+        TRUST = "trust", "Trust"
+        ESTATE = "estate", "Estate (in administration)"
 
     firm = models.ForeignKey(Firm, on_delete=models.CASCADE, related_name="clients")
     reference = models.CharField(max_length=50, help_text="Firm's own client reference/code.")
