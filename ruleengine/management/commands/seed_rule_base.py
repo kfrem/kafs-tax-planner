@@ -953,6 +953,25 @@ class Command(BaseCommand):
                 release=release_property,
             ),
             dict(
+                code="cgt-timing-of-disposals",
+                name="Timing of disposals across tax years",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_timing_of_disposals",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Where a divisible holding such as shares or fund "
+                "units stands at a gain larger than the annual exempt amount, selling it in "
+                "two tranches across two tax years uses two years' exemptions (and two "
+                "basic-rate bands) instead of one, cutting the total CGT. A single indivisible "
+                "asset such as one property cannot be split this way. Quantifies the saving "
+                "from spreading the disposal.",
+                authority_keys=["tcga1992_s1h"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.divisible_capital_gain", "op": "gt", "value": 0},
+                ]},
+                release=release_property,
+            ),
+            dict(
                 code="cgt-spousal-transfer-before-disposal",
                 name="Spousal transfer before disposal",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
