@@ -175,6 +175,10 @@ def combined_personal_tax(facts: dict, tax_year: str) -> dict:
         "adjusted_net_income": round(adjusted_net_income, 2),
         "personal_allowance": personal_allowance,
         "taxable_earned": taxable_earned,
+        "taxable_dividends": taxable_dividends,
+        # Total income occupying the tax bands below any capital gain — the
+        # figure CGT stacks on top of (TCGA 1992 s.1I: gains are the top slice).
+        "taxable_income_total": round(taxable_earned + taxable_dividends, 2),
         "earned_tax": earned_tax,
         "dividend_tax_due": dividend_tax_due,
         "total_tax": round(earned_tax + dividend_tax_due, 2),
