@@ -51,14 +51,36 @@ class ClientFactSet(models.Model):
     (``superseded_by`` chains to the replacement) so that regenerating
     historical advice is possible.
 
-    ``facts`` schema (all keys optional, calculators default sensibly):
-        personal: {other_income, salary_from_own_company,
-                   dividends_from_own_company, spouse_income}
-        company: {profit_before_remuneration, employment_allowance_available,
-                  associated_companies}
-        pension: {threshold_income, adjusted_income,
-                  unused_aa_prior_3_years: [y-3, y-2, y-1], desired_contribution}
+    ``facts`` is an open JSON document of optional "buckets"; every calculator
+    defaults sensibly when a key is absent, and eligibility is driven by which
+    facts are present (not by the client's entity_type label). The buckets in
+    use today — a client populates only the ones that apply to them:
+        personal:   {other_income, employment_income, salary_from_own_company,
+                     dividends_from_own_company, spouse_income, gift_aid_donation,
+                     salary_sacrifice_amount, desired_pension_contribution,
+                     divisible_capital_gain, isa_amount_to_shelter,
+                     isa_realised_gain, isa_annual_dividend_income,
+                     venture_capital_investment/scheme/gain_reinvested,
+                     income_tax_liability}
+        company:    {profit_before_remuneration, employment_allowance_available,
+                     associated_companies, desired_employer_pension_contribution,
+                     surrendering_company_loss, claimant_company_profit,
+                     overdrawn_loan_balance, repaid_within_9_months,
+                     qualifying_capital_spend}
         sole_trade: {annual_profit}
+        pension:    {threshold_income, adjusted_income,
+                     unused_aa_prior_3_years: [y-3, y-2, y-1], desired_contribution}
+        property:   {disposal_gain, disposal_asset_type, ownership_months,
+                     occupied_as_main_residence_months,
+                     shared_occupancy_let_fraction, spouse_available_for_transfer,
+                     badr_qualifying_gain, purchase_price, jurisdiction,
+                     property_type, is_additional_dwelling,
+                     lease_annual_rent, lease_term_years, lease_premium}
+        estate:     {gross_value, liabilities, home_equity_value,
+                     home_passes_to_direct_descendants, qualifying_business_property,
+                     combined_estate_second_death, combined_home_equity_second_death,
+                     charitable_legacy, planned_lifetime_gift,
+                     prior_year_annual_exemption_unused, transferred_nrb/rnrb_fraction}
     """
 
     firm = models.ForeignKey(Firm, on_delete=models.CASCADE, related_name="fact_sets")
