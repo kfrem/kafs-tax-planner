@@ -69,7 +69,7 @@ Last updated: 6 July 2026.
 |---|---|---|---|
 | Lifetime gifting (annual/small-gift exemptions) | ✓ | `iht-lifetime-gifting-pets` | — |
 | Potentially Exempt Transfers (7-year) | ✓ | Taper relief modelled in the gifting strategy | — |
-| Trusts (assets out of estate, retain control) | ○ | Relevant-property regime (entry/10-year/exit charges). Big specialist build; Workstream A7 of the property scope. | Med |
+| Trusts (assets out of estate, retain control) | ✓ | `relevant-property-trust-charges` — the relevant-property regime: 20% entry charge above the available NRB, the ten-year anniversary charge (up to 6% of the excess), and the proportionate exit charge, all quantified so a settlor can weigh a trust against outright gifts (IHTA 1984 ss.58-69). Multiple-trust/same-day-addition interactions and IIP/BMT variants are documented next steps. | — |
 | Nil-Rate Band / Residence NRB (transferable) | ✓ | `iht-spousal-transfer-and-nil-rate-bands` | — |
 | Business Relief / Agricultural Relief (capped Apr 2026) | ✓ | `business-property-relief` — 100% relief on qualifying business/agricultural property with the **effective-dated April 2026 £1m combined cap** (100% within, 50% above; Finance Act 2025), quantifying the value relieved, the taxable value left and the IHT saved — and, run across the tax-year boundary, the extra IHT the reform costs (IHTA 1984 ss.103-124C). Asset-qualification judgement left to the accountant. | — |
 | Life insurance in trust (covers the IHT bill) | ○ | Advisory calc: policy in trust pays the bill without adding to the estate. | Med |
