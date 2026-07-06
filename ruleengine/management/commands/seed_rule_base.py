@@ -1722,6 +1722,22 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.partnership_profit_allocation",
+                description="Two-partner split, one with other income, 2025/26",
+                source="Hand-computed: 100k profit; partner A has 40k other income. 50/50 -> "
+                "tax 25,677.80 + 9,731.80 = 35,409.60; shifting to 30/70 -> 16,477.80 + "
+                "18,088.60 = 34,566.40; saving 843.20.",
+                input_facts={"total_profit": 100000, "partner1_other_income": 40000,
+                             "partner2_other_income": 0, "current_partner1_share": 0.5,
+                             "proposed_partner1_share": 0.3},
+                expected_output={
+                    "total_profit": 100000.0,
+                    "current_total_tax": 35409.60,
+                    "proposed_total_tax": 34566.40,
+                    "tax_saving": 843.20,
+                },
+            ),
+            dict(
                 calculator_key="strategy.property_income_finance_cost",
                 description="Higher-rate landlord hit by the s.24 restriction, 2025/26",
                 source="Hand-computed: 20k profit + 50k income -> tax on 70k=15,432 less 20% "
