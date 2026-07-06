@@ -961,6 +961,26 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="isa-bed-and-isa",
+                name="Bed-and-ISA (shelter investments in an ISA)",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.isa_bed_and_isa",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Selling unwrapped investments and repurchasing them "
+                "inside an ISA (a 'bed-and-ISA') moves them into a wrapper where future dividends "
+                "and capital growth are tax-free. Timing the sale so the gain stays within the "
+                "annual CGT exempt amount means no capital gains tax on the transfer. This "
+                "quantifies the amount sheltered (capped at the £20,000 ISA limit), any CGT due "
+                "on the transfer, and the yearly dividend tax saved once the holding is inside the "
+                "ISA. Future growth is also CGT-free but is not projected here as it depends on "
+                "the growth rate.",
+                authority_keys=["ittoia2005_s694"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.isa_amount_to_shelter", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
