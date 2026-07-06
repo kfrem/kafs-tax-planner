@@ -378,3 +378,26 @@ a £5,000 gain split falls entirely within two £3,000 exemptions, cutting
 income position — a reasonable planning estimate, flagged at the calculator.
 
 **Verdict:** YES.
+
+## Addendum, 6 July 2026 — Capital allowances / AIA (Tier-1 build 4/…)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `capital-allowances-aia`, parameter
+`capital_allowances.aia` (AIA limit £1,000,000; main-pool WDA 18%; special
+rate 6%), authority CAA 2001 s.51A.
+
+**Verified against CAA 2001:** 100% Annual Investment Allowance on qualifying
+plant and machinery up to the AIA limit; expenditure above it is written down
+at 18% in the main pool. Reconciled: £50,000 spend is fully within the AIA
+(£12,500 saved at the 25% CT main rate); £1,200,000 spend gives £1,000,000
+AIA + £36,000 WDA on the £200,000 excess = £1,036,000 first-year allowance,
+saving £259,000. Marginal rate defaults to the CT main rate when not given.
+
+**Documented simplification:** full expensing (unlimited 100% FYA on new
+main-rate P&M for companies, from April 2023) and the special-rate/first-year
+allowances are not yet modelled — only AIA + main-pool WDA. Flagged in the
+coverage map.
+
+**Verdict:** YES for the modelled AIA + WDA scope; full expensing is a
+documented next step.
