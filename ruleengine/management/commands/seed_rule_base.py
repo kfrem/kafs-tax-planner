@@ -809,6 +809,24 @@ class Command(BaseCommand):
                 eligibility_conditions={"all": [{"path": "sole_trade.annual_profit", "op": "gt", "value": 0}]},
             ),
             dict(
+                code="directors-loan-s455",
+                name="Directors' loan s.455 charge",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.directors_loan_s455",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Where a director-shareholder's loan account is "
+                "overdrawn, the company faces a temporary 33.75% s.455 charge on any amount "
+                "still outstanding 9 months and 1 day after the year end. Repaying the loan "
+                "(or enough of it) within that window avoids the charge; the charge is "
+                "refunded when the loan is later repaid. This quantifies the charge and the "
+                "amount avoided by repaying in time.",
+                authority_keys=["cta2010_s455"],
+                eligibility_conditions={"all": [
+                    {"path": "company.overdrawn_loan_balance", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
