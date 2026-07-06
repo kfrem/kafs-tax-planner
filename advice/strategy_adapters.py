@@ -238,6 +238,50 @@ class SalarySacrificeAdapter:
         }
 
 
+@adapter("strategy.personal_pension_contribution")
+class PersonalPensionContributionAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("desired_pension_contribution", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        sole_trade_profit = facts.get("sole_trade", {}).get("annual_profit", 0)
+        # Relevant UK earnings (FA 2004 s.190): employment and trading income
+        # only. 'other_income' (savings/rental) counts as taxable income for
+        # the relief calculation but not towards the earnings cap.
+        relevant_uk_earnings = (
+            personal.get("employment_income", 0)
+            + personal.get("salary_from_own_company", 0)
+            + sole_trade_profit
+        )
+        earned_income = relevant_uk_earnings + personal.get("other_income", 0)
+        return {
+            "earned_income": earned_income,
+            "dividend_income": personal.get("dividends_from_own_company", 0),
+            "desired_contribution": personal.get("desired_pension_contribution", 0),
+            "relevant_uk_earnings": relevant_uk_earnings,
+        }
+
+
+@adapter("strategy.employer_pension_contribution")
+class EmployerPensionContributionAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return (
+            facts.get("company", {}).get("desired_employer_pension_contribution", 0) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        return {
+            "company_profit": company.get("profit_before_remuneration", 0),
+            "contribution": company.get("desired_employer_pension_contribution", 0),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
