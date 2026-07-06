@@ -65,6 +65,69 @@ class TestCgtLiability:
         assert result["tax_due"] == 0.0
 
 
+class TestDisposalComposition:
+    """A capital gain is the top slice (TCGA 1992 s.1I): earned income AND
+    dividends below it consume the basic-rate band, and a gross pension
+    contribution extends it. Composing the whole-income picture materially
+    changes the CGT for owner-managers who take dividends."""
+
+    def test_dividends_consume_the_band_before_the_gain(self):
+        # Earned 30,000 (taxable 17,430) + dividends 20,000 = 37,430 below
+        # the gain. Basic band 37,700 - 37,430 = 270 left. Residential gain
+        # 20,000 - 3,000 AEA = 17,000: 270 @ 18% (48.60) + 16,730 @ 24%
+        # (4,015.20) = 4,063.80 — far more than the 3,060 if dividends were
+        # ignored.
+        result = cgt_liability(
+            {"chargeable_gain": 20000, "asset_type": "residential",
+             "earned_income": 30000, "dividend_income": 20000},
+            TAX_YEAR,
+        )
+        assert result["income_below_gain"] == approx(37430.0)
+        assert result["basic_band_remaining_for_gain"] == approx(270.0)
+        assert result["gain_at_lower_rate"] == approx(270.0)
+        assert result["tax_due"] == approx(4063.80)
+
+    def test_no_dividends_matches_the_earned_only_result(self):
+        # Regression: with no dividends and no pension the composition equals
+        # the old earned-only band fill. Earned 42,270 -> taxable 29,700,
+        # band left 8,000; gain 15,000 - 3,000 = 12,000: 8,000 @ 18% + 4,000
+        # @ 24% = 2,400.
+        result = cgt_liability(
+            {"chargeable_gain": 15000, "asset_type": "residential", "earned_income": 42270},
+            TAX_YEAR,
+        )
+        assert result["tax_due"] == approx(2400.0)
+
+    def test_pension_contribution_extends_the_cgt_band(self):
+        # A relief-at-source pension contribution extends the basic-rate band
+        # for CGT too. Earned 45,000 (taxable 32,430); a 10,000 gross
+        # contribution lifts the basic limit to 47,700, leaving 15,270 for
+        # the gain. Residential gain 30,000 - 3,000 = 27,000: 15,270 @ 18%
+        # (2,748.60) + 11,730 @ 24% (2,815.20) = 5,563.80 (vs 6,163.80
+        # without the contribution).
+        result = cgt_liability(
+            {"chargeable_gain": 30000, "asset_type": "residential",
+             "earned_income": 45000, "gross_pension_contribution": 10000},
+            TAX_YEAR,
+        )
+        assert result["basic_band_remaining_for_gain"] == approx(15270.0)
+        assert result["tax_due"] == approx(5563.80)
+
+    def test_composition_flows_through_a_strategy(self):
+        # End-to-end: lettings relief on a 60%-let disposal, with the owner's
+        # dividends composed in. Gain 60,000 -> PPR 24,000, letting gain
+        # 36,000, lettings relief 24,000, chargeable 12,000. With earned
+        # 30,000 + dividends 20,000, the band left for the gain is 270:
+        # (12,000 - 3,000 AEA) = 9,000 -> 270 @ 18% (48.60) + 8,730 @ 24%
+        # (2,095.20) = 2,143.80.
+        result = strategy_cgt_lettings_relief(
+            {"disposal_gain": 60000, "let_fraction": 0.60,
+             "earned_income": 30000, "dividend_income": 20000},
+            TAX_YEAR,
+        )
+        assert result["cgt_due"] == approx(2143.80)
+
+
 class TestIntraYearCgt2024:
     """The 30 October 2024 mid-year CGT change (Autumn Budget 2024):
     non-residential/other rates rose from 10%/20% to 18%/24%, resolved by
