@@ -18,7 +18,7 @@ python -m pytest -q --create-db   # force-rebuild the test DB after migrations c
 python -m pytest -q ruleengine/tests/test_iht.py   # one module
 ```
 
-**Expected result: `256 passed`** (≈6 minutes; the seed fixture rebuilds
+**Expected result: `258 passed`** (≈6 minutes; the seed fixture rebuilds
 the rule base per test class, which dominates runtime).
 
 The same suite runs in **GitHub Actions on every push and pull request**
@@ -26,11 +26,11 @@ The same suite runs in **GitHub Actions on every push and pull request**
 non-superuser app role so the RLS tests exercise real enforcement, and
 `pytest -q`. Repository: https://github.com/kfrem/kafs-tax-planner.
 
-Last full run: **256 passed, 0 failed, 0 skipped** —
+Last full run: **258 passed, 0 failed, 0 skipped** —
 locally (Python 3.13.14, Django 6.0.6, PostgreSQL 16/Docker, Windows 11)
 and in CI (ubuntu-latest, Python 3.13), 6 July 2026.
 
-## 2. Test inventory (256 tests)
+## 2. Test inventory (258 tests)
 
 | File | Tests | What it proves |
 |---|---|---|
@@ -46,7 +46,7 @@ and in CI (ubuntu-latest, Python 3.13), 6 July 2026.
 | `advice/tests/test_generator.py` | 5 | Generator pipeline: eligibility, immutability (save/delete refusal), supersession, release stamping |
 | `advice/tests/test_personas.py` | 19 | **The consistency suite** — see §3 |
 | `advice/tests/test_adapters.py` | 5 | Fact-schema fields reach the right calculator inputs; employment income counts as relevant UK earnings, 'other income' (rent/savings) does not |
-| `advice/tests/test_self_audit.py` | 2 | **The end-to-end self-audit gate** — runs the `self_audit` command over the real audit cases (`advice/audit_cases.py`): every one of the 32 live strategies is generated, PDF-rendered, panel-reviewed and independently recomputed to the penny, and **all 32 must be exercised end to end**. A negative test strips a strategy's citations and asserts the audit *fails loudly* (the four-expert panel's L1 no-citation blocker), proving the gate is real and not a rubber stamp. This is the standing guard against the migration/end-to-end drift that unit tests alone cannot see |
+| `advice/tests/test_self_audit.py` | 2 | **The end-to-end self-audit gate** — runs the `self_audit` command over the real audit cases (`advice/audit_cases.py`): every one of the 33 live strategies is generated, PDF-rendered, panel-reviewed and independently recomputed to the penny, and **all 33 must be exercised end to end**. A negative test strips a strategy's citations and asserts the audit *fails loudly* (the four-expert panel's L1 no-citation blocker), proving the gate is real and not a rubber stamp. This is the standing guard against the migration/end-to-end drift that unit tests alone cannot see |
 | `advice/tests/test_impact.py` | 6 | Release impact alerts: strategy overlap detection, effective-dating scoping (a 2026/27 change never alerts 2025/26 advice), idempotency, superseded advice excluded, review workflow |
 | `advice/tests/test_scenarios.py` | 5 | Scenario modelling: overrides applied without mutating the record, deltas correct (hand-computed), NOTHING persisted, and the base leg byte-identical to real advice |
 | `advice/tests/test_narrative.py` | 8 | Narrative drafter + §8 validator: draft carries the record's headline figures and risk disclosures; fabricated numbers/citations rejected; rejected drafts cannot be stored; panel persona voices re-express findings verbatim, never add |
