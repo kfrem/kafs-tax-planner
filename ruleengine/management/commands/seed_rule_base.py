@@ -1227,6 +1227,16 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.gift_aid_relief",
+                description="Gift Aid by a higher-rate donor, 2025/26",
+                source="Hand-computed: 800 net grosses up to 1,000; the basic-rate band "
+                "extends by 1,000, so 1,000 of income shifts from 40% to 20% = 200 personal "
+                "relief; the charity reclaims 200",
+                input_facts={"earned_income": 60000, "gift_aid_donation": 800},
+                expected_output={"gross_donation": 1000.0, "charity_reclaims": 200.0,
+                                 "personal_higher_rate_relief": 200.0},
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Dividends push total income into personal allowance taper, 2025/26",
                 source="Hand-computed: earned 28,000 + dividends 73,575 = 101,575 total; "
