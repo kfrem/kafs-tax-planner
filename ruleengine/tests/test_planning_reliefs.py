@@ -297,3 +297,55 @@ class TestGroupLossRelief:
         assert result["loss_surrendered"] == approx(200000.0)
         assert result["claimant_profit_after"] == approx(0.0)
         assert result["unrelieved_loss_carried_forward"] == approx(100000.0)
+
+
+class TestIsaBedAndIsa:
+    def test_within_the_exemption_no_cgt_and_dividends_sheltered(self):
+        # Higher-rate investor shelters 20,000 (the full ISA limit). A 2,500
+        # gain is inside the 3,000 annual exemption -> no CGT on transfer. 800
+        # of annual dividends then escape the 33.75% upper rate = 270 a year.
+        result = strategy_isa_bed_and_isa(
+            {
+                "amount_to_shelter": 20000,
+                "realised_gain": 2500,
+                "annual_dividend_income": 800,
+                "is_higher_rate": True,
+            },
+            TAX_YEAR,
+        )
+        assert result["amount_sheltered"] == approx(20000.0)
+        assert result["isa_allowance_remaining"] == approx(0.0)
+        assert result["gain_covered_by_exemption"] == approx(2500.0)
+        assert result["cgt_payable_on_transfer"] == approx(0.0)
+        assert result["annual_dividend_tax_saved"] == approx(270.0)
+
+    def test_gain_above_the_exemption_crystallises_cgt(self):
+        # 5,000 gain, none of the exemption used elsewhere: 2,000 is taxable at
+        # the 24% higher rate for shares = 480 CGT on the transfer.
+        result = strategy_isa_bed_and_isa(
+            {"amount_to_shelter": 20000, "realised_gain": 5000, "is_higher_rate": True},
+            TAX_YEAR,
+        )
+        assert result["gain_covered_by_exemption"] == approx(3000.0)
+        assert result["cgt_payable_on_transfer"] == approx(480.0)
+
+    def test_amount_capped_at_the_isa_limit(self):
+        # A 30,000 intention is capped at the 20,000 annual subscription limit.
+        result = strategy_isa_bed_and_isa(
+            {"amount_to_shelter": 30000}, TAX_YEAR
+        )
+        assert result["amount_sheltered"] == approx(20000.0)
+        assert result["isa_allowance_remaining"] == approx(0.0)
+
+    def test_basic_rate_investor_uses_the_ordinary_dividend_rate(self):
+        # A basic-rate investor's sheltered dividends escape only the 8.75%
+        # ordinary rate: 1,000 * 8.75% = 87.50.
+        result = strategy_isa_bed_and_isa(
+            {
+                "amount_to_shelter": 10000,
+                "annual_dividend_income": 1000,
+                "is_higher_rate": False,
+            },
+            TAX_YEAR,
+        )
+        assert result["annual_dividend_tax_saved"] == approx(87.50)
