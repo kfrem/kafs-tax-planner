@@ -1155,6 +1155,28 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="relevant-property-trust-charges",
+                name="Relevant-property trust IHT charges",
+                tax_domain=TaxDomain.INHERITANCE_TAX,
+                calculator_key="strategy.relevant_property_trust_charges",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A discretionary trust (and most lifetime trusts) is "
+                "'relevant property' with its own inheritance tax charges, separate from anyone's "
+                "estate: a 20% entry charge on the value settled above the available nil-rate "
+                "band; a charge on each ten-year anniversary of up to 6% of the value above the "
+                "band; and a proportionate exit charge when capital leaves the trust. This "
+                "quantifies all three, so a settlor can compare putting assets in trust (control "
+                "and protection, but these ongoing charges) against outright gifts (a potentially "
+                "exempt transfer with no charge if they survive seven years). Whether the trust is "
+                "relevant property, and the settlor's prior chargeable transfers, are matters the "
+                "adviser confirms.",
+                authority_keys=["ihta1984_relevant_property"],
+                eligibility_conditions={"all": [
+                    {"path": "trust.trust_value", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
