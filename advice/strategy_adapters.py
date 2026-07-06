@@ -182,6 +182,21 @@ def _dividend_income(facts: dict) -> float:
     return personal.get("dividends_from_own_company", 0) + personal.get("other_dividends", 0)
 
 
+@adapter("strategy.directors_loan_s455")
+class DirectorsLoanS455Adapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("overdrawn_loan_balance", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        return {
+            "overdrawn_loan_balance": company.get("overdrawn_loan_balance", 0),
+            "repaid_within_9_months": company.get("loan_repaid_within_9_months", 0),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
