@@ -1,6 +1,6 @@
 # Rule-base review pack — editorial sign-off
 
-Generated 06 July 2026. Machine pre-check: **0 failed checks** across 31 parameters, 23 strategies, 33 authorities.
+Generated 06 July 2026. Machine pre-check: **0 failed checks** across 32 parameters, 24 strategies, 34 authorities.
 
 **How to approve:** read each numbered item; the primary source is one
 click away. Reply YES to approve all items, or list the item numbers you
@@ -10,20 +10,30 @@ rule-base release, with your name and the date.
 ---
 ## A. Tax parameters (the rates and thresholds the engine uses)
 
-### 1. Corporation tax rates and marginal relief  
+### 1. Capital allowances: AIA limit and writing-down rates  
+`capital_allowances.aia` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
+- aia_limit: **1,000,000**
+- main_pool_wda: **0.18**
+- special_rate_wda: **0.06**
+- PASS — consumed by a registered calculator (strategy.capital_allowances)
+- PASS — figure exercised by golden test cases (strategy.capital_allowances)
+- PASS — belongs to a released rule-base version (2025.1)
+- Source cross-reference: 1,000,000 appears in: Capital Allowances Act 2001 s.51A
+
+### 2. Corporation tax rates and marginal relief  
 `corporation_tax.rates` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
 - main_rate: **0.25**
 - main_rate_limit: **250,000**
 - small_profits_rate: **0.19**
 - small_profits_limit: **50,000**
 - marginal_relief_fraction: **0.015**
-- PASS — consumed by a registered calculator (corporation_tax, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
-- PASS — figure exercised by golden test cases (corporation_tax, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
+- PASS — consumed by a registered calculator (corporation_tax, strategy.capital_allowances, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
+- PASS — figure exercised by golden test cases (corporation_tax, strategy.capital_allowances, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 50,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 
-### 2. Directors' loan s.455 charge rate  
+### 3. Directors' loan s.455 charge rate  
 `directors_loan.s455` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
 - rate: **0.3375**
 - beneficial_loan_threshold: **10,000**
@@ -31,7 +41,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (strategy.directors_loan_s455)
 - PASS — belongs to a released rule-base version (2025.1)
 
-### 3. Employer (secondary) Class 1 NIC  
+### 4. Employer (secondary) Class 1 NIC  
 `national_insurance.employer_class1` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
 - rate: **0.15**
 - secondary_threshold: **5,000**
@@ -40,7 +50,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 5,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D; Jones v Garnett (Arctic Systems) [2007] UKHL 35
 
-### 4. Employment Allowance  
+### 5. Employment Allowance  
 `national_insurance.employment_allowance` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
 - amount: **10,500**
 - PASS — consumed by a registered calculator (employer_class1_nic, strategy.salary_dividend_mix, strategy.incorporation_vs_sole_trade)
@@ -48,7 +58,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 10,500 appears in: National Insurance Contributions Act 2014 s.1
 
-### 5. IHT gift exemptions and PET taper relief  
+### 6. IHT gift exemptions and PET taper relief  
 `iht.gift_exemptions` — inheritance_tax — release 2025.2 — effective 2025-04-06 to open
 - taper_relief:
   - tax_reduction: **0.2**
@@ -71,14 +81,14 @@ rule-base release, with your name and the date.
 - Source cross-reference: 250 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 - Source cross-reference: 3,000 appears in: Inheritance Tax Act 1984 s.19
 
-### 6. IHT nil-rate band (frozen through 2029/30)  
+### 7. IHT nil-rate band (frozen through 2029/30)  
 `iht.nil_rate_band` — inheritance_tax — release 2025.2 — effective 2025-04-06 to open
 - amount: **325,000**
 - PASS — consumed by a registered calculator (iht_estate_liability, strategy.iht_spousal_transfer_nil_rate_bands, strategy.iht_lifetime_gifting, strategy.iht_charitable_legacy_reduced_rate)
 - PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 
-### 7. IHT rates: death, reduced charitable, lifetime CLT  
+### 8. IHT rates: death, reduced charitable, lifetime CLT  
 `iht.rates` — inheritance_tax — release 2025.2 — effective 2025-04-06 to open
 - death_rate: **0.4**
 - lifetime_clt_rate: **0.2**
@@ -88,7 +98,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (iht_estate_liability, strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
 
-### 8. IHT residence nil-rate band and taper  
+### 9. IHT residence nil-rate band and taper  
 `iht.residence_nil_rate_band` — inheritance_tax — release 2025.2 — effective 2025-04-06 to open
 - amount: **175,000**
 - taper_rate: **0.5**
@@ -99,7 +109,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
-### 9. Dividend allowance  
+### 10. Dividend allowance  
 `dividend_tax.allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - amount: **500**
 - PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
@@ -107,7 +117,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 500 appears in: Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA; Income Tax Act 2007 s.13A
 
-### 10. Dividend tax bands  
+### 11. Dividend tax bands  
 `dividend_tax.bands` — personal_income_tax — release 2025.1 — effective 2025-04-06 to 2026-04-06
 - bands:
   - rate: **0.0875**
@@ -121,7 +131,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
-### 11. Dividend tax bands  
+### 12. Dividend tax bands  
 `dividend_tax.bands` — personal_income_tax — release 2026.1 — effective 2026-04-06 to open
 - bands:
   - rate: **0.1075**
@@ -135,7 +145,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2026.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
-### 12. Income tax bands (non-savings, non-dividend)  
+### 13. Income tax bands (non-savings, non-dividend)  
 `income_tax.bands` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - bands:
   - rate: **0.2**
@@ -149,14 +159,14 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
-### 13. Marriage Allowance transferable amount  
+### 14. Marriage Allowance transferable amount  
 `income_tax.marriage_allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - transferable_amount: **1,260**
 - PASS — consumed by a registered calculator (strategy.marriage_allowance_transfer)
 - PASS — figure exercised by golden test cases (strategy.marriage_allowance_transfer)
 - PASS — belongs to a released rule-base version (2025.1)
 
-### 14. Personal Allowance  
+### 15. Personal Allowance  
 `income_tax.personal_allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - amount: **12,570**
 - taper_rate: **0.5**
@@ -167,7 +177,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 100,000 appears in: Income Tax Act 2007 s.35; Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
-### 15. Class 4 NIC (self-employed)  
+### 16. Class 4 NIC (self-employed)  
 `national_insurance.class4` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - rate: **0.06**
 - upper_rate: **0.02**
@@ -179,7 +189,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 50,270 appears in: Social Security Contributions and Benefits Act 1992 s.15
 
-### 16. Employee Class 1 NIC  
+### 17. Employee Class 1 NIC  
 `national_insurance.employee_class1` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - rate: **0.08**
 - upper_rate: **0.02**
@@ -191,7 +201,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
 - Source cross-reference: 50,270 appears in: Social Security Contributions and Benefits Act 1992 s.15
 
-### 17. Pension annual allowance and taper  
+### 18. Pension annual allowance and taper  
 `pension.annual_allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - standard_amount: **60,000**
 - minimum_tapered_amount: **10,000**
@@ -202,7 +212,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 60,000 appears in: Finance Act 2004 s.228
 
-### 18. CGT annual exempt amount  
+### 19. CGT annual exempt amount  
 `cgt.annual_exempt_amount` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - amount: **3,000**
 - PASS — consumed by a registered calculator (cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
@@ -210,23 +220,25 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 3,000 appears in: Inheritance Tax Act 1984 s.19
 
-### 19. Business Asset Disposal Relief: reduced CGT rate and lifetime limit  
+### 20. Business Asset Disposal Relief: reduced CGT rate and lifetime limit  
 `cgt.business_asset_disposal_relief` — property_taxes — release 2025.3 — effective 2025-04-06 to 2026-04-06
 - rate: **0.14**
 - lifetime_limit: **1,000,000**
 - PASS — consumed by a registered calculator (strategy.cgt_business_asset_disposal_relief)
 - PASS — figure exercised by golden test cases (strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.3)
+- Source cross-reference: 1,000,000 appears in: Capital Allowances Act 2001 s.51A
 
-### 20. Business Asset Disposal Relief: reduced CGT rate and lifetime limit  
+### 21. Business Asset Disposal Relief: reduced CGT rate and lifetime limit  
 `cgt.business_asset_disposal_relief` — property_taxes — release 2026.1 — effective 2026-04-06 to open
 - rate: **0.18**
 - lifetime_limit: **1,000,000**
 - PASS — consumed by a registered calculator (strategy.cgt_business_asset_disposal_relief)
 - PASS — figure exercised by golden test cases (strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2026.1)
+- Source cross-reference: 1,000,000 appears in: Capital Allowances Act 2001 s.51A
 
-### 21. Lettings relief cap (shared-occupancy let, TCGA 1992 s.223B)  
+### 22. Lettings relief cap (shared-occupancy let, TCGA 1992 s.223B)  
 `cgt.lettings_relief` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - cap: **40,000**
 - PASS — consumed by a registered calculator (strategy.cgt_lettings_relief)
@@ -234,7 +246,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 40,000 appears in: Taxation of Chargeable Gains Act 1992 s.223B
 
-### 22. CGT rates by asset class (lower = within basic band)  
+### 23. CGT rates by asset class (lower = within basic band)  
 `cgt.rates` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - other:
   - lower: **0.18**
@@ -246,7 +258,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.3)
 
-### 23. LBTT lease: NPV discount rate and bands (Scotland)  
+### 24. LBTT lease: NPV discount rate and bands (Scotland)  
 `lbtt.lease_npv_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -262,7 +274,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 150,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
-### 24. LBTT non-residential freehold bands (Scotland)  
+### 25. LBTT non-residential freehold bands (Scotland)  
 `lbtt.non_residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -277,7 +289,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 150,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 
-### 25. LBTT residential bands, Additional Dwelling Supplement, first-time buyer relief (Scotland)  
+### 26. LBTT residential bands, Additional Dwelling Supplement, first-time buyer relief (Scotland)  
 `lbtt.residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -298,7 +310,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 
-### 26. LTT non-residential lease: NPV discount rate and bands (Wales)  
+### 27. LTT non-residential lease: NPV discount rate and bands (Wales)  
 `ltt.lease_npv_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -313,7 +325,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 2,000,000 appears in: Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
-### 27. LTT non-residential freehold bands (Wales)  
+### 28. LTT non-residential freehold bands (Wales)  
 `ltt.non_residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -328,8 +340,9 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (strategy.ltt_non_residential_purchase)
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 1,000,000 appears in: Capital Allowances Act 2001 s.51A
 
-### 28. LTT residential main and higher (additional-property) bands (Wales)  
+### 29. LTT residential main and higher (additional-property) bands (Wales)  
 `ltt.residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - main_bands:
   - rate: **0.0**
@@ -361,7 +374,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 - Source cross-reference: 1,500,000 appears in: Finance Act 2003 s.55 and Sch 4ZA
 
-### 29. SDLT non-residential lease: NPV discount rate and bands (England/NI)  
+### 30. SDLT non-residential lease: NPV discount rate and bands (England/NI)  
 `sdlt.lease_npv_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -376,7 +389,7 @@ rule-base release, with your name and the date.
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 150,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 
-### 30. SDLT non-residential/mixed freehold bands (England/NI)  
+### 31. SDLT non-residential/mixed freehold bands (England/NI)  
 `sdlt.non_residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -391,7 +404,7 @@ rule-base release, with your name and the date.
 - Source cross-reference: 150,000 appears in: Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 
-### 31. SDLT residential bands, surcharge, FTB relief (England/NI)  
+### 32. SDLT residential bands, surcharge, FTB relief (England/NI)  
 `sdlt.residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
 - bands:
   - rate: **0.0**
@@ -422,7 +435,18 @@ rule-base release, with your name and the date.
 ---
 ## B. Strategies (the planning advice, with legal basis)
 
-### 32. Directors' loan s.455 charge  
+### 33. Capital allowances / Annual Investment Allowance  
+`capital-allowances-aia` — corporation_tax — risk **settled**, timeframe short
+> Qualifying spend on plant and machinery gets 100% tax relief in the year of purchase through the Annual Investment Allowance, up to the AIA limit (currently £1,000,000). Spend above that is written down at 18% a year in the main pool. This quantifies the first-year deduction and the tax it saves at the client's marginal rate — often a reason to time capital spend into a particular period.
+- Authority: [Capital Allowances Act 2001 s.51A](https://www.legislation.gov.uk/ukpga/2001/2/section/51A) (in_force)
+- PASS — calculator registered (strategy.capital_allowances)
+- PASS — adapter registered
+- PASS — has legal authorities (1 cited)
+- PASS — plain-English explanation present (391 chars)
+- PASS — risk status set (settled)
+- PASS — timeframe set (short)
+
+### 34. Directors' loan s.455 charge  
 `directors-loan-s455` — corporation_tax — risk **settled**, timeframe short
 > Where a director-shareholder's loan account is overdrawn, the company faces a temporary 33.75% s.455 charge on any amount still outstanding 9 months and 1 day after the year end. Repaying the loan (or enough of it) within that window avoids the charge; the charge is refunded when the loan is later repaid. This quantifies the charge and the amount avoided by repaying in time.
 - Authority: [Corporation Tax Act 2010 s.455](https://www.legislation.gov.uk/ukpga/2010/4/section/455) (in_force)
@@ -433,7 +457,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 33. Incorporation versus remaining a sole trader  
+### 35. Incorporation versus remaining a sole trader  
 `incorporation-vs-sole-trade` — cross_cutting — risk **borderline**, timeframe medium
 > Trading through a company rather than as a sole trader changes the tax base from income tax plus Class 4 NIC on all profits, to corporation tax on retained profit plus income tax/NIC only on amounts extracted as salary or dividends. Whether this saves tax depends on profit level and how much is drawn out; HMRC scrutinises incorporations that appear to have no commercial purpose beyond tax saving.
 - Authority: [Corporation Tax Act 2010 Part 3A (ss.18A-18M)](https://www.legislation.gov.uk/ukpga/2010/4/part/3A) (in_force)
@@ -446,7 +470,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (borderline)
 - PASS — timeframe set (medium)
 
-### 34. Salary/dividend extraction mix  
+### 36. Salary/dividend extraction mix  
 `salary-dividend-mix` — cross_cutting — risk **settled**, timeframe short
 > An owner-manager can choose how much of their reward is taken as salary (deductible against corporation tax, but subject to employer/employee NIC) versus dividends (paid from post-tax company profit, no NIC, taxed at dividend rates). Comparing the combined company and personal tax cost across salary levels identifies the extraction mix with the lowest total tax and NIC for the profit available.
 - Authority: [Corporation Tax Act 2010 Part 3A (ss.18A-18M)](https://www.legislation.gov.uk/ukpga/2010/4/part/3A) (in_force)
@@ -461,7 +485,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 35. Charitable legacy and the 36% reduced rate  
+### 37. Charitable legacy and the 36% reduced rate  
 `iht-charitable-legacy-reduced-rate` — inheritance_tax — risk **settled**, timeframe medium
 > Where at least 10% of the baseline amount of the estate is left to charity, the whole taxable estate is charged at 36% rather than 40%. Because the charitable legacy is itself exempt, topping a smaller legacy up to the 10% threshold often costs the residuary beneficiaries far less than the legacy's face value, and in some estates makes them better off outright.
 - Authority: [Inheritance Tax Act 1984 Sch 1A](https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A) (in_force)
@@ -472,7 +496,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (medium)
 
-### 36. Lifetime gifting: exemptions and potentially exempt transfers  
+### 38. Lifetime gifting: exemptions and potentially exempt transfers  
 `iht-lifetime-gifting-pets` — inheritance_tax — risk **settled**, timeframe long
 > Outright lifetime gifts to individuals are potentially exempt transfers: no tax if the donor survives seven years, with taper relief reducing the tax (not the transfer) where death occurs in years three to seven and the gift exceeds the nil-rate band. The first £3,000 given each tax year is immediately exempt, plus one year's unused prior exemption. The donor must not retain a benefit in the gifted asset, or the gift-with-reservation rules put it back in the estate.
 - Authority: [Inheritance Tax Act 1984 s.19](https://www.legislation.gov.uk/ukpga/1984/51/section/19) (in_force)
@@ -485,7 +509,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (long)
 
-### 37. Spouse exemption and transferable nil-rate bands  
+### 39. Spouse exemption and transferable nil-rate bands  
 `iht-spousal-transfer-and-nil-rate-bands` — inheritance_tax — risk **settled**, timeframe long
 > Transfers between spouses or civil partners are wholly exempt from inheritance tax, and any nil-rate band and residence nil-rate band unused on the first death transfers to the survivor. Leaving the estate to the surviving spouse defers all tax to the second death, where up to double both bands (currently £650,000 plus £350,000 where the home passes to direct descendants) shelter the combined estate. The transferred bands must be claimed by the survivor's personal representatives within two years.
 - Authority: [Inheritance Tax Act 1984 s.18](https://www.legislation.gov.uk/ukpga/1984/51/section/18) (in_force)
@@ -499,7 +523,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (long)
 
-### 38. Gift Aid higher-rate relief  
+### 40. Gift Aid higher-rate relief  
 `gift-aid-relief` — personal_income_tax — risk **settled**, timeframe short
 > A Gift Aid donation is grossed up at the basic rate, which the charity reclaims. For a higher or additional-rate donor the grossed-up amount also extends the basic-rate band, giving personal relief of the difference between their rate and the basic rate. Where income is in the 100,000-125,140 personal-allowance taper, the donation also reduces adjusted net income and can restore some or all of the personal allowance.
 - Authority: [Income Tax Act 2007 s.414](https://www.legislation.gov.uk/ukpga/2007/3/section/414) (in_force)
@@ -510,7 +534,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 39. Marriage Allowance transfer  
+### 41. Marriage Allowance transfer  
 `marriage-allowance-transfer` — personal_income_tax — risk **settled**, timeframe short
 > Where one spouse or civil partner does not use their full personal allowance and the other is a basic-rate taxpayer, 10% of the unused allowance can be transferred, reducing the recipient's tax bill by a fixed amount.
 - Authority: [Income Tax Act 2007 ss.55A-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55A) (in_force)
@@ -521,7 +545,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 40. Pension annual allowance carry-forward  
+### 42. Pension annual allowance carry-forward  
 `pension-annual-allowance-carry-forward` — personal_income_tax — risk **settled**, timeframe short
 > Unused pension annual allowance from the three preceding tax years can be carried forward, allowing a larger contribution in the current year. Personal contributions attract relief only up to the greater of £3,600 and relevant UK earnings (employment and trading income; dividends do not count). Where earnings are the constraint, an employer contribution from the individual's own company avoids the cap entirely and is deductible against corporation tax, subject to the wholly-and-exclusively condition as part of a reasonable remuneration package.
 - Authority: [Corporation Tax Act 2009 s.54](https://www.legislation.gov.uk/ukpga/2009/4/section/54) (in_force)
@@ -534,7 +558,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 41. Business Asset Disposal Relief  
+### 43. Business Asset Disposal Relief  
 `cgt-business-asset-disposal-relief` — property_taxes — risk **settled**, timeframe short
 > On a qualifying disposal of all or part of a trading business, or of shares in a personal trading company, gains up to a 1,000,000 lifetime limit are taxed at a reduced flat CGT rate (14% for 2025/26) instead of the standard 18%/24%. The qualifying conditions — a two-year minimum ownership period and, for shares, a 5% personal-company holding — must be met throughout that period. Gains above the lifetime limit are taxed at the normal rate, so the relief is worth up to ten percentage points on the first million pounds of qualifying gains.
 - Authority: [Taxation of Chargeable Gains Act 1992 ss.169H-169S](https://www.legislation.gov.uk/ukpga/1992/12/section/169H) (in_force)
@@ -546,7 +570,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 42. Lettings relief (shared-occupancy let)  
+### 44. Lettings relief (shared-occupancy let)  
 `cgt-lettings-relief` — property_taxes — risk **settled**, timeframe short
 > Where the owner lets part of their only or main residence to a tenant while continuing to live in another part, lettings relief reduces the gain on the let portion by the lowest of that letting gain, the private residence relief due, and a 40,000 cap. Since 6 April 2020 the relief is available only for periods of shared occupancy with the tenant — the former relief for letting a property after moving out has been withdrawn.
 - Authority: [Taxation of Chargeable Gains Act 1992 s.223B](https://www.legislation.gov.uk/ukpga/1992/12/section/223B) (in_force)
@@ -559,7 +583,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 43. Private residence relief on property disposal  
+### 45. Private residence relief on property disposal  
 `cgt-ppr-relief` — property_taxes — risk **settled**, timeframe short
 > Gains on a property that has at some time been the owner's only or main residence are exempt for the periods of actual occupation plus the final nine months of ownership, apportioned over the total ownership period. Where a property was the main residence for part of the ownership, the relief often removes more of the gain than clients expect — and the occupation history should be evidenced before disposal.
 - Authority: [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) (in_force)
@@ -571,7 +595,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 44. Spousal transfer before disposal  
+### 46. Spousal transfer before disposal  
 `cgt-spousal-transfer-before-disposal` — property_taxes — risk **settled**, timeframe short
 > Transfers between spouses or civil partners are at no gain/no loss, so a half share transferred before an arm's-length disposal uses both annual exempt amounts and both basic-rate bands. Since 6 April 2023 (F(No.2)A 2023 s.41) this treatment also covers separated couples until the end of the third tax year after the tax year of separation, and without time limit under a formal divorce agreement or court order. The transfer must be an outright gift of beneficial ownership made before any unconditional contract to sell exists.
 - Authority: [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) (in_force)
@@ -583,7 +607,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 45. Timing of disposals across tax years  
+### 47. Timing of disposals across tax years  
 `cgt-timing-of-disposals` — property_taxes — risk **settled**, timeframe short
 > Where a divisible holding such as shares or fund units stands at a gain larger than the annual exempt amount, selling it in two tranches across two tax years uses two years' exemptions (and two basic-rate bands) instead of one, cutting the total CGT. A single indivisible asset such as one property cannot be split this way. Quantifies the saving from spreading the disposal.
 - Authority: [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) (in_force)
@@ -594,7 +618,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 46. LBTT on a lease (Scotland)  
+### 48. LBTT on a lease (Scotland)  
 `lbtt-lease-npv` — property_taxes — risk **settled**, timeframe short
 > Quantifies the LBTT due on the grant of a lease in Scotland. The rent is charged on its net present value over the term, discounted at 3.5%, with 0% up to 150,000 of NPV, 1% to 2,000,000 and 2% above. Scotland uniquely requires the tenant to submit LBTT lease reviews every three years, which can change the tax as rents are revised.
 - Authority: [Land and Buildings Transaction Tax (Scotland) Act 2013 s.24](https://www.legislation.gov.uk/asp/2013/11/section/24) (in_force)
@@ -605,7 +629,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 47. LBTT on non-residential purchase (Scotland)  
+### 49. LBTT on non-residential purchase (Scotland)  
 `lbtt-non-residential-purchase` — property_taxes — risk **settled**, timeframe short
 > Quantifies the LBTT on a planned non-residential freehold purchase in Scotland. Commercial rates run in bands (0% to 150,000, 1% to 250,000, 5% above) — a lower middle band than the English SDLT — with no Additional Dwelling Supplement and no first-time buyer relief on non-residential property.
 - Authority: [Land and Buildings Transaction Tax (Scotland) Act 2013 s.24](https://www.legislation.gov.uk/asp/2013/11/section/24) (in_force)
@@ -616,7 +640,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 48. LBTT on planned property purchase (Scotland)  
+### 50. LBTT on planned property purchase (Scotland)  
 `lbtt-purchase-planning` — property_taxes — risk **settled**, timeframe short
 > Quantifies Land and Buildings Transaction Tax on a planned Scottish residential purchase, including the 8% Additional Dwelling Supplement on the whole price where a second dwelling is bought, and first-time buyer relief, which raises the nil-rate band to 175,000 and is worth up to 600. Scotland sets its own rates and bands, so the English SDLT figures do not apply north of the border.
 - Authority: [Land and Buildings Transaction Tax (Scotland) Act 2013 s.24](https://www.legislation.gov.uk/asp/2013/11/section/24) (in_force)
@@ -627,7 +651,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 49. LTT on a non-residential lease (Wales)  
+### 51. LTT on a non-residential lease (Wales)  
 `ltt-lease-npv` — property_taxes — risk **settled**, timeframe short
 > Quantifies the LTT due on the grant of a non-residential lease in Wales. The rent is charged on its net present value over the term, discounted at 3.5%, with 0% up to 225,000 of NPV, 1% to 2,000,000 and 2% above. Wales's higher nil-rate threshold means a lease is often cheaper than the equivalent English SDLT. Residential lease rent is not charged.
 - Authority: [Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24](https://www.legislation.gov.uk/anaw/2017/1/section/24) (in_force)
@@ -638,7 +662,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 50. LTT on non-residential purchase (Wales)  
+### 52. LTT on non-residential purchase (Wales)  
 `ltt-non-residential-purchase` — property_taxes — risk **settled**, timeframe short
 > Quantifies the LTT on a planned non-residential freehold purchase in Wales. Commercial rates run in bands (0% to 225,000, 1% to 250,000, 5% to 1,000,000, 6% above), so the Welsh charge has a higher nil-rate threshold but a top band the other regimes lack. There is no surcharge or first-time buyer relief on non-residential property.
 - Authority: [Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24](https://www.legislation.gov.uk/anaw/2017/1/section/24) (in_force)
@@ -649,7 +673,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 51. LTT on planned property purchase (Wales)  
+### 53. LTT on planned property purchase (Wales)  
 `ltt-purchase-planning` — property_taxes — risk **settled**, timeframe short
 > Quantifies Land Transaction Tax on a planned Welsh residential purchase. Wales applies a separate set of higher-rate bands to additional dwellings rather than a flat surcharge, and has no first-time buyer relief; the main residential nil-rate band runs to 225,000. The devolved rates differ from both English SDLT and Scottish LBTT, so the property's jurisdiction governs the charge.
 - Authority: [Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24](https://www.legislation.gov.uk/anaw/2017/1/section/24) (in_force)
@@ -660,7 +684,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 52. SDLT on a non-residential lease (England/NI)  
+### 54. SDLT on a non-residential lease (England/NI)  
 `sdlt-lease-npv` — property_taxes — risk **settled**, timeframe short
 > Quantifies the SDLT due on the grant of a non-residential lease in England or Northern Ireland. The rent is charged on its net present value over the term, discounted at 3.5%, with 0% up to 150,000 of NPV, 1% to 5,000,000 and 2% above. Any lease premium is charged separately at the freehold rates and is not included here.
 - Authority: [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
@@ -671,7 +695,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 53. SDLT on non-residential purchase (England/NI)  
+### 55. SDLT on non-residential purchase (England/NI)  
 `sdlt-non-residential-purchase` — property_taxes — risk **settled**, timeframe short
 > Quantifies the SDLT on a planned non-residential or mixed-use freehold purchase in England or Northern Ireland. Commercial rates run in bands (0% to 150,000, 2% to 250,000, 5% above) and — unlike residential — carry no additional-dwelling surcharge and no first-time buyer relief. A mixed-use property is charged wholly at these non-residential rates.
 - Authority: [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
@@ -682,7 +706,7 @@ rule-base release, with your name and the date.
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
 
-### 54. SDLT on planned property purchase  
+### 56. SDLT on planned property purchase  
 `sdlt-purchase-planning` — property_taxes — risk **settled**, timeframe short
 > Quantifies the SDLT on a planned residential purchase in England or Northern Ireland, including the 5% additional-dwellings surcharge and first-time buyers' relief. Where the purchase replaces a main residence sold within three years, the surcharge is recoverable — timing the sale matters as much as the price. Scotland (LBTT) and Wales (LTT) set their own rates.
 - Authority: [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
@@ -697,231 +721,238 @@ rule-base release, with your name and the date.
 ---
 ## C. Authority registry (every citation, verified fetchable)
 
-### 55. [Corporation Tax Act 2009 s.54](https://www.legislation.gov.uk/ukpga/2009/4/section/54) — Statute
+### 57. [Capital Allowances Act 2001 s.51A](https://www.legislation.gov.uk/ukpga/2001/2/section/51A) — Statute
+> Entitlement to the annual investment allowance: 100% relief on qualifying expenditure on plant and machinery up to the AIA maximum for the chargeable period. Expenditure above the maximum is relieved through the capital allowance pools at the writing-down allowance rates (s.56).
+- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2001/2/section/51A)
+- PASS — primary source fetched by watcher (5,535 chars of source text on file)
+- PASS — status is in force (in_force)
+- PASS — verbatim extract on file
+
+### 58. [Corporation Tax Act 2009 s.54](https://www.legislation.gov.uk/ukpga/2009/4/section/54) — Statute
 > No deduction is allowed for expenses not incurred wholly and exclusively for the purposes of the trade — the condition governing deductibility of employer pension contributions as part of a reasonable remuneration package.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2009/4/section/54)
 - PASS — primary source fetched by watcher (1,518 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 56. [Corporation Tax Act 2010 Part 3A (ss.18A-18M)](https://www.legislation.gov.uk/ukpga/2010/4/part/3A) — Statute
+### 59. [Corporation Tax Act 2010 Part 3A (ss.18A-18M)](https://www.legislation.gov.uk/ukpga/2010/4/part/3A) — Statute
 > Small profits rate and marginal relief on corporation tax profits, reintroduced with effect from 1 April 2023 by Finance Act 2021 s.7 and Sch.1.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2010/4/part/3A)
 - PASS — primary source fetched by watcher (19,154 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 57. [Corporation Tax Act 2010 s.455](https://www.legislation.gov.uk/ukpga/2010/4/section/455) — Statute
+### 60. [Corporation Tax Act 2010 s.455](https://www.legislation.gov.uk/ukpga/2010/4/section/455) — Statute
 > Charge to tax where a close company makes a loan or advance to a participator (e.g. a director-shareholder): the company pays tax on the amount outstanding at the rate in s.455, currently 33.75%. The charge falls due 9 months and 1 day after the end of the accounting period, and is repaid under s.458 when the loan is repaid or written off.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2010/4/section/455)
 - PASS — primary source fetched by watcher (3,346 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 58. [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) — Statute
+### 61. [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) — Statute
 > Amount of stamp duty land tax chargeable on residential property; Schedule 4ZA imposes higher rates for additional dwellings, refundable where a main residence is replaced within three years.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2003/14/section/55)
 - PASS — primary source fetched by watcher (10,845 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 59. [Finance Act 2003 Sch 6ZA](https://www.legislation.gov.uk/ukpga/2003/14/schedule/6ZA) — Statute
+### 62. [Finance Act 2003 Sch 6ZA](https://www.legislation.gov.uk/ukpga/2003/14/schedule/6ZA) — Statute
 > Relief for first-time buyers: no SDLT up to the relief threshold and a reduced rate above it, unavailable where the price exceeds the cap.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2003/14/schedule/6ZA)
 - PASS — primary source fetched by watcher (10,677 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 60. [Finance Act 2004 s.190](https://www.legislation.gov.uk/ukpga/2004/12/section/190) — Statute
+### 63. [Finance Act 2004 s.190](https://www.legislation.gov.uk/ukpga/2004/12/section/190) — Statute
 > The maximum amount of relief for an individual's pension contributions in a tax year is the greater of the basic amount (£3,600) and the individual's relevant UK earnings chargeable to income tax for that year.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2004/12/section/190)
 - PASS — primary source fetched by watcher (3,902 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 61. [Finance Act 2004 s.228](https://www.legislation.gov.uk/ukpga/2004/12/section/228) — Statute
+### 64. [Finance Act 2004 s.228](https://www.legislation.gov.uk/ukpga/2004/12/section/228) — Statute
 > The annual allowance for tax-relieved pension savings, and (via s.228ZA, inserted by Finance (No.2) Act 2015) its tapering for high-income individuals.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2004/12/section/228)
 - PASS — primary source fetched by watcher (3,094 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 62. [Income Tax Act 2007 s.10](https://www.legislation.gov.uk/ukpga/2007/3/section/10) — Statute
+### 65. [Income Tax Act 2007 s.10](https://www.legislation.gov.uk/ukpga/2007/3/section/10) — Statute
 > Basic rate, higher rate, and additional rate of income tax on non-savings, non-dividend income.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/10)
 - PASS — primary source fetched by watcher (6,064 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 63. [Income Tax Act 2007 s.13A](https://www.legislation.gov.uk/ukpga/2007/3/section/13A) — Statute
+### 66. [Income Tax Act 2007 s.13A](https://www.legislation.gov.uk/ukpga/2007/3/section/13A) — Statute
 > Dividend nil rate: the dividend allowance against which dividend income is charged at 0%, introduced by Finance Act 2016 s.5.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/13A)
 - PASS — primary source fetched by watcher (3,513 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 64. [Income Tax Act 2007 s.35](https://www.legislation.gov.uk/ukpga/2007/3/section/35) — Statute
+### 67. [Income Tax Act 2007 s.35](https://www.legislation.gov.uk/ukpga/2007/3/section/35) — Statute
 > Entitlement to personal allowance for those born after 5 April 1948, and its reduction under section 35(2) where adjusted net income exceeds the income limit.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/35)
 - PASS — primary source fetched by watcher (1,915 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 65. [Income Tax Act 2007 s.414](https://www.legislation.gov.uk/ukpga/2007/3/section/414) — Statute
+### 68. [Income Tax Act 2007 s.414](https://www.legislation.gov.uk/ukpga/2007/3/section/414) — Statute
 > Gift Aid: a qualifying donation is treated as made after deduction of basic-rate income tax; the individual's basic-rate limit (and higher-rate limit) are increased by the grossed-up amount, giving relief to higher and additional-rate taxpayers. The grossed-up gift also reduces adjusted net income for the personal-allowance taper.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/414)
 - PASS — primary source fetched by watcher (2,244 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 66. [Income Tax Act 2007 ss.55A-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55A) — Statute
+### 69. [Income Tax Act 2007 ss.55A-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55A) — Statute
 > Transferable tax allowance for married couples and civil partners (Marriage Allowance), inserted by Finance Act 2014 s.11.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/55A)
 - PASS — primary source fetched by watcher (1,632 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 67. [Income Tax Act 2007 ss.55B-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55B) — Statute
+### 70. [Income Tax Act 2007 ss.55B-55E](https://www.legislation.gov.uk/ukpga/2007/3/section/55B) — Statute
 > Transferable tax allowance for married couples and civil partners (Marriage Allowance), inserted by Finance Act 2014 s.11.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2007/3/section/55B)
 - PASS — primary source fetched by watcher (6,900 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 68. [Inheritance Tax Act 1984 s.18](https://www.legislation.gov.uk/ukpga/1984/51/section/18) — Statute
+### 71. [Inheritance Tax Act 1984 s.18](https://www.legislation.gov.uk/ukpga/1984/51/section/18) — Statute
 > Transfers between spouses or civil partners are exempt transfers (unlimited where the transferee is UK-domiciled).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/18)
 - PASS — primary source fetched by watcher (3,808 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 69. [Inheritance Tax Act 1984 s.19](https://www.legislation.gov.uk/ukpga/1984/51/section/19) — Statute
+### 72. [Inheritance Tax Act 1984 s.19](https://www.legislation.gov.uk/ukpga/1984/51/section/19) — Statute
 > Annual exemption: transfers of value up to £3,000 in a tax year are exempt; unused exemption carries forward one year.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/19)
 - PASS — primary source fetched by watcher (1,844 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 70. [Inheritance Tax Act 1984 s.3A](https://www.legislation.gov.uk/ukpga/1984/51/section/3A) — Statute
+### 73. [Inheritance Tax Act 1984 s.3A](https://www.legislation.gov.uk/ukpga/1984/51/section/3A) — Statute
 > A potentially exempt transfer becomes an exempt transfer if the transferor survives seven years; otherwise it is a chargeable transfer.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/3A)
 - PASS — primary source fetched by watcher (6,263 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 71. [Inheritance Tax Act 1984 s.7 and Sch 1](https://www.legislation.gov.uk/ukpga/1984/51/section/7) — Statute
+### 74. [Inheritance Tax Act 1984 s.7 and Sch 1](https://www.legislation.gov.uk/ukpga/1984/51/section/7) — Statute
 > Rates of tax, including taper relief under s.7(4) reducing the tax charged on chargeable transfers made three to seven years before death.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/7)
 - PASS — primary source fetched by watcher (3,992 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 72. [Inheritance Tax Act 1984 s.8A](https://www.legislation.gov.uk/ukpga/1984/51/section/8A) — Statute
+### 75. [Inheritance Tax Act 1984 s.8A](https://www.legislation.gov.uk/ukpga/1984/51/section/8A) — Statute
 > Transfer of unused nil-rate band between spouses and civil partners: the survivor's nil-rate band is increased by the unused percentage.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/8A)
 - PASS — primary source fetched by watcher (3,172 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 73. [Inheritance Tax Act 1984 s.8D](https://www.legislation.gov.uk/ukpga/1984/51/section/8D) — Statute
+### 76. [Inheritance Tax Act 1984 s.8D](https://www.legislation.gov.uk/ukpga/1984/51/section/8D) — Statute
 > Residence nil-rate amount where a qualifying residential interest is closely inherited; tapered by £1 for every £2 the estate exceeds the taper threshold.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/8D)
 - PASS — primary source fetched by watcher (3,682 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 74. [Inheritance Tax Act 1984 s.8G](https://www.legislation.gov.uk/ukpga/1984/51/section/8G) — Statute
+### 77. [Inheritance Tax Act 1984 s.8G](https://www.legislation.gov.uk/ukpga/1984/51/section/8G) — Statute
 > Transfer of any unused residence nil-rate amount to a surviving spouse or civil partner, by claim, mirroring the s.8A transfer of the ordinary nil-rate band.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/section/8G)
 - PASS — primary source fetched by watcher (2,334 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 75. [Inheritance Tax Act 1984 Sch 1A](https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A) — Statute
+### 78. [Inheritance Tax Act 1984 Sch 1A](https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A) — Statute
 > Where at least 10% of the baseline amount passes to charity, inheritance tax is charged at 36% instead of 40%.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1984/51/schedule/1A)
 - PASS — primary source fetched by watcher (8,527 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 76. [ITTOIA 2005 s.383](https://www.legislation.gov.uk/ukpga/2005/5/section/383) — Statute
+### 79. [ITTOIA 2005 s.383](https://www.legislation.gov.uk/ukpga/2005/5/section/383) — Statute
 > Charge to tax on dividends and other distributions of a UK resident company.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2005/5/section/383)
 - PASS — primary source fetched by watcher (1,484 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 77. [Jones v Garnett (Arctic Systems) [2007] UKHL 35](https://www.bailii.org/uk/cases/UKHL/2007/35.html) — Court Judgment
+### 80. [Jones v Garnett (Arctic Systems) [2007] UKHL 35](https://www.bailii.org/uk/cases/UKHL/2007/35.html) — Court Judgment
 > The House of Lords held that the ordinary-share arrangement between spouses was a settlement within ITTOIA 2005 s.620, but fell within the s.626 outright-gifts-between-spouses exemption because the shares were not wholly or substantially a right to income. Dividend income splitting through ordinary shares held by a spouse therefore stands, subject to the arrangement involving full ordinary shares rather than income-only rights.
 - PASS — canonical URI recorded (https://www.bailii.org/uk/cases/UKHL/2007/35.html)
 - PASS — primary source fetched by watcher (79,967 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 78. [Land and Buildings Transaction Tax (Scotland) Act 2013 s.24](https://www.legislation.gov.uk/asp/2013/11/section/24) — Statute
+### 81. [Land and Buildings Transaction Tax (Scotland) Act 2013 s.24](https://www.legislation.gov.uk/asp/2013/11/section/24) — Statute
 > Empowers the Scottish Ministers to set, by order, the tax bands and percentage rates for Land and Buildings Transaction Tax, including a nil-rate band for residential transactions; the Additional Dwelling Supplement (Schedule 2A) and first-time buyer relief operate alongside these rates.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/asp/2013/11/section/24)
 - PASS — primary source fetched by watcher (1,850 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 79. [Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24](https://www.legislation.gov.uk/anaw/2017/1/section/24) — Statute
+### 82. [Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24](https://www.legislation.gov.uk/anaw/2017/1/section/24) — Statute
 > Empowers the Welsh Ministers to specify, by regulations, the tax bands and percentage rates for Land Transaction Tax across three categories: residential, higher-rates residential (additional properties), and non-residential transactions.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/anaw/2017/1/section/24)
 - PASS — primary source fetched by watcher (4,020 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 80. [National Insurance Contributions Act 2014 s.1](https://www.legislation.gov.uk/ukpga/2014/7/section/1) — Statute
+### 83. [National Insurance Contributions Act 2014 s.1](https://www.legislation.gov.uk/ukpga/2014/7/section/1) — Statute
 > Employment Allowance against employer Class 1 NIC liability, subject to the excluded-companies regulations (SI 2016/344), which exclude a company whose sole employee is also a director.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2014/7/section/1)
 - PASS — primary source fetched by watcher (1,837 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 81. [Social Security Contributions and Benefits Act 1992 s.15](https://www.legislation.gov.uk/ukpga/1992/4/section/15) — Statute
+### 84. [Social Security Contributions and Benefits Act 1992 s.15](https://www.legislation.gov.uk/ukpga/1992/4/section/15) — Statute
 > Class 4 National Insurance contributions on profits of a trade, profession or vocation carried on by a self-employed earner.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/4/section/15)
 - PASS — primary source fetched by watcher (14,848 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 82. [Social Security Contributions and Benefits Act 1992 s.6](https://www.legislation.gov.uk/ukpga/1992/4/section/6) — Statute
+### 85. [Social Security Contributions and Benefits Act 1992 s.6](https://www.legislation.gov.uk/ukpga/1992/4/section/6) — Statute
 > Liability for Class 1 primary and secondary National Insurance contributions on earnings from employment.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/4/section/6)
 - PASS — primary source fetched by watcher (11,910 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 83. [Taxation of Chargeable Gains Act 1992 s.223B](https://www.legislation.gov.uk/ukpga/1992/12/section/223B) — Statute
+### 86. [Taxation of Chargeable Gains Act 1992 s.223B](https://www.legislation.gov.uk/ukpga/1992/12/section/223B) — Statute
 > Additional relief where part of the dwelling-house is the individual's only or main residence and another part is let as residential accommodation: the let-portion gain is relieved by the lowest of that gain, the s.223 private residence relief, and 40,000. For disposals from 6 April 2020 the relief requires shared occupancy with the tenant.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/223B)
 - PASS — primary source fetched by watcher (4,529 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 84. [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) — Statute
+### 87. [Taxation of Chargeable Gains Act 1992 s.58](https://www.legislation.gov.uk/ukpga/1992/12/section/58) — Statute
 > Disposals between spouses or civil partners are on a no-gain/no-loss basis: while living together; where separated, until the end of the third tax year after the tax year of separation; and without time limit where made under a formal divorce/dissolution agreement or court order (as substituted by Finance (No.2) Act 2023 s.41 for disposals from 6 April 2023).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/58)
 - PASS — primary source fetched by watcher (6,329 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 85. [Taxation of Chargeable Gains Act 1992 ss.169H-169S](https://www.legislation.gov.uk/ukpga/1992/12/section/169H) — Statute
+### 88. [Taxation of Chargeable Gains Act 1992 ss.169H-169S](https://www.legislation.gov.uk/ukpga/1992/12/section/169H) — Statute
 > Business Asset Disposal Relief: a qualifying business disposal (s.169I) is charged to capital gains tax at the reduced rate in s.169N, subject to a 1,000,000 lifetime limit on qualifying gains. The reduced rate is 14% for disposals on or after 6 April 2025 (10% before that date; 18% from 6 April 2026).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/169H)
 - PASS — primary source fetched by watcher (4,883 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 86. [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) — Statute
+### 89. [Taxation of Chargeable Gains Act 1992 ss.1H-1K](https://www.legislation.gov.uk/ukpga/1992/12/section/1H) — Statute
 > Rates of capital gains tax by reference to unused basic-rate band, and the annual exempt amount (s.1K).
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/1H)
 - PASS — primary source fetched by watcher (7,522 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 87. [Taxation of Chargeable Gains Act 1992 ss.222-223](https://www.legislation.gov.uk/ukpga/1992/12/section/222) — Statute
+### 90. [Taxation of Chargeable Gains Act 1992 ss.222-223](https://www.legislation.gov.uk/ukpga/1992/12/section/222) — Statute
 > Relief on disposal of a dwelling-house that is or has been the individual's only or main residence; s.223(2) treats the final nine months of ownership as qualifying in any event.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/1992/12/section/222)
 - PASS — primary source fetched by watcher (14,352 chars of source text on file)
@@ -940,7 +971,7 @@ rule-base content under §5.6 of the architecture document.
 |---|---|---|---|
 | Personal/CT/IHT + CGT reliefs + all land taxes + CGT whole-income composition | kfrem (reviewing professional) | YES — verified against HMRC / revenue.scot / gov.wales — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 | 2026/27 rows (release 2026.1): BADR 18% and dividend rates +2pp | kfrem (reviewing professional) | YES — HMRC CG64174/HS275, Finance Act 2025, Budget 2025 technical note; invisible until 2026.1 approved | 6 July 2026 |
-| Tier 1: Gift Aid (ITA 2007 s.414), directors' loan s.455 (CTA 2010 s.455), timing of disposals (two AEAs, TCGA 1992 ss.1H-1K) | kfrem (reviewing professional) | YES — each verified against the primary source and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
+| Tier 1: Gift Aid (ITA 2007 s.414), directors' loan s.455 (CTA 2010 s.455), timing of disposals (TCGA 1992 ss.1H-1K), capital allowances / AIA (CAA 2001 s.51A) | kfrem (reviewing professional) | YES — each verified against the primary source and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 
 *Prior-year (2024/25) rows are validated by golden cases and hand-computed
 tests rather than this forward-looking pack; sign-off in docs/EDITORIAL_SIGNOFF.md.*
