@@ -858,6 +858,27 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="salary-sacrifice-into-pension",
+                name="Salary sacrifice into an employer pension",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.salary_sacrifice",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="The employee gives up an agreed slice of salary and the "
+                "employer pays that amount straight into the employee's pension. Because the salary "
+                "is never received, the employee saves income tax and Class 1 NIC on it, and the "
+                "employer saves secondary (employer) NIC — a saving the employer can also add to the "
+                "pension. The whole sacrificed amount goes into the pension gross, so the net cost to "
+                "the employee is well below the amount invested. This quantifies the employee's income "
+                "tax and NIC saving, the employer's NIC saving, the amount into the pension and its "
+                "net cost. (A valid arrangement must reduce contractual pay before it is earned and "
+                "keep pay above the National Minimum Wage.)",
+                authority_keys=["sscba1992_s6"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.salary_sacrifice_amount", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
