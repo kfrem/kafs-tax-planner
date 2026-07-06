@@ -84,7 +84,7 @@ Last updated: 6 July 2026.
 |---|---|---|---|
 | Bed & ISA / Bed & SIPP | ○ | Uses the annual CGT exemption + shelters future growth; needs the ISA/SIPP fact set. | Med |
 | Spousal transfers (use both allowances/bands) | ✓ | `cgt-spousal-transfer-before-disposal` | — |
-| Timing of disposals (split across tax years) | ○ | Quick — build on the existing CGT engine + annual exempt amount to compare one year vs two. | High |
+| Timing of disposals (split across tax years) | ✓ | `cgt-timing-of-disposals` — splits a divisible gain over two years to use two AEAs + two basic-rate bands; quantifies the saving. | — |
 | Reinvestment reliefs (EIS deferral, rollover) | ○ | Defers the gain into a new qualifying investment; pairs with EIS/SEIS above. | Med |
 
 ---
