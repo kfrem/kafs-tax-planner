@@ -1029,6 +1029,64 @@ class Command(BaseCommand):
                 ]},
                 release=release_property,
             ),
+            dict(
+                code="sdlt-lease-npv",
+                name="SDLT on a non-residential lease (England/NI)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.sdlt_lease_npv",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the SDLT due on the grant of a "
+                "non-residential lease in England or Northern Ireland. The rent is charged on "
+                "its net present value over the term, discounted at 3.5%, with 0% up to "
+                "150,000 of NPV, 1% to 5,000,000 and 2% above. Any lease premium is charged "
+                "separately at the freehold rates and is not included here.",
+                authority_keys=["fa2003_s55"],
+                eligibility_conditions={"all": [
+                    {"path": "property.lease_annual_rent", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="lbtt-lease-npv",
+                name="LBTT on a lease (Scotland)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.lbtt_lease_npv",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the LBTT due on the grant of a lease in "
+                "Scotland. The rent is charged on its net present value over the term, "
+                "discounted at 3.5%, with 0% up to 150,000 of NPV, 1% to 2,000,000 and 2% "
+                "above. Scotland uniquely requires the tenant to submit LBTT lease reviews "
+                "every three years, which can change the tax as rents are revised.",
+                authority_keys=["lbtt_scotland_act_2013_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.lease_annual_rent", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "scotland"},
+                ]},
+                release=release_property,
+            ),
+            dict(
+                code="ltt-lease-npv",
+                name="LTT on a non-residential lease (Wales)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.ltt_lease_npv",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Quantifies the LTT due on the grant of a "
+                "non-residential lease in Wales. The rent is charged on its net present value "
+                "over the term, discounted at 3.5%, with 0% up to 225,000 of NPV, 1% to "
+                "2,000,000 and 2% above. Wales's higher nil-rate threshold means a lease is "
+                "often cheaper than the equivalent English SDLT. Residential lease rent is "
+                "not charged.",
+                authority_keys=["ltt_wales_act_2017_s24"],
+                eligibility_conditions={"all": [
+                    {"path": "property.lease_annual_rent", "op": "gt", "value": 0},
+                    {"path": "property.jurisdiction", "op": "eq", "value": "wales"},
+                ]},
+                release=release_property,
+            ),
         ]
 
         for spec in specs:
