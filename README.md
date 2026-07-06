@@ -62,9 +62,15 @@ across the whole client-complexity range; see TEST_EVIDENCE.md §3.
   data-driven runner over `GoldenTestCase` rows (the CI gate described in
   Section 5.5 of the architecture doc).
 
-Out of scope for this build (per the doc's own phasing): IHT/property
-modules, HMRC MTD integration, LLM narrative drafting, practice-management
-integrations — all Phase 2/3.
+> **Scope has grown well beyond this original Phase-1 list.** Now also
+> built: the full **IHT** and **property/CGT/SDLT** modules (BADR, lettings
+> relief, PPR, spousal transfer; SDLT/LBTT/LTT residential, commercial and
+> lease-NPV across all three UK jurisdictions), intra-year and future-year
+> effective dating, change-monitoring watchers with an editorial queue UI,
+> MFA, and a `/healthz` probe — 20 strategies, 218 tests. See
+> [docs/ONBOARDING.md](docs/ONBOARDING.md) §6 for the current picture.
+> Still out of scope (Phase 2/3): HMRC MTD integration, LLM narrative
+> drafting, practice-management integrations.
 
 ## Governance warning — read before using this for a real client
 
