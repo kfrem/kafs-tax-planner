@@ -9,6 +9,7 @@ from ruleengine.calculators import (
     strategy_cgt_timing_of_disposals,
     strategy_directors_loan_s455,
     strategy_gift_aid_relief,
+    strategy_salary_sacrifice,
 )
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
