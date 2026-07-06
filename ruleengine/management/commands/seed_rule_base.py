@@ -256,6 +256,19 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ittoia2005_s272a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.272A-274C",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/272A",
+                verbatim_extract="Costs of a dwelling-related loan (mortgage interest and other "
+                "finance costs) are not deductible in computing the profits of a residential "
+                "property business. Instead the individual is entitled to a basic-rate tax "
+                "reduction (s.274A) of 20% of the lower of the finance costs, the property "
+                "business profits, and the individual's adjusted total income above the personal "
+                "allowance. Fully in force from 2020/21 (phased in from 2017/18 by F(No.2)A 2015 "
+                "s.24). Companies are unaffected — they still deduct the interest in full.",
+            ),
+            dict(
                 key="ita2007_venture_capital",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT)",
