@@ -186,14 +186,19 @@ year, click "Generate advice".
 ## Tests
 
 ```bash
-python -m pytest        # expect: 218 passed (~6 min); this is the reproduction checkpoint
+python -m pytest        # expect: 253 passed (~7 min); this is the reproduction checkpoint
 ```
 
 Covers: calculator correctness against hand-verified HMRC-rate worked
 examples, the data-driven golden-case runner, row-level security isolation
 (firm A cannot see firm B's data, verified at the database level, not just
 in application code), CSV import, advice generation/eligibility matching,
-advice-record immutability (append-only, undeletable), and PDF rendering.
+advice-record immutability (append-only, undeletable), PDF rendering, and the
+**end-to-end self-audit** (`advice/tests/test_self_audit.py`) that exercises
+every live strategy through advice → PDF → four-expert panel with independent
+recomputation. See `docs/TEST_EVIDENCE.md` for the full inventory, and the
+**"Mandatory self-audit"** section above for the release gate you must run
+before finishing any change.
 
 ## Key architectural decisions carried over from the design doc
 
