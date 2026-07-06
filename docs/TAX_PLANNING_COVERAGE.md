@@ -105,8 +105,9 @@ personal + employer pension-contribution recommendations. **Tier 2 quick wins
 complete**: group relief for company losses, bed-and-ISA, Business/Agricultural
 Property Relief with the April 2026 £1m cap, and EIS/SEIS/VCT investment relief.
 **Client-type expansion in progress**: the landlord s.24 finance-cost
-restriction is built; richer entity labels (sole trader, partnership, trust,
-estate) added.)
+restriction and the partnership profit-share allocation are built; richer
+entity labels (sole trader, partnership, trust, estate) added. Trusts and the
+guided adaptive intake are next.)
 Built = the owner-manager extraction core, the main IHT reliefs, the main
 CGT reliefs, and all three nations' land taxes. That is the hardest and
 most-used third; the backlog is breadth, not the hard core.
