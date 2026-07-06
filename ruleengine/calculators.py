@@ -905,6 +905,61 @@ def strategy_business_property_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.venture_capital_investment",
+    consumes=["venture_capital.schemes", "cgt.rates"],
+    description="EIS / SEIS / VCT investment relief: income tax relief at the scheme rate on the "
+    "investment (up to the annual limit and capped at the investor's income tax liability), plus "
+    "the scheme's CGT treatment — EIS defers a reinvested gain, SEIS exempts 50% of it, VCT pays "
+    "tax-free dividends. Quantifies the income tax relief, the CGT deferred or saved, and the net "
+    "cost after relief (ITA 2007 Parts 5, 5A, 6). Whether the company and shares qualify is a "
+    "judgement the adviser confirms; relief is withdrawn if the minimum holding period is not met.",
+)
+def strategy_venture_capital_investment(facts: dict, tax_year: str) -> dict:
+    scheme = str(facts.get("scheme", "eis")).lower()
+    schemes = get_parameter("venture_capital.schemes", tax_year)
+    if scheme not in schemes:
+        raise ValueError(f"Unknown venture-capital scheme: {scheme!r}")
+    s = schemes[scheme]
+
+    amount = max(0.0, float(facts.get("amount_invested", 0)))
+    it_liability = max(0.0, float(facts.get("income_tax_liability", 0)))
+    gain_reinvested = max(0.0, float(facts.get("gain_reinvested", 0)))
+    is_higher = bool(facts.get("is_higher_rate", True))
+
+    eligible = min(amount, s["annual_limit"])
+    relief_rate = s["relief_rate"]
+    uncapped_relief = round(eligible * relief_rate, 2)
+    income_tax_relief = round(min(uncapped_relief, it_liability), 2)
+    capped = income_tax_relief < uncapped_relief
+
+    cgt_rate = get_parameter("cgt.rates", tax_year)["other"][
+        "higher" if is_higher else "lower"
+    ]
+
+    cgt_deferred = 0.0
+    cgt_permanently_saved = 0.0
+    if s["cgt_deferral"]:
+        cgt_deferred = round(min(gain_reinvested, eligible) * cgt_rate, 2)
+    if s["cgt_reinvestment_relief_rate"] > 0:
+        exempt_gain = min(gain_reinvested, eligible) * s["cgt_reinvestment_relief_rate"]
+        cgt_permanently_saved = round(exempt_gain * cgt_rate, 2)
+
+    net_cost = round(eligible - income_tax_relief - cgt_permanently_saved, 2)
+
+    return {
+        "scheme": scheme,
+        "eligible_investment": round(eligible, 2),
+        "income_tax_relief_rate": relief_rate,
+        "income_tax_relief": income_tax_relief,
+        "capped_by_income_tax_liability": capped,
+        "cgt_deferred": cgt_deferred,
+        "cgt_permanently_saved": cgt_permanently_saved,
+        "tax_free_dividends": bool(s["tax_free_dividends"]),
+        "net_cost_after_relief": net_cost,
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
