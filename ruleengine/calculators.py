@@ -830,6 +830,7 @@ def strategy_cgt_lettings_relief(facts: dict, tax_year: str) -> dict:
     gain = max(0.0, float(facts["disposal_gain"]))
     let_fraction = min(1.0, max(0.0, float(facts.get("let_fraction", 0))))
     earned_income = float(facts.get("earned_income", 0))
+    dividend_income = float(facts.get("dividend_income", 0))
 
     cap = get_parameter("cgt.lettings_relief", tax_year)["cap"]
 
@@ -841,11 +842,13 @@ def strategy_cgt_lettings_relief(facts: dict, tax_year: str) -> dict:
     chargeable = round(letting_gain - lettings_relief, 2)
 
     with_relief = cgt_liability(
-        {"chargeable_gain": chargeable, "asset_type": "residential", "earned_income": earned_income},
+        {"chargeable_gain": chargeable, "asset_type": "residential",
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
     without_lettings = cgt_liability(
-        {"chargeable_gain": letting_gain, "asset_type": "residential", "earned_income": earned_income},
+        {"chargeable_gain": letting_gain, "asset_type": "residential",
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
 
