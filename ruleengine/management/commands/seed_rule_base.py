@@ -245,6 +245,17 @@ class Command(BaseCommand):
                 "reintroduced with effect from 1 April 2023 by Finance Act 2021 s.7 and Sch.1.",
             ),
             dict(
+                key="cta2010_s455",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Corporation Tax Act 2010 s.455",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2010/4/section/455",
+                verbatim_extract="Charge to tax where a close company makes a loan or advance "
+                "to a participator (e.g. a director-shareholder): the company pays tax on the "
+                "amount outstanding at the rate in s.455, currently 33.75%. The charge falls "
+                "due 9 months and 1 day after the end of the accounting period, and is "
+                "repaid under s.458 when the loan is repaid or written off.",
+            ),
+            dict(
                 key="fa2004_s228",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Finance Act 2004 s.228",
