@@ -879,6 +879,43 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="personal-pension-contribution",
+                name="Personal pension contribution (relief at source)",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.personal_pension_contribution",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A personal pension contribution is paid net of basic-rate "
+                "tax, which the provider reclaims into the pot. A higher or additional-rate taxpayer "
+                "claims further relief because the grossed-up contribution extends the basic-rate "
+                "band. Where income is in the 100,000-125,140 personal-allowance taper the "
+                "contribution also reduces adjusted net income and restores personal allowance, so "
+                "the effective relief can reach 60%. Relief is capped at the greater of £3,600 and "
+                "relevant UK earnings; dividends and savings/rental income do not count towards it.",
+                authority_keys=["fa2004_s190"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.desired_pension_contribution", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="employer-pension-contribution",
+                name="Employer pension contribution",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.employer_pension_contribution",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="An employer pension contribution from the individual's own "
+                "company is not restricted by relevant UK earnings and carries no employee or "
+                "employer National Insurance. The company deducts it against corporation tax, subject "
+                "to the wholly-and-exclusively condition as part of a reasonable remuneration package. "
+                "This quantifies the corporation tax saved, the employer NIC saved versus paying the "
+                "same amount as salary, and the net cost to the company.",
+                authority_keys=["cta2009_s54"],
+                eligibility_conditions={"all": [
+                    {"path": "company.desired_employer_pension_contribution", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
