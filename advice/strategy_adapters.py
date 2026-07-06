@@ -197,6 +197,21 @@ class DirectorsLoanS455Adapter:
         }
 
 
+@adapter("strategy.capital_allowances")
+class CapitalAllowancesAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("qualifying_capital_spend", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        result = {"qualifying_spend": company.get("qualifying_capital_spend", 0)}
+        if company.get("marginal_rate"):
+            result["marginal_rate"] = company["marginal_rate"]
+        return result
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
