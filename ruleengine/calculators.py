@@ -1021,6 +1021,55 @@ def strategy_partnership_profit_allocation(facts: dict, tax_year: str) -> dict:
     }
 
 
+# Statutory structure of the relevant-property regime (IHTA 1984 ss.64-69),
+# fixed by the Act rather than annually re-rated: the ten-year charge is 30%
+# of lifetime rates, and the exit charge is proportioned over the 40 quarters
+# of a ten-year cycle. The rate that varies (the 20% lifetime rate) and the
+# nil-rate band come from the rate store.
+_TEN_YEAR_CHARGE_FACTOR = 0.30
+_QUARTERS_PER_CYCLE = 40
+
+
+@register(
+    "strategy.relevant_property_trust_charges",
+    consumes=["iht.rates", "iht.nil_rate_band"],
+    description="Relevant-property trust IHT charges (discretionary and most lifetime trusts, "
+    "IHTA 1984 ss.58-69): the 20% entry charge on value settled above the available nil-rate "
+    "band; the ten-year anniversary (principal) charge of up to 6% of the value above the band "
+    "(30% of lifetime rates); and the proportionate exit charge when property leaves between "
+    "anniversaries, based on the last ten-year effective rate and the complete quarters elapsed. "
+    "Quantifies all three so a settlor can weigh a trust against outright gifts.",
+)
+def strategy_relevant_property_trust_charges(facts: dict, tax_year: str) -> dict:
+    nrb = get_parameter("iht.nil_rate_band", tax_year)["amount"]
+    lifetime_rate = get_parameter("iht.rates", tax_year)["lifetime_clt_rate"]
+    available_nrb = float(facts.get("available_nrb", nrb))
+
+    amount_settled = max(0.0, float(facts.get("amount_settled", 0)))
+    trust_value = max(0.0, float(facts.get("trust_value", 0)))
+    amount_distributed = max(0.0, float(facts.get("amount_distributed", 0)))
+    quarters = max(0, min(_QUARTERS_PER_CYCLE, int(facts.get("quarters_since_last_charge", 0))))
+
+    entry_charge = round(lifetime_rate * max(0.0, amount_settled - available_nrb), 2)
+
+    ten_year_charge = round(
+        _TEN_YEAR_CHARGE_FACTOR * lifetime_rate * max(0.0, trust_value - available_nrb), 2
+    )
+    ten_year_effective_rate = round(ten_year_charge / trust_value, 6) if trust_value else 0.0
+
+    exit_charge = round(
+        ten_year_effective_rate * (quarters / _QUARTERS_PER_CYCLE) * amount_distributed, 2
+    )
+
+    return {
+        "available_nrb": round(available_nrb, 2),
+        "entry_charge": entry_charge,
+        "ten_year_charge": ten_year_charge,
+        "ten_year_effective_rate": ten_year_effective_rate,
+        "exit_charge": exit_charge,
+    }
+
+
 @register(
     "strategy.venture_capital_investment",
     consumes=["venture_capital.schemes", "cgt.rates"],
