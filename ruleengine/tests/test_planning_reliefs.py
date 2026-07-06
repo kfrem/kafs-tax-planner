@@ -106,3 +106,32 @@ class TestTimingOfDisposals:
         assert result["cgt_if_sold_in_one_year"] == approx(360.0)
         assert result["cgt_if_split_over_two_years"] == approx(0.0)
         assert result["saving_from_splitting"] == approx(360.0)
+
+
+class TestCapitalAllowances:
+    def test_spend_within_aia_is_fully_relieved(self):
+        # 50,000 is within the 1,000,000 AIA -> 50,000 first-year allowance;
+        # at 25% CT that saves 12,500.
+        result = strategy_capital_allowances(
+            {"qualifying_spend": 50000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["annual_investment_allowance_used"] == approx(50000.0)
+        assert result["first_year_allowance"] == approx(50000.0)
+        assert result["tax_saved_year_one"] == approx(12500.0)
+
+    def test_spend_above_aia_writes_down_the_excess(self):
+        # 1,200,000: 1,000,000 AIA + 200,000 at the 18% WDA (36,000) =
+        # 1,036,000 first-year allowance; at 25% that saves 259,000.
+        result = strategy_capital_allowances(
+            {"qualifying_spend": 1200000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["annual_investment_allowance_used"] == approx(1000000.0)
+        assert result["written_down_first_year"] == approx(36000.0)
+        assert result["first_year_allowance"] == approx(1036000.0)
+        assert result["tax_saved_year_one"] == approx(259000.0)
+
+    def test_marginal_rate_defaults_to_ct_main_rate(self):
+        # No marginal_rate given -> uses the 25% CT main rate from the seed.
+        result = strategy_capital_allowances({"qualifying_spend": 50000}, TAX_YEAR)
+        assert result["marginal_rate"] == approx(0.25)
+        assert result["tax_saved_year_one"] == approx(12500.0)
