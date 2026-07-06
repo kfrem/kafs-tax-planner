@@ -1019,6 +1019,28 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="business-property-relief",
+                name="Business / Agricultural Property Relief",
+                tax_domain=TaxDomain.INHERITANCE_TAX,
+                calculator_key="strategy.business_property_relief",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Qualifying business and agricultural property is "
+                "relieved from inheritance tax — at 100% for an unquoted trading business or "
+                "qualifying farmland. From 6 April 2026 the 100% rate is capped at a combined "
+                "£1,000,000, with 50% relief on anything above that (Finance Act 2025), so a "
+                "large business or farm can face inheritance tax for the first time. This "
+                "quantifies the value relieved, the taxable value left after relief, and the IHT "
+                "saved. It assumes the rest of the estate has used the nil-rate bands, which is "
+                "the usual position where seven figures of business property are in point. "
+                "Whether specific assets qualify (trading vs investment, two-year ownership) is a "
+                "judgement the accountant confirms.",
+                authority_keys=["ihta1984_bpr_apr"],
+                eligibility_conditions={"all": [
+                    {"path": "estate.qualifying_business_property", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
