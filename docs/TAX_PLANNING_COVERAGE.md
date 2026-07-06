@@ -26,7 +26,7 @@ Last updated: 6 July 2026.
 | Pension contributions (band extension, PA restoration in £100k–125k taper) | ◐ | Modelled inside `combined_personal_tax` (gross contribution extends bands; taper uses adjusted net income) and the pension relief calc. Needs a *standalone advice strategy* that recommends the contribution to restore the PA / capture 60% relief. | High |
 | Marriage Allowance | ✓ | `marriage-allowance-transfer` | — |
 | ISA maximisation | ○ | Needs an investments/ISA-allowance fact set; the "saving" is sheltering future growth (more advisory than a point calc). | Med |
-| Salary sacrifice (pension / EV / childcare) | ○ | Build on the NIC + pension engine — IT + employee/employer NI saved. | High |
+| Salary sacrifice (pension / EV / childcare) | ✓ | `salary-sacrifice-into-pension` — swaps salary for an employer pension contribution; quantifies the employee's income tax + Class 1 NIC saving, the employer's secondary NIC saving, the amount into the pension gross and its net cost (SSCBA 1992 s.6). EV/childcare variants follow the same engine. | — |
 | Gift Aid (extends basic-rate band) | ✓ | `gift-aid-relief` — basic-rate gross-up, higher-rate band relief + PA restoration in the taper (ITA 2007 s.414). | — |
 | Dividend vs salary optimisation | ✓ | `salary-dividend-mix` | — |
 | EIS / SEIS / VCT (IT relief + CGT defer/exempt) | ○ | Real module: income-tax relief calc + CGT deferral/exemption. Ties to reinvestment reliefs below. | Med |
