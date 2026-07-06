@@ -176,6 +176,7 @@ def combined_personal_tax(facts: dict, tax_year: str) -> dict:
         "earned_income": earned,
         "dividend_income": dividends,
         "gross_pension_contribution": gross_ras,
+        "gross_gift_aid": gross_gift_aid,
         "adjusted_net_income": round(adjusted_net_income, 2),
         "personal_allowance": personal_allowance,
         "taxable_earned": taxable_earned,
