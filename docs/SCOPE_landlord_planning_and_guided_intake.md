@@ -224,6 +224,79 @@ residential & partnership relief — FA 2003 Sch 4A and Sch 15; ATED — FA 2013
 Part 3; the property-business-as-business test — *Ramsay v HMRC* [2013] UKUT
 0226; the relevant-property trust regime — IHTA 1984 Part III Ch III.
 
+## Milestone 1 — task breakdown (guided intake engine)
+
+Start here. This slice is self-contained, improves **every** existing
+strategy, and demos the founder's exact example (married? spouse income?).
+Each task is one commit-sized piece; follow the six-part definition of done.
+Recommended order:
+
+**Task 1 — Fact-path helpers.** New `advice/facts.py`: `get_fact(facts,
+"personal.spouse_income", default=None)` and `set_fact(facts, path, value)`
+that read/write the nested `ClientFactSet.facts` JSON by dotted path. Pure,
+no DB. *Tests:* nested get/set, missing intermediate keys, overwrite.
+
+**Task 2 — Questions as data.** New `advice/intake.py` with a `Question`
+dataclass — `id`, `prompt`, `answer_type` ('bool' | 'money' | 'number' |
+'choice'), `fills` (dotted fact path), `condition` (a `Callable[[dict],
+bool]` deciding *when to ask*), `required` (decision-critical or optional),
+`help_text` — and a `QUESTIONS` list. Seed the first set to prove
+conditionals: `married?` → if true reveal `spouse_income`, `spouse_works?`;
+`owns_rental_property?` → if true reveal `property_is_mortgaged?` → if true
+reveal `annual_mortgage_interest`. Keep it plain Python, like
+`strategy_adapters.py` (explicit and auditable, not a DSL). *Tests:* every
+question well-formed; `fills` paths are unique.
+
+**Task 3 — The intake engine.** In `advice/intake.py`:
+`applicable_questions(facts)` (condition true), `outstanding_questions(facts)`
+(applicable **and** the `fills` path is still empty), and
+`missing_required(facts)` (outstanding + `required`). *Tests (hand-reasoned):*
+a single client shows no spouse questions; setting `personal.married=True`
+makes `spouse_income`/`spouse_works` outstanding; answering `spouse_income`
+drops it from outstanding; a mortgage question only appears once
+`owns_rental_property` and `property_is_mortgaged` are true.
+
+**Task 4 — Assumptions on advice (B3).** Migration adding
+`assumptions = JSONField(default=list)` to `AdviceRecord` (keep the
+append-only `save()` working — assumptions are set at creation, never
+updated). In `advice/generator.py`, when a strategy runs while a
+decision-critical fact is defaulted, append a plain-English line
+("Assumed the spouse has no other income"). Surface the list in the advice
+detail template and the PDF. *Tests:* generating with no spouse data records
+the assumption; the record is still undeletable/immutable; a fully-answered
+client records no assumption.
+
+**Task 5 — Completeness surfacing (B2).** Expose `outstanding_questions()`
+on the client/advice views so unanswered decision-critical questions are
+shown prominently before/at generation. **Policy:** do **not** block
+generation — generate with the assumptions list (Task 4) as the safety net,
+and nudge the user to answer. *Tests:* a view test that an unanswered
+critical question is surfaced.
+
+**Task 6 — Guided wizard UI (HTMX).** A staff-facing view (e.g.
+`clients/<id>/intake`) that renders the next outstanding question, POSTs the
+answer via `set_fact` into the `ClientFactSet`, and re-renders the next —
+one question at a time, conditionals appearing as answers come in. *Tests:*
+GET shows a question; POST saves the fact and advances; access is
+firm-scoped (a firm user cannot answer another firm's client).
+
+**Task 7 — Confirm facts flow into advice.** Verify the seeded questions
+fill facts that real strategies consume (Marriage Allowance and the CGT
+spousal strategies already read `personal.spouse_income`), so answering them
+visibly changes the advice and the assumptions. Keep the personas green
+(they set these facts explicitly, so unaffected).
+
+**Task 8 — Docs.** Update `TEST_EVIDENCE.md` (new test files), note the
+"how to add a question" pattern in `ONBOARDING.md` §5, and tick this
+milestone in `DEVELOPER_HANDOVER.md` §6 item 0.
+
+**Milestone-1 done when:** a staff user opens a client, is asked the
+adaptive follow-up questions (married → spouse income, etc.), answers them,
+generates advice that reflects those answers, and any unanswered
+decision-critical fact appears as a stated assumption on the advice — all
+under the usual green suite + CI. No property tax maths yet; that is
+Workstream A, which builds on this.
+
 ## Open questions for the founder / tax editor
 
 - Which nations' property rules first — England (SDLT) only, or all three
