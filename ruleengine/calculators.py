@@ -646,16 +646,21 @@ def strategy_marriage_allowance_transfer(facts: dict, tax_year: str) -> dict:
         "cgt.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
     ],
     description="CGT on a chargeable gain: annual exempt amount, then the lower rate "
     "within the individual's unused basic-rate band and the higher rate above it "
-    "(TCGA 1992 ss.1H-1K). An optional disposal_date resolves rates that change "
-    "mid-year, e.g. the 30 October 2024 rise in non-residential rates.",
+    "(TCGA 1992 ss.1H-1K). The gain is the top slice: earned income AND dividends "
+    "below it consume the basic-rate band, and a gross pension contribution extends "
+    "it. An optional disposal_date resolves rates that change mid-year (30 Oct 2024).",
 )
 def cgt_liability(facts: dict, tax_year: str) -> dict:
     gain = max(0.0, float(facts.get("chargeable_gain", 0)))
     asset_type = facts.get("asset_type", "residential")
     earned_income = max(0.0, float(facts.get("earned_income", 0)))
+    dividend_income = max(0.0, float(facts.get("dividend_income", 0)))
+    gross_pension = max(0.0, float(facts.get("gross_pension_contribution", 0)))
 
     # The disposal date, when supplied, resolves intra-year rate changes
     # (30 Oct 2024). The AEA and rates are read as of that date; income tax
@@ -668,14 +673,26 @@ def cgt_liability(facts: dict, tax_year: str) -> dict:
     bands_param = get_parameter("income_tax.bands", tax_year)
     rates = rates_param[asset_type]
 
-    taxable_income = income_tax_on_earned_income({"total_income": earned_income}, tax_year)[
-        "taxable_income"
-    ]
+    # Compose the whole-income picture: earned income and dividends stack
+    # below the gain and consume the basic-rate band; a relief-at-source
+    # pension contribution extends the basic-rate limit for CGT as well.
+    # (With no dividends and no pension this equals earned - PA, so the
+    # simpler prior behaviour is preserved exactly.)
+    composed = combined_personal_tax(
+        {
+            "earned_income": earned_income,
+            "dividend_income": dividend_income,
+            "gross_pension_contribution": gross_pension,
+        },
+        tax_year,
+    )
+    income_below_gain = composed["taxable_income_total"]
+
     aea_used = min(aea_param["amount"], gain)
     taxable_gain = round(gain - aea_used, 2)
 
-    basic_rate_limit = bands_param["bands"][0]["upper"]
-    basic_band_remaining = max(0.0, basic_rate_limit - taxable_income)
+    basic_rate_limit = bands_param["bands"][0]["upper"] + gross_pension
+    basic_band_remaining = max(0.0, basic_rate_limit - income_below_gain)
     at_lower_rate = min(taxable_gain, basic_band_remaining)
     at_higher_rate = max(0.0, taxable_gain - at_lower_rate)
     tax_due = round(at_lower_rate * rates["lower"] + at_higher_rate * rates["higher"], 2)
@@ -685,6 +702,8 @@ def cgt_liability(facts: dict, tax_year: str) -> dict:
         "asset_type": asset_type,
         "annual_exempt_amount_used": round(aea_used, 2),
         "taxable_gain": taxable_gain,
+        "income_below_gain": income_below_gain,
+        "basic_band_remaining_for_gain": round(basic_band_remaining, 2),
         "gain_at_lower_rate": round(at_lower_rate, 2),
         "gain_at_higher_rate": round(at_higher_rate, 2),
         "tax_due": tax_due,
