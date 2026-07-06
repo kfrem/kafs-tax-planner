@@ -126,10 +126,14 @@ def combined_personal_tax(facts: dict, tax_year: str) -> dict:
     """
     earned = max(0.0, float(facts.get("earned_income", 0)))
     dividends = max(0.0, float(facts.get("dividend_income", 0)))
-    # Gross relief-at-source pension contribution: extends the band limits
-    # and reduces adjusted net income for the taper (FA 2004 s.192; ITA 2007
-    # s.35(2) via the s.58 definition of adjusted net income).
+    # Gross relief-at-source pension contributions AND gross Gift Aid
+    # donations both extend the band limits and reduce adjusted net income
+    # for the taper (FA 2004 s.192 and ITA 2007 s.414 respectively; ITA 2007
+    # s.35(2) via the s.58 definition of adjusted net income). They are
+    # additive and mechanically identical for the band/taper calculation.
     gross_ras = max(0.0, float(facts.get("gross_pension_contribution", 0)))
+    gross_gift_aid = max(0.0, float(facts.get("gross_gift_aid", 0)))
+    band_extension = gross_ras + gross_gift_aid
 
     pa_param = get_parameter("income_tax.personal_allowance", tax_year)
     bands_param = get_parameter("income_tax.bands", tax_year)
@@ -137,15 +141,15 @@ def combined_personal_tax(facts: dict, tax_year: str) -> dict:
     div_bands_param = get_parameter("dividend_tax.bands", tax_year)
 
     def _extend(bands: list[dict]) -> list[dict]:
-        if not gross_ras:
+        if not band_extension:
             return bands
         return [
-            {"upper": (b["upper"] + gross_ras) if b["upper"] is not None else None, "rate": b["rate"]}
+            {"upper": (b["upper"] + band_extension) if b["upper"] is not None else None, "rate": b["rate"]}
             for b in bands
         ]
 
     total_income = earned + dividends
-    adjusted_net_income = max(0.0, total_income - gross_ras)
+    adjusted_net_income = max(0.0, total_income - band_extension)
     excess = max(0.0, adjusted_net_income - pa_param["taper_threshold"])
     reduction = min(pa_param["amount"], excess * pa_param["taper_rate"])
     personal_allowance = round(pa_param["amount"] - reduction, 2)
