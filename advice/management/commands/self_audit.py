@@ -58,16 +58,24 @@ class Command(BaseCommand):
             "--passes", type=int, default=1,
             help="Re-run the full end-to-end audit this many times (proves determinism).",
         )
+        parser.add_argument("--firm-slug", default="demo-accountants")
+        parser.add_argument("--username", default="demo")
+        parser.add_argument(
+            "--skip-migration-check", action="store_true",
+            help="Skip the unapplied-migration check (used by the test runner, "
+            "whose database is built fresh from migrations).",
+        )
 
     def handle(self, *args, **options):
         passes = max(1, options["passes"])
         problems: list[str] = []
 
-        problems += self._check_migrations()
+        if not options["skip_migration_check"]:
+            problems += self._check_migrations()
         problems += self._check_editorial()
         problems += self._check_golden()
 
-        firm, user = self._context()
+        firm, user = self._context(options["firm_slug"], options["username"])
         expected = self._expected_strategy_codes()
 
         for p in range(1, passes + 1):
