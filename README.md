@@ -21,6 +21,7 @@ from the code.
 | [docs/DEVELOPER_HANDOVER.md](docs/DEVELOPER_HANDOVER.md) | Build log, conventions, defect log, known simplifications, remaining work, case-law roadmap |
 | [docs/TEST_EVIDENCE.md](docs/TEST_EVIDENCE.md) | Full test inventory, how to run, expected results, persona suite |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) + [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) | Container usage, hosting comparison, and the go-live checklist |
+| [docs/HOSTING_AND_COSTS.md](docs/HOSTING_AND_COSTS.md) | Costs per growth stage, database options, provider-switching, and the stack decision log |
 | [docs/RULE_BASE_REVIEW_PACK.md](docs/RULE_BASE_REVIEW_PACK.md) + [docs/EDITORIAL_SIGNOFF.md](docs/EDITORIAL_SIGNOFF.md) | The generated editorial review pack and reviewer sign-off history |
 | The `.docx` above | The founding design document (pre-build) |
 
