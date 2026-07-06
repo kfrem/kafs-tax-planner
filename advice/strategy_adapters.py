@@ -339,6 +339,26 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.relevant_property_trust_charges")
+class RelevantPropertyTrustAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("trust", {}).get("trust_value", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        t = facts.get("trust", {})
+        return {
+            "amount_settled": t.get("amount_settled", 0),
+            "trust_value": t.get("trust_value", 0),
+            "amount_distributed": t.get("amount_distributed", 0),
+            "quarters_since_last_charge": t.get("quarters_since_last_charge", 0),
+            "available_nrb": t.get("available_nrb", None)
+            if t.get("available_nrb") is not None
+            else None,
+        }
+
+
 @adapter("strategy.partnership_profit_allocation")
 class PartnershipProfitAllocationAdapter:
     @staticmethod
