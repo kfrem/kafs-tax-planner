@@ -1368,6 +1368,17 @@ class Command(BaseCommand):
                                  "gain_at_higher_rate": 4000.0, "tax_due": 2400.0},
             ),
             dict(
+                calculator_key="strategy.cgt_timing_of_disposals",
+                description="Splitting a 15,000 share gain across two tax years, 2025/26",
+                source="Hand-computed: whole 12,000 taxable (8,000 at 18% + 4,000 at 24%) = "
+                "2,400; split 7,500 each -> 4,500 taxable both in the basic band at 18% = 810 "
+                "each = 1,620; saving 780 (second AEA at 18% plus 4,000 kept out of 24%)",
+                input_facts={"disposal_gain": 15000, "asset_type": "other", "earned_income": 42270},
+                expected_output={"cgt_if_sold_in_one_year": 2400.0,
+                                 "cgt_if_split_over_two_years": 1620.0,
+                                 "saving_from_splitting": 780.0},
+            ),
+            dict(
                 calculator_key="cgt_liability",
                 description="Gain composed with dividends: dividends consume the band "
                 "before the gain, 2025/26",
