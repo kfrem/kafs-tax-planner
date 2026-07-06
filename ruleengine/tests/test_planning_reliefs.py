@@ -13,6 +13,7 @@ from ruleengine.calculators import (
     strategy_gift_aid_relief,
     strategy_group_loss_relief,
     strategy_isa_bed_and_isa,
+    strategy_partnership_profit_allocation,
     strategy_personal_pension_contribution,
     strategy_property_income_finance_cost,
     strategy_salary_sacrifice,
