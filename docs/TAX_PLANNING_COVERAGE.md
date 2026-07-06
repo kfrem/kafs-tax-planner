@@ -37,7 +37,7 @@ Last updated: 6 July 2026.
 | Strategy | Status | Notes / what's needed | Priority |
 |---|---|---|---|
 | Salary vs dividend mix | ✓ | `salary-dividend-mix` | — |
-| Directors' loan account / s.455 (33.75% charge) | ○ | Very common. Model the s.455 charge, the 9-month window, and repayment/bed-and-breakfasting rules. | High |
+| Directors' loan account / s.455 (33.75% charge) | ✓ | `directors-loan-s455` — the charge on the balance outstanding after the 9-month window, and the amount avoided by repaying in time (CTA 2010 s.455). | — |
 | Capital allowances / Annual Investment Allowance | ○ | Very common. AIA 100% up to the limit, full expensing, WDAs. | High |
 | R&D tax relief | ○ | Valuable, specialist; the merged-scheme rules from April 2024. | Med |
 | Employer pension contributions (CT relief, no NI) | ◐ | The pension strategy already shows the employer-route CT saving; surface it as its own recommendation. | Med |
