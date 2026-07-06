@@ -1152,6 +1152,73 @@ def strategy_ltt_non_residential_purchase(facts: dict, tax_year: str) -> dict:
     return {"price": price, "total_ltt": _progressive_tax(price, param["bands"])}
 
 
+# Lease grants are charged on the net present value (NPV) of the rent over
+# the term, discounted at the statutory temporal rate (3.5%), on each
+# regime's own NPV bands. Modelled for a constant annual rent over a whole
+# number of years; stepped/uncertain rent, the five-year highest-rent rule,
+# any lease premium, and residential leases are out of scope
+# (DEVELOPER_HANDOVER §5).
+
+
+def _lease_rent_npv(annual_rent: float, term_years: int, discount_rate: float) -> float:
+    """NPV of a constant annual rent: sum of rent / (1+d)^i for each year i
+    of the term (FA 2003 Sch 5 / LBTT(S)A Sch 19 / LTTA method)."""
+    return round(
+        sum(annual_rent / (1 + discount_rate) ** i for i in range(1, term_years + 1)), 2
+    )
+
+
+def _lease_charge(facts: dict, param: dict) -> dict:
+    rent = max(0.0, float(facts["annual_rent"]))
+    term = int(facts["term_years"])
+    npv = _lease_rent_npv(rent, term, param["discount_rate"])
+    return {
+        "annual_rent": rent,
+        "term_years": term,
+        "net_present_value": npv,
+        "tax_on_rent": _progressive_tax(npv, param["bands"]),
+    }
+
+
+@register(
+    "strategy.sdlt_lease_npv",
+    consumes=["sdlt.lease_npv_bands"],
+    description="SDLT on the grant of a non-residential lease in England/NI: the net "
+    "present value of the rent over the term at the 3.5% temporal discount rate, charged "
+    "on the NPV bands (FA 2003 s.55, Schedule 5).",
+)
+def strategy_sdlt_lease_npv(facts: dict, tax_year: str) -> dict:
+    result = _lease_charge(facts, get_parameter("sdlt.lease_npv_bands", tax_year))
+    result["total_sdlt"] = result.pop("tax_on_rent")
+    return result
+
+
+@register(
+    "strategy.lbtt_lease_npv",
+    consumes=["lbtt.lease_npv_bands"],
+    description="LBTT on the grant of a lease in Scotland: the net present value of the "
+    "rent at the 3.5% discount rate, charged on the NPV bands (LBTT(S)A 2013 s.24, "
+    "Schedule 19). Scotland also requires 3-yearly LBTT lease reviews (not modelled).",
+)
+def strategy_lbtt_lease_npv(facts: dict, tax_year: str) -> dict:
+    result = _lease_charge(facts, get_parameter("lbtt.lease_npv_bands", tax_year))
+    result["total_lbtt"] = result.pop("tax_on_rent")
+    return result
+
+
+@register(
+    "strategy.ltt_lease_npv",
+    consumes=["ltt.lease_npv_bands"],
+    description="LTT on the grant of a non-residential lease in Wales: the net present "
+    "value of the rent at the 3.5% discount rate, charged on the NPV bands (LTTA 2017 "
+    "s.24). Wales does not charge LTT on residential lease rent.",
+)
+def strategy_ltt_lease_npv(facts: dict, tax_year: str) -> dict:
+    result = _lease_charge(facts, get_parameter("ltt.lease_npv_bands", tax_year))
+    result["total_ltt"] = result.pop("tax_on_rent")
+    return result
+
+
 # --- Inheritance tax ----------------------------------------------------------
 
 
