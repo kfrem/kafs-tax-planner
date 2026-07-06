@@ -91,9 +91,10 @@ Last updated: 6 July 2026.
 
 ## Coverage tally
 
-Roughly **17 built, 4 partial, ~17 planned** of ~38 mainstream strategies
-(Tier-1 so far: Gift Aid, directors'-loan/s.455, timing of disposals,
-capital allowances / AIA, salary sacrifice — 6 Jul 2026).
+Roughly **19 built, 2 partial, ~17 planned** of ~38 mainstream strategies
+(**Tier 1 complete, 6 Jul 2026**: Gift Aid, directors'-loan/s.455, timing of
+disposals, capital allowances / AIA, salary sacrifice, and the standalone
+personal + employer pension-contribution recommendations).
 Built = the owner-manager extraction core, the main IHT reliefs, the main
 CGT reliefs, and all three nations' land taxes. That is the hardest and
 most-used third; the backlog is breadth, not the hard core.
