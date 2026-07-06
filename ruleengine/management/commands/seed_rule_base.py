@@ -256,6 +256,20 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ihta1984_relevant_property",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Inheritance Tax Act 1984 ss.58-69 (relevant property)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/part/III/chapter/III",
+                verbatim_extract="Property in a relevant-property trust (most discretionary and, "
+                "since 2006, most lifetime trusts) is subject to its own IHT charges outside a "
+                "person's estate: a lifetime entry charge at half the death rate (20%) on value "
+                "settled above the available nil-rate band; a ten-year anniversary charge (s.64) "
+                "of up to 6% of the value above the band, being 30% of the lifetime effective "
+                "rate; and a proportionate exit charge (s.65) when property leaves the trust, by "
+                "reference to the last ten-year rate and the complete quarters since the last "
+                "anniversary.",
+            ),
+            dict(
                 key="ittoia2005_s850",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 s.850",
