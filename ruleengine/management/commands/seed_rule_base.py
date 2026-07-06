@@ -1154,6 +1154,30 @@ class Command(BaseCommand):
                                  "gain_at_higher_rate": 4000.0, "tax_due": 2400.0},
             ),
             dict(
+                calculator_key="cgt_liability",
+                description="Non-residential gain disposed BEFORE 30 Oct 2024: old 10% "
+                "basic rate, 2024/25",
+                source="Hand-computed: earned 20,000 -> taxable 7,430, basic band left "
+                "30,270; gain 20,000 - 3,000 AEA = 17,000 all within the band at the "
+                "pre-Budget 10% rate = 1,700",
+                tax_year="2024/25",
+                input_facts={"chargeable_gain": 20000, "asset_type": "other",
+                             "earned_income": 20000, "disposal_date": "2024-06-01"},
+                expected_output={"taxable_gain": 17000.0, "tax_due": 1700.0},
+            ),
+            dict(
+                calculator_key="cgt_liability",
+                description="Non-residential gain disposed ON/AFTER 30 Oct 2024: new 18% "
+                "basic rate, 2024/25",
+                source="Hand-computed: same 17,000 taxable gain within the basic band, but "
+                "at the post-Budget 18% rate = 3,060 (proves the intra-year row resolves by "
+                "disposal date)",
+                tax_year="2024/25",
+                input_facts={"chargeable_gain": 20000, "asset_type": "other",
+                             "earned_income": 20000, "disposal_date": "2024-11-15"},
+                expected_output={"taxable_gain": 17000.0, "tax_due": 3060.0},
+            ),
+            dict(
                 calculator_key="strategy.cgt_business_asset_disposal_relief",
                 description="Qualifying business disposal within the lifetime limit, "
                 "higher-rate owner, 2025/26",
