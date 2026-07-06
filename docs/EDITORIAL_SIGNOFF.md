@@ -576,3 +576,34 @@ qualify, and the minimum-holding-period risk, are flagged for the adviser.
 
 **Verdict:** YES. **The Tier-2 quick wins are complete; only the
 property-incorporation flagship remains in Tier 2.**
+
+## Addendum, 6 July 2026 — Client-type expansion 1: entity labels + landlord s.24
+
+**Reviewing professional:** kfrem.
+
+**Scope:** (a) richer `Client.EntityType` labels — sole trader, partnership,
+trust, estate added alongside the existing three (a filing/reporting label
+only; it does not gate any strategy, which remains fact-driven) plus a
+corrected `ClientFactSet` facts-schema docstring; (b) strategy
+`property-income-finance-cost` (`strategy.property_income_finance_cost`), new
+parameter `property_income.finance_cost_restriction` (20% reducer) and new
+authority ITTOIA 2005 ss.272A-274C.
+
+**Verified against ITTOIA 2005 ss.272A-274C / F(No.2)A 2015 s.24:** an
+individual residential landlord's finance costs are not deducted from profit
+but relieved as a 20% tax reducer on the lower of the finance costs, the
+property profits and adjusted total income. Reconciled: £24k rent − £4k
+expenses = £20k profit; with £50k other income, tax on £70k (£15,432) less a
+20% reducer on £10k interest (£2,000) = £13,432, versus £11,432 if the interest
+were fully deducted — so s.24 costs a higher-rate landlord £2,000 extra
+(interest relieved at 20% not 40%). Confirmed a basic-rate landlord pays no
+penalty, and that the reducer is capped at rental profit with the unrelieved
+interest carried forward.
+
+**Documented scope:** models the income-tax finance-cost restriction only; the
+wider property-income module (FHL transition, rent-a-room, the incorporation
+flagship that uses this figure as its break-even numerator) remains scoped, not
+built. Client entity_type is confirmed to be display-only — eligibility is and
+remains fact-driven (proved by the self-audit's companyless cases).
+
+**Verdict:** YES.
