@@ -180,6 +180,7 @@ def _build_cases():
          "individual_with_company", DANIEL_FACTS),
         ("AUDIT-HOME", "Audit: CGT homeowner", "individual", CGT_HOMEOWNER_FACTS),
         ("AUDIT-LANDLORD", "Audit: mortgaged landlord (s.24)", "individual", LANDLORD_FACTS),
+        ("AUDIT-PARTNERSHIP", "Audit: two-partner firm", "partnership", PARTNERSHIP_FACTS),
     ]
     for juris, tag in (("england", "ENG"), ("scotland", "SCO"), ("wales", "WAL")):
         cases.append((f"AUDIT-{tag}-RES", f"Audit: {juris} residential purchase",
