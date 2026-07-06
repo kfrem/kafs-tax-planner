@@ -312,3 +312,29 @@ so a future edit cannot silently break the carry-forward.
 parameter set is complete against currently-confirmed law; further changes
 (e.g. a future Budget) are tracked on the monitoring watch-list and become
 new effective-dated rows when legislated.
+
+## Addendum, 6 July 2026 — Gift Aid higher-rate relief (Tier-1 build 1/…)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** first Tier-1 strategy from `TAX_PLANNING_COVERAGE.md` — strategy
+`gift-aid-relief` and authority ITA 2007 s.414. No new rate parameter (Gift
+Aid uses the existing basic rate). `combined_personal_tax` was generalised
+to accept a Gift Aid gross alongside the pension gross — mechanically
+identical (both extend the band and reduce adjusted net income) and
+backward-compatible (all 218 prior tests unchanged).
+
+**Verified against ITA 2007 s.414:**
+- The net donation is grossed up at the **basic rate** (£800 → £1,000); the
+  charity reclaims the 20%.
+- The grossed-up amount **extends the basic-rate limit**, so a higher-rate
+  donor gets relief of the rate difference — £200 on a £1,000 gross gift
+  (the golden case).
+- The grossed-up amount **reduces adjusted net income**, so in the
+  £100,000–125,140 taper it restores the personal allowance — a £10,000
+  gross gift by a £110,000 earner restores £5,000 of PA and is worth £4,000
+  (40% effective). A basic-rate donor correctly gets no *extra* personal
+  relief. Both pinned by hand-computed tests.
+
+**Verdict:** YES. Correct and defensible; the composition with the existing
+band/taper engine is exact.
