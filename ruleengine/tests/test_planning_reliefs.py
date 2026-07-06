@@ -10,6 +10,7 @@ from ruleengine.calculators import (
     strategy_directors_loan_s455,
     strategy_employer_pension_contribution,
     strategy_gift_aid_relief,
+    strategy_group_loss_relief,
     strategy_personal_pension_contribution,
     strategy_salary_sacrifice,
 )
