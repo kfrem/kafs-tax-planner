@@ -546,12 +546,37 @@ class Command(BaseCommand):
                     introduced_in_release=release_iht,
                 )
 
-    def _create_property_parameters(self, release_property, release_2026):
-        # 2025/26 onward only: the 2024/25 CGT year had mid-year rate changes
-        # (30 Oct 2024) that the effective-dating model would need intra-year
-        # ranges to represent honestly; deferred until prior-year CGT
-        # computations are in scope.
+    def _create_property_parameters(self, release_property, release_cgt_2024, release_2026):
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
+
+        # 2024/25 CGT with the 30 October 2024 intra-year change. The engine
+        # resolves these by disposal date (get_parameter as_of=...), so a
+        # non-residential disposal before 30 Oct 2024 is taxed at 10%/20% and
+        # one on/after at 18%/24%; residential is 18%/24% throughout. This is
+        # the intra-year effective-range case the module previously deferred.
+        cgt_2024_h1 = Range(datetime.date(2024, 4, 6), datetime.date(2024, 10, 30), bounds="[)")
+        cgt_2024_h2 = Range(datetime.date(2024, 10, 30), datetime.date(2025, 4, 6), bounds="[)")
+        cgt_2024_full = Range(datetime.date(2024, 4, 6), datetime.date(2025, 4, 6), bounds="[)")
+        prior_cgt = [
+            ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
+             cgt_2024_h1,
+             {"residential": {"lower": 0.18, "higher": 0.24},
+              "other": {"lower": 0.10, "higher": 0.20}}),
+            ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
+             cgt_2024_h2,
+             {"residential": {"lower": 0.18, "higher": 0.24},
+              "other": {"lower": 0.18, "higher": 0.24}}),
+            ("cgt.annual_exempt_amount", "CGT annual exempt amount",
+             cgt_2024_full, {"amount": 3000}),
+        ]
+        for key, label, effective_range, payload in prior_cgt:
+            TaxParameter.objects.filter(key=key, effective_range=effective_range).delete()
+            TaxParameter.objects.create(
+                key=key, label=label, tax_domain=TaxDomain.PROPERTY_TAXES,
+                effective_range=effective_range, payload=payload,
+                risk_classification=RiskStatus.SETTLED,
+                introduced_in_release=release_cgt_2024,
+            )
 
         rows = [
             ("cgt.annual_exempt_amount", "CGT annual exempt amount",
