@@ -56,17 +56,35 @@ def parameter_provenance():
         _parameter_log.reset(token)
 
 
-def get_parameter(key: str, tax_year: str) -> dict:
+def get_parameter(key: str, tax_year: str, as_of=None) -> dict:
     """Look up the payload of the TaxParameter effective during ``tax_year``.
 
     Only rows introduced by a RELEASED rule-base release are visible: a
     parameter staged under a draft release must never influence advice
     (Section 5.6 four-eyes governance). Uses the PostgreSQL date-range
     containment operator via Django's ``__contains`` lookup.
+
+    ``as_of`` is an optional date WITHIN the tax year used to resolve rates
+    that change mid-year (e.g. the 30 October 2024 CGT change): pass the
+    disposal date and the intra-year effective range is honoured. It must
+    fall inside ``tax_year`` (a mismatched fact is an error, not a silent
+    wrong answer). When omitted, the tax year's first day (6 April) is used,
+    which is correct for every parameter that changes only at year
+    boundaries. Determinism holds: ``as_of`` is a fact, not a wall clock.
     """
     cache = _parameter_cache.get()
     log = _parameter_log.get()
-    cache_key = (key, tax_year)
+
+    if as_of is not None:
+        start, end = tax_year_bounds(tax_year)
+        if not (start <= as_of <= end):
+            raise ValueError(
+                f"as_of {as_of.isoformat()} falls outside tax year {tax_year}"
+            )
+        resolved_as_of = as_of
+    else:
+        resolved_as_of = anchor_date(tax_year)
+    cache_key = (key, tax_year, resolved_as_of)
 
     if cache is not None and cache_key in cache:
         entry = cache[cache_key]
@@ -74,11 +92,10 @@ def get_parameter(key: str, tax_year: str) -> dict:
             log[cache_key] = entry["meta"]
         return entry["payload"]
 
-    as_of = anchor_date(tax_year)
     param = (
         TaxParameter.objects.filter(
             key=key,
-            effective_range__contains=as_of,
+            effective_range__contains=resolved_as_of,
             introduced_in_release__status="released",
         )
         .select_related("introduced_in_release")
