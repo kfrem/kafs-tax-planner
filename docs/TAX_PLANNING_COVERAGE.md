@@ -103,9 +103,9 @@ most-used third; the backlog is breadth, not the hard core.
 
 **Tier 1 — quick, high-frequency wins (build on the existing engine):**
 ~~Gift Aid~~ · ~~directors' loan / s.455~~ · ~~timing of disposals~~ ·
-~~capital allowances / AIA~~ · ~~salary sacrifice~~ (done, 6 Jul 2026) ·
-finish the standalone pension-contribution and employer-pension strategies.
-Each is a small, self-contained strategy that firms use constantly.
+~~capital allowances / AIA~~ · ~~salary sacrifice~~ · ~~standalone personal
+pension contribution~~ · ~~employer pension contribution~~ — **all done,
+6 Jul 2026. Tier 1 is complete.** Next is Tier 2.
 
 **Tier 2 — the flagship + common modules:** property incorporation (the
 scoped landlord module) · Business Relief / Agricultural Relief · EIS / SEIS
