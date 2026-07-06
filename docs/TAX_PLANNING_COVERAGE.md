@@ -101,8 +101,8 @@ most-used third; the backlog is breadth, not the hard core.
 ## Recommended build order (value × frequency)
 
 **Tier 1 — quick, high-frequency wins (build on the existing engine):**
-~~Gift Aid~~ · ~~directors' loan / s.455~~ (both done, 6 Jul 2026) · salary
-sacrifice · capital allowances / AIA · timing of disposals · finish the
+~~Gift Aid~~ · ~~directors' loan / s.455~~ · ~~timing of disposals~~ (done,
+6 Jul 2026) · salary sacrifice · capital allowances / AIA · finish the
 standalone pension-contribution and employer-pension strategies. Each is a
 small, self-contained strategy that firms use constantly — fast credibility.
 
