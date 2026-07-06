@@ -14,6 +14,7 @@ from ruleengine.calculators import (
     strategy_group_loss_relief,
     strategy_isa_bed_and_isa,
     strategy_personal_pension_contribution,
+    strategy_property_income_finance_cost,
     strategy_salary_sacrifice,
     strategy_venture_capital_investment,
 )
