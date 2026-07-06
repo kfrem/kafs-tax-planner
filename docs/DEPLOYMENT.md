@@ -31,6 +31,16 @@ Required environment for any host:
 Scheduled job to configure on the host: `python manage.py run_watchers`
 (daily; plus a manual run on Budget/fiscal-event days).
 
+**Health check:** point the load balancer / orchestrator liveness and
+readiness probes at `GET /healthz` — unauthenticated, returns `200
+{"status":"ok"}` when the app can reach its database, `503` when it
+cannot. Make sure the probe host is in `ALLOWED_HOSTS`.
+
+**Before go-live:** work through `docs/PRODUCTION_READINESS.md` — it lists
+what the code already guarantees and what the firm/host must sign off
+(DPIA, backups with tested restores, processor agreement, Cyber
+Essentials, a released rule base).
+
 ## Choosing a host (architecture doc §3)
 
 The binding requirement is **client financial data residency that a
