@@ -463,3 +463,43 @@ class TestVentureCapitalInvestment:
         )
         assert result["eligible_investment"] == approx(1000000.0)
         assert result["income_tax_relief"] == approx(300000.0)
+
+
+class TestPropertyIncomeFinanceCost:
+    def test_higher_rate_landlord_pays_the_s24_penalty(self):
+        # 24,000 rent - 4,000 expenses = 20,000 profit; 50,000 other income.
+        # Tax on 70,000 = 15,432, less a 20% reducer on 10,000 interest (2,000)
+        # = 13,432. Full deduction (tax on 60,000) = 11,432. s.24 costs 2,000
+        # extra — the interest relieved at 20% instead of the 40% it saves.
+        result = strategy_property_income_finance_cost(
+            {"rental_income": 24000, "allowable_expenses": 4000,
+             "finance_costs": 10000, "other_income": 50000}, TAX_YEAR
+        )
+        assert result["rental_profit"] == approx(20000.0)
+        assert result["basic_rate_tax_reducer"] == approx(2000.0)
+        assert result["tax_under_s24"] == approx(13432.0)
+        assert result["tax_if_interest_fully_deductible"] == approx(11432.0)
+        assert result["extra_tax_from_restriction"] == approx(2000.0)
+
+    def test_basic_rate_landlord_is_unaffected(self):
+        # 15,000 rent - 3,000 = 12,000 profit; 20,000 other income keeps the
+        # landlord in the basic band, where the 20% reducer exactly equals the
+        # relief a full deduction would give — s.24 costs nothing.
+        result = strategy_property_income_finance_cost(
+            {"rental_income": 15000, "allowable_expenses": 3000,
+             "finance_costs": 5000, "other_income": 20000}, TAX_YEAR
+        )
+        assert result["basic_rate_tax_reducer"] == approx(1000.0)
+        assert result["extra_tax_from_restriction"] == approx(0.0)
+
+    def test_reducer_capped_at_rental_profit(self):
+        # Very geared: 18,000 rent - 3,000 = 15,000 profit but 20,000 interest.
+        # The reducer is capped at the 15,000 profit (not the 20,000 interest),
+        # and the unrelieved 5,000 of interest is carried forward.
+        result = strategy_property_income_finance_cost(
+            {"rental_income": 18000, "allowable_expenses": 3000,
+             "finance_costs": 20000, "other_income": 50000}, TAX_YEAR
+        )
+        assert result["rental_profit"] == approx(15000.0)
+        assert result["basic_rate_tax_reducer"] == approx(3000.0)  # 20% of 15,000
+        assert result["finance_costs_carried_forward"] == approx(5000.0)
