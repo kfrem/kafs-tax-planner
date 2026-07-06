@@ -632,6 +632,31 @@ class Command(BaseCommand):
                     introduced_in_release=release_iht,
                 )
 
+        # Business Property Relief / Agricultural Property Relief. Finance Act
+        # 2025 reforms these from 6 April 2026: the 100% rate is capped at a
+        # combined £1,000,000 of qualifying business + agricultural property,
+        # with 50% relief on the excess (and AIM/unlisted shares dropping to
+        # 50%). Per A5 a rate change is a NEW effective-dated row: the pre-reform
+        # row (unlimited 100%) is CLOSED at 6 April 2026 and the reformed row
+        # opens there under the 2026.1 release. Delete-all-by-key keeps the seed
+        # idempotent regardless of any earlier single-row shape.
+        bpr_key = "iht.business_property_relief"
+        bpr_label = "IHT Business/Agricultural Property Relief: 100% rate and combined cap"
+        bpr_rows = [
+            (Range(datetime.date(2024, 4, 6), datetime.date(2026, 4, 6), bounds="[)"),
+             {"full_relief_cap": None, "rate_above_cap": 1.0}, release_iht),
+            (Range(datetime.date(2026, 4, 6), None, bounds="[)"),
+             {"full_relief_cap": 1000000, "rate_above_cap": 0.5}, release_2026),
+        ]
+        TaxParameter.objects.filter(key=bpr_key).delete()
+        for effective_range, payload, release in bpr_rows:
+            TaxParameter.objects.create(
+                key=bpr_key, label=bpr_label, tax_domain=TaxDomain.INHERITANCE_TAX,
+                effective_range=effective_range, payload=payload,
+                risk_classification=RiskStatus.SETTLED,
+                introduced_in_release=release,
+            )
+
     def _create_property_parameters(self, release_property, release_cgt_2024, release_2026):
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
 
