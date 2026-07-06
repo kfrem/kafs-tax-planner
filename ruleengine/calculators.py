@@ -905,6 +905,60 @@ def strategy_business_property_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.property_income_finance_cost",
+    consumes=[
+        "property_income.finance_cost_restriction",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="The s.24 residential-landlord finance-cost restriction: mortgage interest is no "
+    "longer deducted from rental profit but relieved only as a 20% basic-rate tax reducer (on the "
+    "lower of the finance costs, the rental profit and adjusted total income above the personal "
+    "allowance). For a higher or additional-rate landlord this costs more tax than a full "
+    "deduction would. Quantifies the rental profit, the tax reducer, the tax under the restriction "
+    "versus full deductibility, and the extra tax the restriction costs — the figure that drives "
+    "the incorporation question, since a company still deducts the interest in full. "
+    "ITTOIA 2005 ss.272A-274C.",
+)
+def strategy_property_income_finance_cost(facts: dict, tax_year: str) -> dict:
+    rental_income = max(0.0, float(facts.get("rental_income", 0)))
+    allowable_expenses = max(0.0, float(facts.get("allowable_expenses", 0)))
+    finance_costs = max(0.0, float(facts.get("finance_costs", 0)))
+    other_income = max(0.0, float(facts.get("other_income", 0)))
+
+    rental_profit = max(0.0, rental_income - allowable_expenses)
+    reducer_rate = get_parameter(
+        "property_income.finance_cost_restriction", tax_year
+    )["reducer_rate"]
+    personal_allowance = get_parameter("income_tax.personal_allowance", tax_year)["amount"]
+
+    total_income = other_income + rental_profit
+    adjusted_total_income = max(0.0, total_income - personal_allowance)
+    restricted = min(finance_costs, rental_profit, adjusted_total_income)
+    tax_reducer = round(restricted * reducer_rate, 2)
+    finance_costs_carried_forward = round(finance_costs - restricted, 2)
+
+    tax_before_reducer = income_tax_on_earned_income(
+        {"total_income": total_income}, tax_year
+    )["tax_due"]
+    tax_under_s24 = round(tax_before_reducer - tax_reducer, 2)
+
+    tax_if_deductible = income_tax_on_earned_income(
+        {"total_income": max(0.0, total_income - finance_costs)}, tax_year
+    )["tax_due"]
+
+    return {
+        "rental_profit": round(rental_profit, 2),
+        "finance_costs": round(finance_costs, 2),
+        "basic_rate_tax_reducer": tax_reducer,
+        "finance_costs_carried_forward": finance_costs_carried_forward,
+        "tax_under_s24": tax_under_s24,
+        "tax_if_interest_fully_deductible": tax_if_deductible,
+        "extra_tax_from_restriction": round(tax_under_s24 - tax_if_deductible, 2),
+    }
+
+
+@register(
     "strategy.venture_capital_investment",
     consumes=["venture_capital.schemes", "cgt.rates"],
     description="EIS / SEIS / VCT investment relief: income tax relief at the scheme rate on the "
