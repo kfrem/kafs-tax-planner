@@ -601,7 +601,7 @@ class Command(BaseCommand):
                 introduced_in_release=release,
             )
 
-    def _create_iht_parameters(self, release_iht):
+    def _create_iht_parameters(self, release_iht, release_2026):
         y2024 = Range(datetime.date(2024, 4, 6), datetime.date(2025, 4, 6), bounds="[)")
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
 
