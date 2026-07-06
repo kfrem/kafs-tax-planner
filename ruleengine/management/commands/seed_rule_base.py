@@ -1085,6 +1085,28 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="property-income-finance-cost",
+                name="Landlord finance-cost restriction (s.24)",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.property_income_finance_cost",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Since April 2020 an individual residential landlord can "
+                "no longer deduct mortgage interest from rental profit. The interest is relieved "
+                "instead as a basic-rate (20%) tax reducer, on the lower of the finance costs, the "
+                "rental profit and adjusted total income. A basic-rate landlord is unaffected, but "
+                "a higher or additional-rate landlord effectively loses relief at 40%/45% and pays "
+                "more tax. This quantifies the rental profit, the tax reducer, the tax with and "
+                "without the restriction, and the extra tax it costs — which is the main reason "
+                "landlords consider holding property through a company (which still deducts the "
+                "interest in full).",
+                authority_keys=["ittoia2005_s272a"],
+                eligibility_conditions={"all": [
+                    {"path": "property.rental_income", "op": "gt", "value": 0},
+                    {"path": "property.finance_costs", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
