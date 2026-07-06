@@ -56,7 +56,7 @@ class Command(BaseCommand):
             ) = self._create_releases(editor, reviewer, options["release"])
             authorities = self._create_authorities()
             self._create_parameters(release_2024, release_2025, release_2026)
-            self._create_iht_parameters(release_iht)
+            self._create_iht_parameters(release_iht, release_2026)
             self._create_property_parameters(
                 release_property, release_cgt_2024, release_2026
             )
