@@ -8,12 +8,20 @@ multi-tenant isolation, wrapped in a server-rendered Django app.
 
 ## Documentation
 
+**New developer? Start with [docs/ONBOARDING.md](docs/ONBOARDING.md)** — the
+single front door: the non-negotiable rules, run-from-zero setup, the app
+map, current state, deployment, and the tribal knowledge that isn't obvious
+from the code.
+
 | Document | Audience / purpose |
 |---|---|
+| [docs/ONBOARDING.md](docs/ONBOARDING.md) | **Read first.** Seamless take-over guide tying everything together |
+| [docs/ENGINEERING_PLAYBOOK.md](docs/ENGINEERING_PLAYBOOK.md) | The binding correctness/governance rules — read before writing code |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System **as built**: components, models, engine, invariants |
-| [docs/DEVELOPER_HANDOVER.md](docs/DEVELOPER_HANDOVER.md) | Take-over guide: build log, setup, conventions, defect log, known simplifications, remaining work, case-law roadmap |
-| [docs/TEST_EVIDENCE.md](docs/TEST_EVIDENCE.md) | Full test inventory, how to run, expected results, persona suite, manual verification sessions |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Container usage, required environment, UK hosting comparison |
+| [docs/DEVELOPER_HANDOVER.md](docs/DEVELOPER_HANDOVER.md) | Build log, conventions, defect log, known simplifications, remaining work, case-law roadmap |
+| [docs/TEST_EVIDENCE.md](docs/TEST_EVIDENCE.md) | Full test inventory, how to run, expected results, persona suite |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) + [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) | Container usage, hosting comparison, and the go-live checklist |
+| [docs/RULE_BASE_REVIEW_PACK.md](docs/RULE_BASE_REVIEW_PACK.md) + [docs/EDITORIAL_SIGNOFF.md](docs/EDITORIAL_SIGNOFF.md) | The generated editorial review pack and reviewer sign-off history |
 | The `.docx` above | The founding design document (pre-build) |
 
 Three canonical test personas (simple / typical / complex —
