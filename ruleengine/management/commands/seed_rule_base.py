@@ -1690,10 +1690,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.property_income_finance_cost",
                 description="Higher-rate landlord hit by the s.24 restriction, 2025/26",
-                source="Hand-computed: 24,000 rent - 4,000 expenses = 20,000 profit; with 50,000 "
-                "other income, tax on 70,000 is 15,432 less a 20% reducer on 10,000 interest "
-                "(2,000) = 13,432; full deduction (tax on 60,000) is 11,432, so s.24 costs 2,000 "
-                "extra (the interest relieved at 20% not 40%).",
+                source="Hand-computed: 20k profit + 50k income -> tax on 70k=15,432 less 20% "
+                "reducer on 10k interest (2,000)=13,432; full deduction (tax on 60k)=11,432 -> "
+                "s.24 costs 2,000 extra.",
                 input_facts={"rental_income": 24000, "allowable_expenses": 4000,
                              "finance_costs": 10000, "other_income": 50000},
                 expected_output={

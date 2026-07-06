@@ -171,7 +171,7 @@ rule-base release, with your name and the date.
   - upper: **125,140**
   - rate: **0.45**
   - upper: **None**
-- PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.property_income_finance_cost, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
 - PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
@@ -188,7 +188,7 @@ rule-base release, with your name and the date.
 - amount: **12,570**
 - taper_rate: **0.5**
 - taper_threshold: **100,000**
-- PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — consumed by a registered calculator (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.property_income_finance_cost, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
 - PASS — figure exercised by golden test cases (income_tax_on_earned_income, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_sacrifice, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.incorporation_vs_sole_trade, strategy.marriage_allowance_transfer, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 12,570 appears in: Income Tax Act 2007 s.35; Social Security Contributions and Benefits Act 1992 s.15
@@ -1128,10 +1128,4 @@ rule-base content under §5.6 of the architecture document.
 
 | Item range | Reviewer | Decision | Date |
 |---|---|---|---|
-| Personal/CT/IHT + CGT reliefs + all land taxes + CGT whole-income composition | kfrem (reviewing professional) | YES — verified against HMRC / revenue.scot / gov.wales — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
-| 2026/27 rows (release 2026.1): BADR 18%, dividend rates +2pp, BPR/APR £1m cap | kfrem (reviewing professional) | YES — HMRC CG64174/HS275, Finance Act 2025, Budget 2025 technical note; invisible until 2026.1 approved | 6 July 2026 |
-| Tier 1: Gift Aid (ITA 2007 s.414), directors' loan s.455 (CTA 2010 s.455), timing of disposals (TCGA 1992 ss.1H-1K), capital allowances / AIA (CAA 2001 s.51A), salary sacrifice into a pension (SSCBA 1992 s.6), personal pension contribution (FA 2004 s.190) and employer pension contribution (CTA 2009 s.54) | kfrem (reviewing professional) | YES — each verified against the primary source and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
-| Tier 2: group relief (CTA 2010 Part 5), bed-and-ISA (ITTOIA 2005 s.694), Business/Agricultural Property Relief incl. the April 2026 £1m cap (IHTA 1984 ss.103-124C) and EIS/SEIS/VCT investment relief (ITA 2007 Parts 5, 5A, 6) | kfrem (reviewing professional) | YES — verified and hand-computed, including the effective-dated reform and the per-scheme relief and CGT treatment — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
-
-*Prior-year (2024/25) rows are validated by golden cases and hand-computed
-tests rather than this forward-looking pack; sign-off in docs/EDITORIAL_SIGNOFF.md.*
+| 1–105 | _(name)_ | _(YES / exceptions)_ | _(date)_ |
