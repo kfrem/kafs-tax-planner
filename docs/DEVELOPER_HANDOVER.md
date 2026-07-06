@@ -207,10 +207,14 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    future-year changes; and **land-tax leases** for all three regimes
    (`strategy.{sdlt,lbtt,ltt}_lease_npv`: the rent charged on its net
    present value at the 3.5% discount rate, bands as data, golden cases +
-   `TestLeaseNpv`). All editorially signed off. Still open: disposal
-   composition with the salary/dividend whole-income picture; filling out
-   the rest of the 2026/27 figures (only BADR has a distinct 2026/27 row
-   so far); mixed-use apportionment.
+   `TestLeaseNpv`); and **disposal composition** — `cgt_liability` now
+   stacks the gain above the client's *whole* income (earned + dividends)
+   and extends the basic-rate band for a gross pension contribution
+   (TCGA 1992 s.1I), threaded through all four CGT strategies and their
+   adapters (`TestDisposalComposition`). All editorially signed off. Still
+   open: filling out the rest of the 2026/27 figures (only BADR has a
+   distinct 2026/27 row so far); composing CGT with the *recommended* (not
+   just recorded) salary/dividend extraction; mixed-use apportionment.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
