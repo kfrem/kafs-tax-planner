@@ -87,6 +87,62 @@ until someone reviews the data in `/admin/` and marks a
 The `--release` flag exists only to make local development/testing possible
 without doing that review; never use it against real client data.
 
+## Mandatory self-audit — the app checks itself; never skip it
+
+This is intended to be the first tool of its kind in the UK: it produces the
+very numbers an accountant hands a client, across potentially thousands of
+companies, so **a single wrong penny is a real defect, not a rounding quibble.**
+Every change — however small, and however certain you are it "cannot change the
+result" — must pass the self-audit before it is done. This is not optional and
+does not depend on who is doing the work.
+
+```bash
+python manage.py migrate                    # apply ALL migrations FIRST (see below)
+python manage.py seed_rule_base --release   # dev/test only (see governance warning)
+python manage.py seed_watched_sources
+python manage.py run_watchers               # fetch primary-source snapshots (network)
+python manage.py self_audit --passes 3      # the app audits itself, end to end, 3x
+```
+
+`self_audit` (`advice/management/commands/self_audit.py`) builds **real client
+cases** (`advice/audit_cases.py`) that between them exercise **every** registered
+strategy, and for each case it regenerates the advice, renders the PDF, deploys
+the four-expert panel, and has the panel **independently recompute every figure
+from the stored input snapshot**. It exits non-zero on ANY of:
+
+- an **unapplied migration** — the exact defect that once let the app 500 in the
+  browser while every unit test still passed (see below);
+- a golden-case mismatch or an editorial machine-pre-check failure;
+- a panel *engine-defect* finding — a figure that does not reproduce, extraction
+  arithmetic that does not balance, missing provenance, or an uncited position;
+- a non-deterministic recomputation (same facts producing different numbers);
+- a PDF that fails to render;
+- any live strategy that **no** real case exercises end to end.
+
+The same audit runs on every push (`advice/tests/test_self_audit.py`), including a
+negative test proving it actually *rejects* a broken rule base. Run it locally with
+`--passes 3` before handing over, so you have **seen** it green several times — the
+way an agent re-checks its own work rather than trusting a single pass.
+
+### Why `migrate` is called out first
+A database that is behind on migrations passes the *entire* unit-test suite (the
+test DB is rebuilt fresh from migrations every run) while the real app 500s on the
+first authenticated page. That happened once — the `django_otp` (MFA) tables were
+never created in the dev DB. `self_audit` now refuses to pass while any migration is
+unapplied, so it cannot recur regardless of who takes over. **Always run
+`python manage.py migrate` after pulling changes, before anything else.**
+
+### Definition of done for every change (restated, binding)
+1. Implementation + rule data (rates as data, effective-dated per `docs/ENGINEERING_PLAYBOOK.md`).
+2. Hand-computed tests **and** a golden case pinning each new figure.
+3. Full suite green (`pytest`) — never run two pytest processes against the shared DB at once.
+4. Docs updated: coverage map, `TEST_EVIDENCE.md`, `EDITORIAL_SIGNOFF.md`, review pack.
+5. Governance pipeline: `ruff`, `check --deploy`, reseed, `seed_watched_sources`,
+   `run_watchers`, `generate_review_pack` (0 machine failures), sign-off restored,
+   any `ChangeAlert` triaged with recorded notes.
+6. **`python manage.py self_audit --passes 3` green**, and — for anything with a UI
+   effect — actually opened in the browser and confirmed to render without errors.
+
 ## Local setup
 
 Requires: Python 3.13, Docker (for PostgreSQL), and on Windows, the GTK3
