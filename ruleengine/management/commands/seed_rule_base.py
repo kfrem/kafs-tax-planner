@@ -928,6 +928,27 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="group-loss-relief",
+                name="Group relief for company losses",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.group_loss_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Where one company in a 75% group makes a loss and "
+                "another makes a profit, the loss can be surrendered as group relief and set "
+                "against the profitable company's profits. This relieves the loss now, at the "
+                "claimant company's marginal rate — worth 26.5% where the claimant is in the "
+                "marginal-relief band (profits between £50,000 and £250,000), which is more "
+                "valuable than carrying the loss forward at 19% or the 25% main rate. Any loss "
+                "not covered by the claimant's profit is carried forward. Establishing the 75% "
+                "group relationship is a precondition the accountant confirms.",
+                authority_keys=["cta2010_part5"],
+                eligibility_conditions={"all": [
+                    {"path": "company.surrendering_company_loss", "op": "gt", "value": 0},
+                    {"path": "company.claimant_company_profit", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
