@@ -39,5 +39,5 @@ class TestEditorialPrecheck:
     def test_structure_covers_all_content(self, sources_with_snapshots):
         report = precheck()
         assert len(report["parameters"]) >= 15   # every current-year parameter
-        assert len(report["strategies"]) == 17   # all strategies reviewed
+        assert len(report["strategies"]) == 20   # all strategies reviewed
         assert len(report["authorities"]) >= 25  # entire registry reviewed
