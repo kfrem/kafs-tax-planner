@@ -96,6 +96,23 @@ CGT_HOMEOWNER_FACTS = {
 }
 
 
+# A two-partner firm (e.g. a married couple) where one partner has other
+# income — the profit-share allocation strategy.
+PARTNERSHIP_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {"profit_before_remuneration": 0},
+    "sole_trade": {"annual_profit": 0},
+    "partnership": {
+        "total_profit": 100000,
+        "partner1_other_income": 40000,
+        "partner2_other_income": 0,
+        "current_partner1_share": 0.5,
+        "proposed_partner1_share": 0.3,
+    },
+    "estate": {},
+}
+
+
 # A higher-rate landlord with a mortgaged residential let — the s.24
 # finance-cost restriction, plus the CGT position if the let is later sold.
 LANDLORD_FACTS = {
