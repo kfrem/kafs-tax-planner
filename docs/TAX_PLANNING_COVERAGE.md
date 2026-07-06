@@ -51,7 +51,8 @@ Last updated: 6 July 2026.
 
 | Strategy | Status | Notes / what's needed | Priority |
 |---|---|---|---|
-| Incorporation of property portfolios | ○ | **Scoped as the flagship build** — see `SCOPE_landlord_planning_and_guided_intake.md` (Section 24, s.162, SDLT-on-transfer, ATED, break-even). | High |
+| Landlord finance-cost restriction (s.24) | ✓ | `property-income-finance-cost` — mortgage interest relieved as a 20% tax reducer (lower of finance costs, rental profit, adjusted total income); quantifies the extra tax a higher/additional-rate landlord pays vs full deductibility, and carries forward unrelieved interest (ITTOIA 2005 ss.272A-274C). The headline driver for the incorporation question. | — |
+| Incorporation of property portfolios | ○ | **Scoped as the flagship build** — see `SCOPE_landlord_planning_and_guided_intake.md` (Section 24, s.162, SDLT-on-transfer, ATED, break-even). The s.24 cost above is the break-even numerator. | High |
 | Furnished Holiday Lettings transitional planning | ○ | FHL regime abolished from April 2025 — model the transitional position. | Low |
 | SDLT reliefs (multiple/mixed-use/uninhabitable) | ◐ | SDLT built with the additional-dwelling surcharge + FTB relief. Missing: mixed-use rate, uninhabitable/derelict. (Multiple Dwellings Relief was abolished June 2024.) | Med |
 | Capital allowances on commercial property (fixtures) | ○ | Fixtures/integral features within commercial buildings. | Med |
