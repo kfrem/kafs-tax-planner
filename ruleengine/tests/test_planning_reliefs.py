@@ -504,3 +504,34 @@ class TestPropertyIncomeFinanceCost:
         assert result["rental_profit"] == approx(15000.0)
         assert result["basic_rate_tax_reducer"] == approx(3000.0)  # 20% of 15,000
         assert result["finance_costs_carried_forward"] == approx(5000.0)
+
+
+class TestPartnershipProfitAllocation:
+    def test_shifting_share_to_the_lower_rate_partner_saves_tax(self):
+        # 100k profit; partner A also has 40k other income (so their share is
+        # taxed at 40%), partner B has none. 50/50: A pays IT(90k)=23,432 +
+        # Class4(50k)=2,245.80; B pays IT(50k)=7,486 + 2,245.80 => 35,409.60.
+        # 30/70: A IT(70k)=15,432 + Class4(30k)=1,045.80; B IT(70k)=15,432 +
+        # Class4(70k)=2,656.60 => 34,566.40. Saving 843.20.
+        result = strategy_partnership_profit_allocation(
+            {"total_profit": 100000, "partner1_other_income": 40000,
+             "partner2_other_income": 0, "current_partner1_share": 0.5,
+             "proposed_partner1_share": 0.3}, TAX_YEAR
+        )
+        assert result["current_total_tax"] == approx(35409.60)
+        assert result["proposed_total_tax"] == approx(34566.40)
+        assert result["tax_saving"] == approx(843.20)
+        assert result["current"]["partner1_tax"] == approx(25677.80)
+        assert result["proposed"]["partner2_tax"] == approx(18088.60)
+
+    def test_equal_partners_equal_income_no_saving_from_rebalancing(self):
+        # Two partners with identical other income are already balanced: any
+        # symmetric reallocation leaves the combined tax unchanged.
+        result = strategy_partnership_profit_allocation(
+            {"total_profit": 80000, "partner1_other_income": 10000,
+             "partner2_other_income": 10000, "current_partner1_share": 0.5,
+             "proposed_partner1_share": 0.4}, TAX_YEAR
+        )
+        # Rebalancing between identical partners moves tax between them but the
+        # household total barely moves (both stay in the same bands here).
+        assert result["tax_saving"] == approx(0.0)
