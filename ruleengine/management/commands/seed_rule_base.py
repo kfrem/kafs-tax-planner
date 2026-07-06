@@ -256,6 +256,19 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ihta1984_bpr_apr",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Inheritance Tax Act 1984 ss.103-114 (BPR) and ss.115-124C (APR)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/part/V/chapter/I",
+                verbatim_extract="Business property relief reduces the value transferred by "
+                "relevant business property by 100% (unquoted trading businesses and unquoted "
+                "shares) or 50% (controlling quoted holdings, certain land and machinery). "
+                "Agricultural property relief similarly relieves the agricultural value of "
+                "qualifying farmland at 100% or 50%. From 6 April 2026 the 100% rate is limited "
+                "to a combined £1,000,000 of qualifying business and agricultural property, with "
+                "50% relief on value above that cap (Finance Act 2025).",
+            ),
+            dict(
                 key="ittoia2005_s694",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 s.694",
