@@ -62,6 +62,69 @@ class TestCgtLiability:
         assert result["tax_due"] == 0.0
 
 
+class TestIntraYearCgt2024:
+    """The 30 October 2024 mid-year CGT change (Autumn Budget 2024):
+    non-residential/other rates rose from 10%/20% to 18%/24%, resolved by
+    disposal date through the intra-year effective ranges. Residential rates
+    were 18%/24% throughout 2024/25."""
+
+    def test_other_asset_basic_rate_before_30_oct(self):
+        # Earned 20,000 -> taxable 7,430, basic band left 30,270. Gain
+        # 20,000 - 3,000 AEA = 17,000 within the band at the pre-Budget 10%
+        # = 1,700.
+        result = cgt_liability(
+            {"chargeable_gain": 20000, "asset_type": "other", "earned_income": 20000,
+             "disposal_date": "2024-06-01"},
+            "2024/25",
+        )
+        assert result["taxable_gain"] == approx(17000.0)
+        assert result["tax_due"] == approx(1700.0)
+
+    def test_other_asset_basic_rate_from_30_oct(self):
+        # Same 17,000 taxable gain, but disposed on/after 30 Oct 2024 -> the
+        # new 18% basic rate = 3,060.
+        result = cgt_liability(
+            {"chargeable_gain": 20000, "asset_type": "other", "earned_income": 20000,
+             "disposal_date": "2024-11-15"},
+            "2024/25",
+        )
+        assert result["tax_due"] == approx(3060.0)
+
+    def test_other_asset_higher_rate_across_the_boundary(self):
+        # Higher-rate owner (earned 60,000, band full), 100,000 gain -> 97,000
+        # taxable. Before: 20% = 19,400. On/after: 24% = 23,280.
+        before = cgt_liability(
+            {"chargeable_gain": 100000, "asset_type": "other", "earned_income": 60000,
+             "disposal_date": "2024-10-29"},
+            "2024/25",
+        )
+        after = cgt_liability(
+            {"chargeable_gain": 100000, "asset_type": "other", "earned_income": 60000,
+             "disposal_date": "2024-10-30"},
+            "2024/25",
+        )
+        assert before["tax_due"] == approx(19400.0)
+        assert after["tax_due"] == approx(23280.0)
+
+    def test_residential_rate_unchanged_across_the_boundary(self):
+        # Residential stayed 18%/24% all year: same tax either side of 30 Oct.
+        facts = {"chargeable_gain": 100000, "asset_type": "residential", "earned_income": 60000}
+        before = cgt_liability({**facts, "disposal_date": "2024-10-29"}, "2024/25")
+        after = cgt_liability({**facts, "disposal_date": "2024-10-30"}, "2024/25")
+        assert before["tax_due"] == approx(23280.0)
+        assert after["tax_due"] == approx(23280.0)
+
+    def test_engine_resolves_intra_year_row_by_disposal_date(self):
+        h1 = get_parameter("cgt.rates", "2024/25", as_of=datetime.date(2024, 6, 1))
+        h2 = get_parameter("cgt.rates", "2024/25", as_of=datetime.date(2024, 11, 15))
+        assert h1["other"]["lower"] == 0.10
+        assert h2["other"]["lower"] == 0.18
+
+    def test_as_of_outside_the_tax_year_is_rejected(self):
+        with pytest.raises(ValueError, match="outside tax year"):
+            get_parameter("cgt.rates", "2024/25", as_of=datetime.date(2025, 6, 1))
+
+
 class TestPprRelief:
     def test_partial_occupation_with_final_period(self):
         # Owned 120 months, occupied 60: exempt (60 + 9)/120 = 57.5% of the
