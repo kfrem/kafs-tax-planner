@@ -840,6 +840,24 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="capital-allowances-aia",
+                name="Capital allowances / Annual Investment Allowance",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.capital_allowances",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Qualifying spend on plant and machinery gets 100% "
+                "tax relief in the year of purchase through the Annual Investment Allowance, "
+                "up to the AIA limit (currently £1,000,000). Spend above that is written down "
+                "at 18% a year in the main pool. This quantifies the first-year deduction and "
+                "the tax it saves at the client's marginal rate — often a reason to time "
+                "capital spend into a particular period.",
+                authority_keys=["caa2001_s51a"],
+                eligibility_conditions={"all": [
+                    {"path": "company.qualifying_capital_spend", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
