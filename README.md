@@ -129,7 +129,7 @@ year, click "Generate advice".
 ## Tests
 
 ```bash
-python -m pytest
+python -m pytest        # expect: 218 passed (~6 min); this is the reproduction checkpoint
 ```
 
 Covers: calculator correctness against hand-verified HMRC-rate worked
