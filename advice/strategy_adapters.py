@@ -302,6 +302,29 @@ class GroupLossReliefAdapter:
         }
 
 
+@adapter("strategy.isa_bed_and_isa")
+class IsaBedAndIsaAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("isa_amount_to_shelter", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        # Higher-rate if total earned + dividend income takes the client above
+        # the basic-rate limit; the adapter passes the flag, the calculator
+        # applies the corresponding CGT and dividend rates.
+        total_income = _earned_income(facts) + _dividend_income(facts)
+        bands = _basic_rate_limit_income(total_income)
+        return {
+            "amount_to_shelter": personal.get("isa_amount_to_shelter", 0),
+            "realised_gain": personal.get("isa_realised_gain", 0),
+            "aea_already_used": personal.get("cgt_aea_already_used", 0),
+            "annual_dividend_income": personal.get("isa_annual_dividend_income", 0),
+            "is_higher_rate": bands,
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
