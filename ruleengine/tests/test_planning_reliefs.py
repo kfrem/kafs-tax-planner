@@ -8,7 +8,9 @@ from ruleengine.calculators import (
     strategy_capital_allowances,
     strategy_cgt_timing_of_disposals,
     strategy_directors_loan_s455,
+    strategy_employer_pension_contribution,
     strategy_gift_aid_relief,
+    strategy_personal_pension_contribution,
     strategy_salary_sacrifice,
 )
 
