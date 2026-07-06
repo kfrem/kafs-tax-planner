@@ -873,6 +873,8 @@ def strategy_cgt_lettings_relief(facts: dict, tax_year: str) -> dict:
         "cgt.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
     ],
     description="No-gain/no-loss transfer of a half share to a spouse before disposal "
     "(TCGA 1992 s.58): both annual exempt amounts and both basic-rate bands are used.",
@@ -881,18 +883,23 @@ def strategy_cgt_spousal_transfer(facts: dict, tax_year: str) -> dict:
     gain = float(facts["disposal_gain"])
     asset_type = facts.get("asset_type", "residential")
     earned_income = float(facts.get("earned_income", 0))
+    dividend_income = float(facts.get("dividend_income", 0))
     spouse_earned_income = float(facts.get("spouse_earned_income", 0))
+    spouse_dividend_income = float(facts.get("spouse_dividend_income", 0))
 
     alone = cgt_liability(
-        {"chargeable_gain": gain, "asset_type": asset_type, "earned_income": earned_income},
+        {"chargeable_gain": gain, "asset_type": asset_type,
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
     own_half = cgt_liability(
-        {"chargeable_gain": gain / 2, "asset_type": asset_type, "earned_income": earned_income},
+        {"chargeable_gain": gain / 2, "asset_type": asset_type,
+         "earned_income": earned_income, "dividend_income": dividend_income},
         tax_year,
     )
     spouse_half = cgt_liability(
-        {"chargeable_gain": gain / 2, "asset_type": asset_type, "earned_income": spouse_earned_income},
+        {"chargeable_gain": gain / 2, "asset_type": asset_type,
+         "earned_income": spouse_earned_income, "dividend_income": spouse_dividend_income},
         tax_year,
     )
     split_total = round(own_half["tax_due"] + spouse_half["tax_due"], 2)
