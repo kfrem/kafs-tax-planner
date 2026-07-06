@@ -1239,10 +1239,9 @@ class Command(BaseCommand):
                 calculator_key="cgt_liability",
                 description="Gain composed with dividends: dividends consume the band "
                 "before the gain, 2025/26",
-                source="Hand-computed: earned 30,000 (taxable 17,430) + dividends 20,000 = "
-                "37,430 below the gain; basic band 37,700 - 37,430 = 270 left. Residential "
-                "gain 20,000 - 3,000 AEA = 17,000: 270 at 18% (48.60) + 16,730 at 24% "
-                "(4,015.20) = 4,063.80 (vs 3,060 if dividends were ignored)",
+                source="Hand-computed: taxable earned 17,430 + dividends 20,000 = 37,430 "
+                "below the gain; band left 270. Gain 17,000: 270 at 18% + 16,730 at 24% = "
+                "4,063.80 (vs 3,060 ignoring dividends)",
                 input_facts={"chargeable_gain": 20000, "asset_type": "residential",
                              "earned_income": 30000, "dividend_income": 20000},
                 expected_output={"income_below_gain": 37430.0, "gain_at_lower_rate": 270.0,
