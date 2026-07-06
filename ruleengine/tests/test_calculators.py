@@ -13,10 +13,43 @@ from ruleengine.calculators import (
     income_tax_on_earned_income,
     strategy_marriage_allowance_transfer,
 )
+from ruleengine.engine import get_parameter
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
 
 TAX_YEAR = "2025/26"
+approx = lambda v: pytest.approx(v, abs=0.02)  # noqa: E731
+
+
+class TestFutureYear2026:
+    """2026/27 fill-out. The one confirmed change to a modelled parameter is
+    the +2pp dividend rate rise (Budget 2025); everything else is frozen and
+    carries forward on its open effective range. These tests make that
+    carry-forward explicit so a future edit can't silently break it."""
+
+    def test_dividend_rates_rise_2pp_in_2026_27(self):
+        # Same 30,000 other income + 20,000 dividends. 2025/26: 7,700 @ 8.75%
+        # + 12,300 @ 33.75% - 500 @ 8.75% = 4,781.25. 2026/27: 7,700 @ 10.75%
+        # + 12,300 @ 35.75% - 500 @ 10.75% = 5,171.25.
+        facts = {"other_taxable_income": 30000, "dividend_income": 20000}
+        assert dividend_tax(facts, "2025/26")["tax_due"] == approx(4781.25)
+        assert dividend_tax(facts, "2026/27")["tax_due"] == approx(5171.25)
+
+    def test_dividend_bands_are_effective_dated(self):
+        assert get_parameter("dividend_tax.bands", "2025/26")["bands"][0]["rate"] == 0.0875
+        assert get_parameter("dividend_tax.bands", "2026/27")["bands"][0]["rate"] == 0.1075
+        # The additional rate is unchanged.
+        assert get_parameter("dividend_tax.bands", "2026/27")["bands"][2]["rate"] == 0.3935
+
+    def test_frozen_parameters_carry_forward_to_2026_27(self):
+        # These are frozen and correctly resolve to their 2025/26 values in
+        # 2026/27 via their open effective ranges (no separate row needed).
+        assert get_parameter("income_tax.personal_allowance", "2026/27")["amount"] == 12570
+        assert get_parameter("income_tax.bands", "2026/27")["bands"][0]["upper"] == 37700
+        assert get_parameter("dividend_tax.allowance", "2026/27")["amount"] == 500
+        assert get_parameter("cgt.annual_exempt_amount", "2026/27")["amount"] == 3000
+        assert get_parameter("iht.nil_rate_band", "2026/27")["amount"] == 325000
+        assert get_parameter("corporation_tax.rates", "2026/27")["main_rate"] == 0.25
 
 
 def test_income_tax_basic_rate_only():
