@@ -5,6 +5,7 @@ shown in the comment."""
 import pytest
 
 from ruleengine.calculators import (
+    strategy_business_property_relief,
     strategy_capital_allowances,
     strategy_cgt_timing_of_disposals,
     strategy_directors_loan_s455,
