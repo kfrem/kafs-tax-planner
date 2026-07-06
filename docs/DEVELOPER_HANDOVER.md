@@ -196,10 +196,14 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    effective-dated rows, proving the engine resolves rates by tax year;
    the editorial pre-check now reviews the 2025/26 *and* 2026/27 anchors,
    and an unapproved 2026.1 is invisible to the engine (four-eyes,
-   `TestFutureYearBadr`). All editorially signed off. Still open: filling
+   `TestFutureYearBadr`); and **2024/25 intra-year CGT** (release 2024.2)
+   — the 30 October 2024 non-residential rate change (10%/20% → 18%/24%)
+   modelled as two intra-year effective ranges, resolved by disposal date
+   via the new `get_parameter(..., as_of=...)` (`TestIntraYearCgt2024`).
+   With this, effective-dating spans intra-year, year-boundary, and
+   future-year changes. All editorially signed off. Still open: filling
    out the rest of the 2026/27 figures (only BADR has a distinct 2026/27
-   row so far); 2024/25 intra-year CGT rates (needs intra-year effective
-   ranges); land-tax *leases* (rent NPV) and mixed-use apportionment;
+   row so far); land-tax *leases* (rent NPV) and mixed-use apportionment;
    disposal composition with the salary/dividend whole-income picture.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
