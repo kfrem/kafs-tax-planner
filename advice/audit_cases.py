@@ -1,0 +1,160 @@
+"""Real client scenarios engineered to exercise EVERY registered strategy
+end-to-end, used by the ``self_audit`` management command (and its test).
+
+The three canonical personas (Emma/Sarah/Victor) cover the simple/typical/
+complex income-and-IHT range. This module adds:
+
+* DANIEL — a comprehensive owner-manager whose facts trigger the Tier-1 and
+  Tier-2 additions (salary sacrifice, both pension routes, group relief,
+  bed-and-ISA, BPR, EIS/SEIS/VCT) plus Gift Aid, a director's loan, timing of
+  disposals, capital allowances and Business Asset Disposal Relief.
+* A CGT homeowner whose property was a former main residence with a let
+  period (PPR, lettings relief, spousal transfer).
+* Nine land-transaction cases: residential purchase, non-residential purchase
+  and a lease, in each of England, Scotland and Wales, so every SDLT/LBTT/LTT
+  strategy fires.
+
+``self_audit`` asserts the UNION of strategies fired across these cases equals
+the full registered set — so no strategy can ship without a real case proving
+it end-to-end (advice → PDF → four-expert panel → independent recomputation).
+"""
+
+from __future__ import annotations
+
+from clients.personas import EMMA_FACTS, SARAH_FACTS, VICTOR_FACTS
+
+# A comprehensive owner-manager: trading company in a group, a share portfolio,
+# EIS appetite, two pension routes, a director's loan, capital spend, a business
+# sale (BADR) and a large business for IHT.
+DANIEL_FACTS = {
+    "personal": {
+        "other_income": 0,
+        "employment_income": 0,
+        "salary_from_own_company": 70000,
+        "dividends_from_own_company": 30000,
+        "spouse_income": 15000,
+        "gift_aid_donation": 2000,
+        "divisible_capital_gain": 15000,
+        "salary_sacrifice_amount": 10000,
+        "desired_pension_contribution": 20000,
+        "isa_amount_to_shelter": 20000,
+        "isa_realised_gain": 2500,
+        "isa_annual_dividend_income": 800,
+        "venture_capital_investment": 50000,
+        "venture_capital_scheme": "eis",
+        "venture_capital_gain_reinvested": 20000,
+        "income_tax_liability": 25000,
+    },
+    "company": {
+        "profit_before_remuneration": 300000,
+        "employment_allowance_available": False,
+        "associated_companies": 1,
+        "desired_employer_pension_contribution": 20000,
+        "surrendering_company_loss": 50000,
+        "claimant_company_profit": 250000,
+        "overdrawn_loan_balance": 40000,
+        "repaid_within_9_months": 10000,
+        "qualifying_capital_spend": 60000,
+    },
+    "sole_trade": {"annual_profit": 0},
+    "property": {
+        # A separate business-asset sale qualifying for BADR.
+        "badr_qualifying_gain": 500000,
+    },
+    "estate": {
+        "gross_value": 3000000,
+        "liabilities": 0,
+        "qualifying_business_property": 2000000,
+        "home_equity_value": 600000,
+        "home_passes_to_direct_descendants": True,
+        "combined_estate_second_death": 2500000,
+        "combined_home_equity_second_death": 600000,
+        "charitable_legacy": 100000,
+        "planned_lifetime_gift": 200000,
+        "prior_year_annual_exemption_unused": True,
+    },
+}
+
+# A homeowner disposing of a former main residence that was also let for a
+# period: PPR relief, lettings relief and the spousal transfer before disposal.
+CGT_HOMEOWNER_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {"profit_before_remuneration": 0},
+    "sole_trade": {"annual_profit": 0},
+    "property": {
+        "disposal_gain": 120000,
+        "disposal_asset_type": "residential",
+        "ownership_months": 240,
+        "occupied_as_main_residence_months": 120,
+        "let_months": 96,
+        "let_fraction": 0.5,
+        "spouse_available_for_transfer": True,
+        "purchase_price": 0,
+    },
+    "estate": {},
+}
+
+
+def _land_case(jurisdiction: str) -> dict:
+    """A client making three separate land transactions in one jurisdiction:
+    a residential purchase, a non-residential purchase and a lease. Each land
+    case carries only one property transaction, so we emit three per region."""
+    return jurisdiction
+
+
+def _residential_purchase(jurisdiction: str) -> dict:
+    return {
+        "personal": {}, "company": {}, "sole_trade": {}, "estate": {},
+        "property": {
+            "purchase_price": 600000,
+            "jurisdiction": jurisdiction,
+            "property_type": "residential",
+            "is_additional_dwelling": True,
+        },
+    }
+
+
+def _non_residential_purchase(jurisdiction: str) -> dict:
+    return {
+        "personal": {}, "company": {}, "sole_trade": {}, "estate": {},
+        "property": {
+            "purchase_price": 800000,
+            "jurisdiction": jurisdiction,
+            "property_type": "non_residential",
+        },
+    }
+
+
+def _lease(jurisdiction: str) -> dict:
+    return {
+        "personal": {}, "company": {}, "sole_trade": {}, "estate": {},
+        "property": {
+            "jurisdiction": jurisdiction,
+            "property_type": "non_residential",
+            "lease_annual_rent": 50000,
+            "lease_term_years": 10,
+            "lease_premium": 100000,
+        },
+    }
+
+
+def _build_cases():
+    cases = [
+        ("AUDIT-EMMA", "Audit: Emma (simple)", "individual", EMMA_FACTS),
+        ("AUDIT-SARAH", "Audit: Sarah (typical)", "individual_with_company", SARAH_FACTS),
+        ("AUDIT-VICTOR", "Audit: Victor (complex)", "individual_with_company", VICTOR_FACTS),
+        ("AUDIT-DANIEL", "Audit: Daniel (comprehensive owner-manager)",
+         "individual_with_company", DANIEL_FACTS),
+        ("AUDIT-HOME", "Audit: CGT homeowner", "individual", CGT_HOMEOWNER_FACTS),
+    ]
+    for juris, tag in (("england", "ENG"), ("scotland", "SCO"), ("wales", "WAL")):
+        cases.append((f"AUDIT-{tag}-RES", f"Audit: {juris} residential purchase",
+                      "individual", _residential_purchase(juris)))
+        cases.append((f"AUDIT-{tag}-NONRES", f"Audit: {juris} non-residential purchase",
+                      "individual", _non_residential_purchase(juris)))
+        cases.append((f"AUDIT-{tag}-LEASE", f"Audit: {juris} commercial lease",
+                      "individual", _lease(juris)))
+    return cases
+
+
+AUDIT_CASES = _build_cases()
