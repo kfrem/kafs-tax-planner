@@ -277,6 +277,48 @@ def employer_class1_nic(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.salary_sacrifice",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "national_insurance.employee_class1",
+        "national_insurance.employer_class1",
+    ],
+    description="Salary sacrifice into an employer pension: giving up salary cuts the "
+    "employee's income tax and Class 1 NIC and the employer's secondary NIC, and the whole "
+    "sacrificed amount goes into the pension gross. Quantifies the employee saving, the "
+    "employer NIC saving, the amount into the pension and its net cost to the employee.",
+)
+def strategy_salary_sacrifice(facts: dict, tax_year: str) -> dict:
+    salary = max(0.0, float(facts.get("salary", 0)))
+    sacrifice = min(salary, max(0.0, float(facts.get("sacrifice_amount", 0))))
+    reduced = round(salary - sacrifice, 2)
+
+    def _cost(gross: float) -> tuple:
+        it = income_tax_on_earned_income({"total_income": gross}, tax_year)["tax_due"]
+        ee = employee_class1_nic({"annual_salary": gross}, tax_year)["nic_due"]
+        er = employer_class1_nic(
+            {"annual_salary": gross, "employment_allowance_available": False}, tax_year
+        )["nic_due"]
+        return it, ee, er
+
+    it0, ee0, er0 = _cost(salary)
+    it1, ee1, er1 = _cost(reduced)
+
+    employee_saved = round((it0 + ee0) - (it1 + ee1), 2)
+    employer_ni_saved = round(er0 - er1, 2)
+
+    return {
+        "salary_sacrificed": round(sacrifice, 2),
+        "employee_income_tax_and_ni_saved": employee_saved,
+        "employer_ni_saved": employer_ni_saved,
+        "into_pension": round(sacrifice, 2),
+        "net_cost_of_pension_to_employee": round(sacrifice - employee_saved, 2),
+        "total_saving": round(employee_saved + employer_ni_saved, 2),
+    }
+
+
+@register(
     "corporation_tax",
     consumes=["corporation_tax.rates"],
     description="Corporation tax with marginal relief between the small profits and main rate limits.",
