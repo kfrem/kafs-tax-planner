@@ -256,6 +256,16 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ittoia2005_s694",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Trading and Other Income) Act 2005 s.694",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/694",
+                verbatim_extract="Income arising from investments held in an individual savings "
+                "account (ISA) is exempt from income tax, subject to the ISA regulations. The "
+                "annual subscription limit is set by those regulations (SI 1998/1870); gains on "
+                "ISA investments are likewise exempt from capital gains tax (TCGA 1992 s.151).",
+            ),
+            dict(
                 key="cta2010_part5",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Corporation Tax Act 2010 Part 5 (ss.97-188)",
