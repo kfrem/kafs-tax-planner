@@ -607,3 +607,30 @@ built. Client entity_type is confirmed to be display-only — eligibility is and
 remains fact-driven (proved by the self-audit's companyless cases).
 
 **Verdict:** YES.
+
+## Addendum, 6 July 2026 — Client-type expansion 2: partnership profit-share
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `partnership-profit-allocation`
+(`strategy.partnership_profit_allocation`, **risk status BORDERLINE**), new
+authority ITTOIA 2005 s.850. No new parameter — composes `combined_personal_tax`
+and a shared `_class4_nic` helper (refactored out of the incorporation
+calculator).
+
+**Verified against ITTOIA 2005 s.850:** a partnership is transparent; each
+partner is taxed on their profit share as trading income (income tax + Class 4
+NIC). Reconciled the two-partner planning case: £100k profit, partner A also
+has £40k other income. At 50/50, A pays £23,432 IT + £2,245.80 Class 4 and B
+pays £7,486 + £2,245.80 = £35,409.60 combined; shifting to 30/70 gives
+£16,477.80 + £18,088.60 = £34,566.40, a £843.20 saving. Also confirmed that
+equalising two identical partners from 40/60 to 50/50 saves £1,546.00.
+
+**Governance:** flagged **borderline**, not settled — the profit-sharing ratio
+must reflect the partners' genuine commercial contribution and cannot be set to
+divert income for tax (settlements rules). The panel therefore raises a risk-
+disclosure caution on it (verdict 'attention', not a blocker), which is correct.
+Full N-partner allocation and salaried-member (LLP) rules are documented next
+steps.
+
+**Verdict:** YES, with the borderline flag carried through to the advice.
