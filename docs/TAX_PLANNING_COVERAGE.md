@@ -25,7 +25,7 @@ Last updated: 6 July 2026.
 |---|---|---|---|
 | Pension contributions (band extension, PA restoration in £100k–125k taper) | ✓ | `personal-pension-contribution` — standalone recommendation delegating to `combined_personal_tax`: basic-rate credit + higher-rate/taper relief through band extension, PA restoration, **effective relief rate up to 60%** in the £100k–125,140 taper, net cost, and the FA 2004 s.190 relevant-earnings cap. | — |
 | Marriage Allowance | ✓ | `marriage-allowance-transfer` | — |
-| ISA maximisation | ○ | Needs an investments/ISA-allowance fact set; the "saving" is sheltering future growth (more advisory than a point calc). | Med |
+| ISA maximisation / Bed-and-ISA | ✓ | `isa-bed-and-isa` — shelters investments in an ISA (capped at the £20,000 limit); quantifies CGT on the transfer (nil where the gain is within the annual exemption) and the yearly dividend tax saved once inside the wrapper (ITTOIA 2005 s.694). Future growth is CGT-free but not projected (depends on growth rate). | — |
 | Salary sacrifice (pension / EV / childcare) | ✓ | `salary-sacrifice-into-pension` — swaps salary for an employer pension contribution; quantifies the employee's income tax + Class 1 NIC saving, the employer's secondary NIC saving, the amount into the pension gross and its net cost (SSCBA 1992 s.6). EV/childcare variants follow the same engine. | — |
 | Gift Aid (extends basic-rate band) | ✓ | `gift-aid-relief` — basic-rate gross-up, higher-rate band relief + PA restoration in the taper (ITA 2007 s.414). | — |
 | Dividend vs salary optimisation | ✓ | `salary-dividend-mix` | — |
