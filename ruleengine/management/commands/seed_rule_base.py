@@ -1068,6 +1068,27 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="venture-capital-investment",
+                name="EIS / SEIS / VCT investment relief",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.venture_capital_investment",
+                timeframe=Timeframe.MEDIUM,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Investing in a qualifying venture-capital scheme gives "
+                "income tax relief: 30% under the Enterprise Investment Scheme (up to £1m a year), "
+                "50% under the Seed Enterprise Investment Scheme (up to £200k), or 30% through a "
+                "Venture Capital Trust (up to £200k). The relief cannot exceed the investor's "
+                "income tax bill. EIS also defers a chargeable gain reinvested in the shares, SEIS "
+                "exempts half of a reinvested gain, and VCT dividends are tax-free. This quantifies "
+                "the income tax relief, the CGT deferred or saved, and the net cost after relief. "
+                "These are higher-risk investments and relief is withdrawn if the shares are not "
+                "held for the minimum period — the adviser confirms the company and shares qualify.",
+                authority_keys=["ita2007_venture_capital"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.venture_capital_investment", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="marriage-allowance-transfer",
                 name="Marriage Allowance transfer",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
