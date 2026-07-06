@@ -34,7 +34,7 @@ and in CI (ubuntu-latest, Python 3.13), 6 July 2026.
 
 | File | Tests | What it proves |
 |---|---|---|
-| `ruleengine/tests/test_calculators.py` | 14 | Layer 2 calculators against hand-computed 2025/26 values: income tax incl. PA taper, dividend tax, employee/employer NIC (incl. 2025/26 threshold change + Employment Allowance), Class 4, CT marginal relief, pension AA taper |
+| `ruleengine/tests/test_calculators.py` | 17 | Layer 2 calculators against hand-computed 2025/26 values: income tax incl. PA taper, dividend tax, employee/employer NIC (incl. 2025/26 threshold change + Employment Allowance), Class 4, CT marginal relief, pension AA taper; **2026/27 fill-out** (`TestFutureYear2026`): the confirmed +2pp dividend rate rise (£30k+£20k dividends → £4,781.25 in 2025/26 vs £5,171.25 in 2026/27), the dividend bands effective-dated, and every other modelled parameter verified frozen and carrying forward |
 | `ruleengine/tests/test_golden_cases.py` | 2 (data-driven) | Executes all **33 GoldenTestCase rows stored in the rule base itself** (each with its own `tax_year`, so 2026/27 and 2024/25 cases run against those years' rows) — the §5.5 release gate. Adding a golden case to the seed automatically adds coverage |
 | `ruleengine/tests/test_income_interaction.py` | 11 | Whole-income interaction: PA taper triggered by dividends, PA remainder sheltering dividends, Sarah's exact scenario to the penny, optimiser (interior optimum at £5,000; £12,570 confirmed optimal when no other income; affordability cap £9,347 from £10,000 profit) |
 | `ruleengine/tests/test_pension_relief.py` | 6 | RAS band extension (40% relief case), taper restoration (60% effective relief case), FA 2004 s.190 earnings cap, £3,600 floor, AA charge basis, employer-route CT saving |
