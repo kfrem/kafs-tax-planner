@@ -1449,6 +1449,20 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.group_loss_relief",
+                description="Group relief surrendered into the marginal-relief band, 2025/26",
+                source="Hand-computed: 50,000 loss into a 250,000-profit claimant. CT "
+                "62,500 (25% at the 250k upper limit) vs CT on 200,000 = 50,000 - 750 marginal "
+                "relief = 49,250; saved 13,250 = 26.5% marginal rate on the 50,000 relieved.",
+                input_facts={"claimant_company_profit": 250000, "surrendering_company_loss": 50000},
+                expected_output={
+                    "loss_surrendered": 50000.0,
+                    "corporation_tax_saved": 13250.0,
+                    "unrelieved_loss_carried_forward": 0.0,
+                    "effective_relief_rate": 0.265,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
