@@ -645,15 +645,22 @@ def strategy_marriage_allowance_transfer(facts: dict, tax_year: str) -> dict:
     ],
     description="CGT on a chargeable gain: annual exempt amount, then the lower rate "
     "within the individual's unused basic-rate band and the higher rate above it "
-    "(TCGA 1992 ss.1H-1K).",
+    "(TCGA 1992 ss.1H-1K). An optional disposal_date resolves rates that change "
+    "mid-year, e.g. the 30 October 2024 rise in non-residential rates.",
 )
 def cgt_liability(facts: dict, tax_year: str) -> dict:
     gain = max(0.0, float(facts.get("chargeable_gain", 0)))
     asset_type = facts.get("asset_type", "residential")
     earned_income = max(0.0, float(facts.get("earned_income", 0)))
 
-    aea_param = get_parameter("cgt.annual_exempt_amount", tax_year)
-    rates_param = get_parameter("cgt.rates", tax_year)
+    # The disposal date, when supplied, resolves intra-year rate changes
+    # (30 Oct 2024). The AEA and rates are read as of that date; income tax
+    # bands do not change mid-year, so they use the tax-year anchor.
+    disposal_date = facts.get("disposal_date")
+    as_of = datetime.date.fromisoformat(disposal_date) if disposal_date else None
+
+    aea_param = get_parameter("cgt.annual_exempt_amount", tax_year, as_of=as_of)
+    rates_param = get_parameter("cgt.rates", tax_year, as_of=as_of)
     bands_param = get_parameter("income_tax.bands", tax_year)
     rates = rates_param[asset_type]
 
