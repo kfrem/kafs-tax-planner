@@ -256,6 +256,18 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="ittoia2005_s850",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Trading and Other Income) Act 2005 s.850",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/850",
+                verbatim_extract="A partnership is transparent for tax: each partner is treated as "
+                "carrying on the trade and is taxed on their share of the firm's profit determined "
+                "by the firm's profit-sharing arrangement, as trading income (income tax and Class "
+                "4 NIC). The profit-sharing ratio must reflect the commercial arrangement between "
+                "the partners; HMRC can challenge allocations made to divert income for tax "
+                "advantage (see also the settlements rules, ITTOIA 2005 Part 5 Ch 5).",
+            ),
+            dict(
                 key="ittoia2005_s272a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.272A-274C",
