@@ -132,9 +132,15 @@ left.** Small self-contained wins done first, flagship next.
 death-benefit & life-insurance-in-trust · capital allowances on commercial
 property · Patent Box · holding-company structuring · charity VAT reliefs.
 
-**Cross-cutting (do alongside Tier 1):** the guided adaptive intake
-(`SCOPE_...` Workstream B) — it makes *every* strategy above safer by asking
-the right follow-up questions and stating its assumptions.
+**Cross-cutting:** the guided adaptive intake (`SCOPE_...` Workstream B) —
+**engine built** (`advice/intake.py`): given a client's facts, `intake_gaps`
+returns the material questions the engine would otherwise assume (marital
+status/spouse income, property jurisdiction, landlord mortgage/s.24, BPR
+qualification, pension taper, partnership commerciality, trust prior transfers),
+each with why it matters and the assumption being made. Surfaced on the advice
+page as "Questions to confirm before relying on this advice" and exercised by
+the self-audit for every case. The remaining piece is the *pre-generation*
+dynamic questionnaire UI (ask before generating, not just flag after).
 
 Every item, whenever built, follows the six-part definition of done and
 needs tax-editor sign-off before real-client use.
