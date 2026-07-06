@@ -200,6 +200,7 @@ class CgtPprReliefAdapter:
             "ownership_months": prop.get("ownership_months", 1),
             "occupied_as_main_residence_months": prop.get("occupied_as_main_residence_months", 0),
             "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
         }
 
 
