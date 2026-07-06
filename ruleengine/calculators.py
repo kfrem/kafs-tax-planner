@@ -784,6 +784,41 @@ def strategy_employer_pension_contribution(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.group_loss_relief",
+    consumes=["corporation_tax.rates"],
+    description="Group relief (CTA 2010 Part 5): a loss-making group company surrenders its "
+    "current-period loss to a profitable 75%-group company, which sets it against its profits. "
+    "The loss is relieved at the claimant's marginal rate — worth 26.5% where the claimant sits "
+    "in the marginal-relief band, more than the 25% main rate or a 19%/main-rate carry-forward. "
+    "Quantifies the corporation tax saved, the profit relieved, and any loss left to carry "
+    "forward. The 75% group relationship is a precondition the reviewing accountant confirms.",
+)
+def strategy_group_loss_relief(facts: dict, tax_year: str) -> dict:
+    loss = max(0.0, float(facts.get("surrendering_company_loss", 0)))
+    profit = max(0.0, float(facts.get("claimant_company_profit", 0)))
+    associated = int(facts.get("associated_companies", 0))
+
+    relief_used = min(loss, profit)
+    ct_args = {"associated_companies": associated}
+    ct_before = corporation_tax({"taxable_profit": profit, **ct_args}, tax_year)["tax_due"]
+    ct_after = corporation_tax(
+        {"taxable_profit": profit - relief_used, **ct_args}, tax_year
+    )["tax_due"]
+    tax_saved = round(ct_before - ct_after, 2)
+    unrelieved = round(loss - relief_used, 2)
+    effective_rate = round(tax_saved / relief_used, 4) if relief_used else 0.0
+
+    return {
+        "loss_surrendered": round(relief_used, 2),
+        "claimant_profit_before": round(profit, 2),
+        "claimant_profit_after": round(profit - relief_used, 2),
+        "corporation_tax_saved": tax_saved,
+        "unrelieved_loss_carried_forward": unrelieved,
+        "effective_relief_rate": effective_rate,
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
