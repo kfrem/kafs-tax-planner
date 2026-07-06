@@ -462,3 +462,33 @@ wholly-and-exclusively test (CTA 2009 s.54) is flagged in the strategy text
 as the reviewing accountant's judgement, not auto-applied.
 
 **Verdict:** YES. **Tier 1 of the coverage map is now complete.**
+
+## Addendum, 6 July 2026 — Group relief for company losses (Tier-2 quick win 1)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `group-loss-relief` (`strategy.group_loss_relief`), new
+authority CTA 2010 Part 5 (ss.97-188). No new parameter — composes the
+existing `corporation_tax` calculator.
+
+**Verified:** a current-period loss surrendered from one 75%-group company to
+a profitable member is relieved against the claimant's profits at the
+claimant's marginal rate. Reconciled: a £50,000 loss into a £250,000-profit
+claimant saves £13,250 — CT £62,500 (25% at the £250k upper limit) less
+£49,250 (£50,000 − £750 marginal relief on £200,000) — an effective **26.5%**,
+the marginal rate, which is better than a 19% or 25% carry-forward. Confirmed
+a surrender wholly above the upper limit relieves at the 25% main rate
+(£100,000 into £500,000 → £25,000), and that a loss exceeding the claimant's
+profit relieves the profit to nil and carries the balance forward
+(£300,000 loss, £200,000 profit → £100,000 carried forward).
+
+**Documented conditions/next steps:** the 75% group relationship (CTA 2010
+s.152) is a precondition stated in the strategy text for the accountant to
+confirm, not auto-checked; loss carry-back and terminal-loss relief are
+documented as next steps in the coverage map.
+
+**Watcher note:** the *Jones v Garnett* source alert raised this session was a
+BAILII citation-order change only (identical citation set, unchanged judgment)
+— dismissed as no rule impact, recorded in the monitoring queue.
+
+**Verdict:** YES.
