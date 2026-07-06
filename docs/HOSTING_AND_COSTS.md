@@ -97,15 +97,23 @@ domain's DNS → update a few environment variables. Realistically a
 | Date | Decided / discussed | Status |
 |---|---|---|
 | 6 Jul 2026 | Data residency: EU is acceptable to the founder for now; UK preferred once real client data is on. | Agreed |
-| 6 Jul 2026 | Demo stage will use a ~£5/mo option — **Railway Hobby** or a **Hostinger VPS** (founder already uses Hostinger). Leaning Hostinger VPS for value + one-vendor consolidation; Railway if zero server-maintenance is preferred. | **Open — pick one** |
-| 6 Jul 2026 | Database for demo: host's built-in Postgres (or Neon free tier). Supabase considered but not needed (extras unused). | Agreed direction |
+| 6 Jul 2026 | **Demo/early stage host: Railway (app) + Neon (Postgres).** Chosen for lowest cost and zero server maintenance (Railway auto-builds the Dockerfile; Neon is serverless Postgres that scales to zero, so idle cost is near nil). Target: keep it to ~£5/mo. | **DECIDED** |
+| 6 Jul 2026 | Founder to **retire/delete pre-existing Railway projects** so only this app runs, avoiding extra Railway usage charges. Done by the founder in the Railway dashboard (project → Settings → Delete) — not by the developer, who must never hold account credentials. | Founder action |
+| 6 Jul 2026 | Database: **Neon free/low tier** for demo (host-managed or Neon; Supabase considered but not needed — the app does its own auth/RLS). Move to a proper managed UK Postgres with tested restores when the first firm signs. | Agreed |
 | 6 Jul 2026 | Real-client hosting target: DigitalOcean London (or Azure UK) with managed Postgres + tested backups, moving there when the first firm signs. | Agreed direction |
 | 6 Jul 2026 | Switching hosts as size grows is accepted as easy (Docker image + pg_dump/restore); no premature over-investment in enterprise hosting. | Agreed |
 
-**Next action for the founder:** choose the demo host (Hostinger VPS vs
-Railway). Once chosen, the developer writes the one-page deploy guide for
-that host and the row above moves to *Agreed*. Update this log whenever a
-choice is made, so the reasoning is never re-litigated.
+**Credentials note (permanent):** the developer/assistant will **never**
+take the founder's Railway/Neon/host login details. Deploys are either
+guided step-by-step, or driven via a CLI the founder authenticates
+themselves (`railway login` / Neon token that the founder pastes into their
+own terminal). Account-destructive actions (deleting old projects) are done
+by the founder.
+
+**Next action:** founder creates the Railway + Neon accounts and deletes old
+Railway projects; developer then provides the one-page Railway+Neon deploy
+guide and drives the deploy from the terminal once the founder has
+authenticated the Railway CLI locally.
 
 ## 6. What we are NOT spending on (deliberately)
 
