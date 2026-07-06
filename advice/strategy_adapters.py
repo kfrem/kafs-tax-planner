@@ -260,6 +260,7 @@ class CgtBadrAdapter:
         return {
             "disposal_gain": prop.get("badr_qualifying_gain", 0),
             "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
             "badr_lifetime_limit_used": prop.get("badr_lifetime_limit_used", 0),
         }
 
