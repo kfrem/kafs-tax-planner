@@ -1758,6 +1758,21 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.relevant_property_trust_charges",
+                description="Discretionary trust: entry, ten-year and exit charges, 2025/26",
+                source="Hand-computed: 500k settled, 325k NRB -> 20% entry on 175k = 35,000; "
+                "600k at the 10-year point -> 6% of 275k = 16,500 (rate 2.75%); a 100k exit at "
+                "20 quarters -> 2.75% x 0.5 x 100k = 1,375.",
+                input_facts={"amount_settled": 500000, "trust_value": 600000,
+                             "amount_distributed": 100000, "quarters_since_last_charge": 20},
+                expected_output={
+                    "entry_charge": 35000.0,
+                    "ten_year_charge": 16500.0,
+                    "ten_year_effective_rate": 0.0275,
+                    "exit_charge": 1375.0,
+                },
+            ),
+            dict(
                 calculator_key="strategy.partnership_profit_allocation",
                 description="Two-partner split, one with other income, 2025/26",
                 source="Hand-computed: 100k profit; partner A has 40k other income. 50/50 -> "
