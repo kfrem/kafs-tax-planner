@@ -1571,6 +1571,36 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.business_property_relief",
+                description="BPR on a 2m business, pre-reform (unlimited 100%), 2025/26",
+                source="Hand-computed: 2,000,000 qualifying at 100% -> fully relieved, no "
+                "taxable value, 800,000 IHT saved at 40%.",
+                input_facts={"qualifying_value": 2000000},
+                expected_output={
+                    "full_relief_cap": None,
+                    "total_relieved_value": 2000000.0,
+                    "taxable_value_after_relief": 0.0,
+                    "iht_saved_by_relief": 800000.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.business_property_relief",
+                description="Same 2m business under the 2026/27 reformed 1m cap",
+                source="Hand-computed: 1,000,000 at 100% + 1,000,000 at 50% = 1,500,000 "
+                "relieved; 500,000 taxable; 600,000 IHT saved at 40% (200,000 more IHT than "
+                "before the cap).",
+                tax_year="2026/27",
+                input_facts={"qualifying_value": 2000000},
+                expected_output={
+                    "full_relief_cap": 1000000,
+                    "value_relieved_at_100pc": 1000000.0,
+                    "value_above_cap": 1000000.0,
+                    "total_relieved_value": 1500000.0,
+                    "taxable_value_after_relief": 500000.0,
+                    "iht_saved_by_relief": 600000.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
