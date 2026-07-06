@@ -178,6 +178,11 @@ unresolved alerts. View layer and its staff-only access boundary are
 tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
 `TestOpenAlertBadge`).
 
+**Master strategy backlog:** [`TAX_PLANNING_COVERAGE.md`](TAX_PLANNING_COVERAGE.md)
+maps every mainstream UK planning strategy (~38) to built / partial /
+planned, with a value×frequency build order. Use it as the source of truth
+for "is X covered?" and what to pick up next.
+
 0. **FLAGSHIP NEXT BUILD — Landlord & property planning + guided adaptive
    intake.** Fully specified in
    [`SCOPE_landlord_planning_and_guided_intake.md`](SCOPE_landlord_planning_and_guided_intake.md):
