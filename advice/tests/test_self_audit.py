@@ -37,7 +37,7 @@ def test_self_audit_passes_end_to_end(sources_with_snapshots, firm, staff_user, 
     assert "all 31 live strategies exercised end to end" in out
 
 
-def test_self_audit_fails_loudly_on_an_uncited_strategy(firm, staff_user):
+def test_self_audit_fails_loudly_on_an_uncited_strategy(sources_with_snapshots, firm, staff_user):
     # Break provenance: strip the authorities off a strategy the audit exercises.
     # The tax lawyer's L1 check must turn this into a hard failure — proving the
     # audit does not merely rubber-stamp.
