@@ -28,6 +28,7 @@ from django.db.migrations.executor import MigrationExecutor
 
 from advice.audit_cases import AUDIT_CASES
 from advice.generator import compute_strategy_results, generate_advice
+from advice.intake import intake_gaps
 from advice.panel import deploy_panel
 from advice.strategy_adapters import ADAPTERS
 from clients.models import Client, ClientFactSet
