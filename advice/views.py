@@ -11,6 +11,7 @@ from clients.models import (
 from reports.pdf import render_advice_pdf
 
 from .generator import NoReleasedRuleBaseError, generate_advice
+from .intake import intake_gaps
 from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision
 from .narrative import NarrativeRejected, create_narrative
 from .panel import DecisionError, deploy_panel, persona_summaries, record_decision
