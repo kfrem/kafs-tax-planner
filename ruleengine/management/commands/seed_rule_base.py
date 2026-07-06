@@ -1495,6 +1495,22 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.isa_bed_and_isa",
+                description="Bed-and-ISA within the CGT exemption, higher-rate investor, 2025/26",
+                source="Hand-computed: shelter 20,000 (the full ISA limit); 2,500 gain is within "
+                "the 3,000 annual exemption so no CGT on transfer; 800 of annual dividends then "
+                "escape the 33.75% upper rate = 270 saved a year.",
+                input_facts={"amount_to_shelter": 20000, "realised_gain": 2500,
+                             "annual_dividend_income": 800, "is_higher_rate": True},
+                expected_output={
+                    "amount_sheltered": 20000.0,
+                    "isa_allowance_remaining": 0.0,
+                    "gain_covered_by_exemption": 2500.0,
+                    "cgt_payable_on_transfer": 0.0,
+                    "annual_dividend_tax_saved": 270.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
