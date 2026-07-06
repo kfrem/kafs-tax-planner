@@ -86,8 +86,9 @@ CGT_HOMEOWNER_FACTS = {
         "disposal_asset_type": "residential",
         "ownership_months": 240,
         "occupied_as_main_residence_months": 120,
-        "let_months": 96,
-        "let_fraction": 0.5,
+        # A lodger / part-let while the owner lived there — the post-2020
+        # shared-occupancy test that lettings relief now requires.
+        "shared_occupancy_let_fraction": 0.4,
         "spouse_available_for_transfer": True,
         "purchase_price": 0,
     },
