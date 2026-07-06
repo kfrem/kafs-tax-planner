@@ -466,7 +466,7 @@ class Command(BaseCommand):
             result[key] = authority
         return result
 
-    def _create_parameters(self, release_2024, release_2025):
+    def _create_parameters(self, release_2024, release_2025, release_2026):
         y2024 = Range(datetime.date(2024, 4, 6), datetime.date(2025, 4, 6), bounds="[)")
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
 
@@ -479,9 +479,6 @@ class Command(BaseCommand):
              None),
             ("dividend_tax.allowance", "Dividend allowance", TaxDomain.PERSONAL_INCOME_TAX,
              {"amount": 500}, None),
-            ("dividend_tax.bands", "Dividend tax bands", TaxDomain.PERSONAL_INCOME_TAX,
-             {"bands": [{"upper": 37700, "rate": 0.0875}, {"upper": 125140, "rate": 0.3375}, {"upper": None, "rate": 0.3935}]},
-             None),
             ("income_tax.marriage_allowance", "Marriage Allowance transferable amount", TaxDomain.PERSONAL_INCOME_TAX,
              {"transferable_amount": 1260}, None),
             ("national_insurance.employee_class1", "Employee Class 1 NIC", TaxDomain.PERSONAL_INCOME_TAX,
