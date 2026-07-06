@@ -96,6 +96,22 @@ CGT_HOMEOWNER_FACTS = {
 }
 
 
+# A settlor funding a discretionary (relevant-property) trust — entry,
+# ten-year and exit charges.
+TRUST_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {"profit_before_remuneration": 0},
+    "sole_trade": {"annual_profit": 0},
+    "trust": {
+        "amount_settled": 500000,
+        "trust_value": 600000,
+        "amount_distributed": 100000,
+        "quarters_since_last_charge": 20,
+    },
+    "estate": {},
+}
+
+
 # A two-partner firm (e.g. a married couple) where one partner has other
 # income — the profit-share allocation strategy.
 PARTNERSHIP_FACTS = {
