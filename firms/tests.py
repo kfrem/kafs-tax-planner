@@ -58,3 +58,12 @@ def test_no_firm_context_sees_nothing(db, firm, staff_user):
     )
     _set_firm_context("0")
     assert Client.objects.count() == 0
+
+
+def test_healthz_is_public_and_reports_ok(client, db):
+    # Load balancers probe /healthz unauthenticated; it must return 200 and
+    # confirm database reachability without redirecting to login or touching
+    # client data.
+    response = client.get("/healthz")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
