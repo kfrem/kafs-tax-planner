@@ -1,6 +1,6 @@
 # Rule-base review pack — editorial sign-off
 
-Generated 05 July 2026. Machine pre-check: **0 failed checks** across 26 parameters, 17 strategies, 30 authorities.
+Generated 06 July 2026. Machine pre-check: **0 failed checks** across 26 parameters, 17 strategies, 30 authorities.
 
 **How to approve:** read each numbered item; the primary source is one
 click away. Reply YES to approve all items, or list the item numbers you
@@ -785,4 +785,9 @@ rule-base content under §5.6 of the architecture document.
 |---|---|---|---|
 | 1–54 (05/07 pack) | kfrem (reviewing professional) | YES; 3 corrections applied same day and re-verified (s.8G added) — see docs/EDITORIAL_SIGNOFF.md | 5 July 2026 |
 | BADR 2025/26 14% + LBTT/LTT residential + lettings relief + commercial land taxes | kfrem (reviewing professional) | YES — all verified against HMRC / revenue.scot / gov.wales primary sources — see docs/EDITORIAL_SIGNOFF.md | 5 July 2026 |
-| BADR 2026/27 18% row (release 2026.1, effective 6 April 2026) | kfrem (reviewing professional) | YES — 18% rate for disposals on/after 6 April 2026 verified against HMRC CG64174 / HS275 and Finance Act 2025; held as a separate effective-dated row, invisible until 2026.1 is approved — see docs/EDITORIAL_SIGNOFF.md | 5 July 2026 |
+| BADR 2026/27 18% row (release 2026.1) | kfrem (reviewing professional) | YES — 18% for disposals on/after 6 April 2026 verified against HMRC CG64174 / HS275 and Finance Act 2025; invisible until 2026.1 is approved | 5 July 2026 |
+
+*Prior-year (2024/25) rows — including the 30 October 2024 intra-year CGT
+change (release 2024.2) — are validated by golden cases and hand-computed
+tests rather than this forward-looking pack; their sign-off is recorded in
+docs/EDITORIAL_SIGNOFF.md.*
