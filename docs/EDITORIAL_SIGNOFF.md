@@ -547,3 +547,32 @@ qualify (trading vs investment, the two-year ownership test, AIM shares moving
 to 50%) is a judgement flagged for the accountant, not auto-checked.
 
 **Verdict:** YES.
+
+## Addendum, 6 July 2026 — EIS/SEIS/VCT investment relief (Tier-2 quick win 4, completes the Tier-2 quick wins)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `venture-capital-investment`
+(`strategy.venture_capital_investment`), new authority ITA 2007 Parts 5/5A/6,
+and a new parameter `venture_capital.schemes` holding the per-scheme relief
+rate, annual limit, minimum holding period and CGT treatment (rates-as-data —
+one calculator, three schemes selected by a fact).
+
+**Verified against ITA 2007 / TCGA 1992 Sch 5B/5BB:** income tax relief at 30%
+(EIS, £1m limit), 50% (SEIS, £200k) and 30% (VCT, £200k), capped at the
+investor's income tax liability; EIS defers a reinvested gain, SEIS exempts 50%
+of it, VCT dividends are tax-free. Reconciled: EIS £100k → £30k relief + £9,600
+gain deferred (40k at 24%), net cost £70k; SEIS £100k → £50k relief + £4,800
+CGT saved (50% of 40k at 24%), net cost £45,200; VCT £50k with only a £10k IT
+bill → relief capped at £10k, tax-free dividends flagged; and an EIS £1.2m
+investment capped at the £1m annual limit (£300k relief).
+
+**Documented scope:** the CGT deferred under EIS is postponed (it becomes
+chargeable on a later event), not saved, so it does not reduce the net cost —
+modelled explicitly as a separate figure from the SEIS permanent exemption.
+Loss relief, the knowledge-intensive £2m EIS limit, and carry-back of relief to
+the prior year are documented next steps. Whether the company and shares
+qualify, and the minimum-holding-period risk, are flagged for the adviser.
+
+**Verdict:** YES. **The Tier-2 quick wins are complete; only the
+property-incorporation flagship remains in Tier 2.**
