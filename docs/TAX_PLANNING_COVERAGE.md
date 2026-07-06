@@ -91,7 +91,8 @@ Last updated: 6 July 2026.
 
 ## Coverage tally
 
-Roughly **12 built, 4 partial, ~22 planned** of ~38 mainstream strategies.
+Roughly **13 built, 4 partial, ~21 planned** of ~38 mainstream strategies
+(Gift Aid landed 6 Jul 2026 — first Tier-1 item).
 Built = the owner-manager extraction core, the main IHT reliefs, the main
 CGT reliefs, and all three nations' land taxes. That is the hardest and
 most-used third; the backlog is breadth, not the hard core.
