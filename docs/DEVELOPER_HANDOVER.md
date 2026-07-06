@@ -201,10 +201,13 @@ tested in `monitoring/tests.py` (`TestEditorialQueueViews`,
    modelled as two intra-year effective ranges, resolved by disposal date
    via the new `get_parameter(..., as_of=...)` (`TestIntraYearCgt2024`).
    With this, effective-dating spans intra-year, year-boundary, and
-   future-year changes. All editorially signed off. Still open: filling
-   out the rest of the 2026/27 figures (only BADR has a distinct 2026/27
-   row so far); land-tax *leases* (rent NPV) and mixed-use apportionment;
-   disposal composition with the salary/dividend whole-income picture.
+   future-year changes; and **land-tax leases** for all three regimes
+   (`strategy.{sdlt,lbtt,ltt}_lease_npv`: the rent charged on its net
+   present value at the 3.5% discount rate, bands as data, golden cases +
+   `TestLeaseNpv`). All editorially signed off. Still open: disposal
+   composition with the salary/dividend whole-income picture; filling out
+   the rest of the 2026/27 figures (only BADR has a distinct 2026/27 row
+   so far); mixed-use apportionment.
 2. Ops/compliance items before real firms: real SECRET_KEY/env handling,
    MFA, per-client access controls, backups, DPIA, Cyber Essentials —
    architecture doc §7 lists the full set.
