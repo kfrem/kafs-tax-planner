@@ -1153,6 +1153,16 @@ class Command(BaseCommand):
                 expected_output={"tax_due": 4781.25},
             ),
             dict(
+                calculator_key="dividend_tax",
+                description="Same dividends at the 2026/27 rates (+2pp, Budget 2025)",
+                source="Hand-computed: 7,700 at 10.75% (827.75) + 12,300 at 35.75% "
+                "(4,397.25) - 500 allowance at 10.75% (53.75) = 5,171.25 (vs 4,781.25 in "
+                "2025/26)",
+                tax_year="2026/27",
+                input_facts={"other_taxable_income": 30000, "dividend_income": 20000},
+                expected_output={"tax_due": 5171.25},
+            ),
+            dict(
                 calculator_key="employee_class1_nic",
                 description="Salary above UEL, 2025/26",
                 source="Hand-computed from published 2025/26 rates",
