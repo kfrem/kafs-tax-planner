@@ -351,6 +351,40 @@ class TestLbtt:
         assert result["as_planned"]["total_lbtt"] == approx(36350.0)
 
 
+class TestLeaseNpv:
+    """Lease grants charged on the NPV of rent at the 3.5% discount rate.
+    NPV = sum of rent / 1.035^i over the term; all figures hand-computed
+    from that formula, then the jurisdiction's NPV bands applied."""
+
+    def test_sdlt_lease(self):
+        # NPV of 50,000 over 10 years = 415,830.27. SDLT: 0% to 150,000, then
+        # (415,830.27 - 150,000) at 1% = 2,658.30.
+        result = strategy_sdlt_lease_npv({"annual_rent": 50000, "term_years": 10}, TAX_YEAR)
+        assert result["net_present_value"] == approx(415830.27)
+        assert result["total_sdlt"] == approx(2658.30)
+
+    def test_ltt_lease_beats_sdlt_on_the_higher_threshold(self):
+        # Same NPV 415,830.27, but Wales's nil band runs to 225,000, so
+        # (415,830.27 - 225,000) at 1% = 1,908.30 — cheaper than the 2,658.30
+        # English charge.
+        result = strategy_ltt_lease_npv({"annual_rent": 50000, "term_years": 10}, TAX_YEAR)
+        assert result["net_present_value"] == approx(415830.27)
+        assert result["total_ltt"] == approx(1908.30)
+
+    def test_lbtt_lease_exercises_the_2pc_band(self):
+        # NPV of 250,000 over 10 years = 2,079,151.33. LBTT: 1,850,000 at 1%
+        # (18,500) + (2,079,151.33 - 2,000,000) at 2% (1,583.03) = 20,083.03.
+        result = strategy_lbtt_lease_npv({"annual_rent": 250000, "term_years": 10}, TAX_YEAR)
+        assert result["net_present_value"] == approx(2079151.33)
+        assert result["total_lbtt"] == approx(20083.03)
+
+    def test_short_low_rent_lease_below_threshold_is_nil(self):
+        # NPV of 20,000 over 5 years = 90,301.05, below every nil-rate band.
+        result = strategy_sdlt_lease_npv({"annual_rent": 20000, "term_years": 5}, TAX_YEAR)
+        assert result["net_present_value"] == approx(90301.05)
+        assert result["total_sdlt"] == approx(0.0)
+
+
 class TestFutureYearBadr:
     """The 2026/27 release scaffolding: BADR's rate rises from 14% to 18%
     on 6 April 2026 (FA 2025), held as two effective-dated rows, and the
