@@ -524,14 +524,16 @@ class TestPartnershipProfitAllocation:
         assert result["current"]["partner1_tax"] == approx(25677.80)
         assert result["proposed"]["partner2_tax"] == approx(18088.60)
 
-    def test_equal_partners_equal_income_no_saving_from_rebalancing(self):
-        # Two partners with identical other income are already balanced: any
-        # symmetric reallocation leaves the combined tax unchanged.
+    def test_equalising_identical_partners_saves_tax(self):
+        # Two partners with identical 10k other income. An unequal 40/60 split
+        # pushes partner B into the 40% band while partner A wastes basic-rate
+        # room. Current 40/60: 7,051.80 + 12,757.80 = 19,809.60. Proposed 50/50:
+        # 9,131.80 each = 18,263.60. Equalising saves 1,546.00.
         result = strategy_partnership_profit_allocation(
             {"total_profit": 80000, "partner1_other_income": 10000,
-             "partner2_other_income": 10000, "current_partner1_share": 0.5,
-             "proposed_partner1_share": 0.4}, TAX_YEAR
+             "partner2_other_income": 10000, "current_partner1_share": 0.4,
+             "proposed_partner1_share": 0.5}, TAX_YEAR
         )
-        # Rebalancing between identical partners moves tax between them but the
-        # household total barely moves (both stay in the same bands here).
-        assert result["tax_saving"] == approx(0.0)
+        assert result["current_total_tax"] == approx(19809.60)
+        assert result["proposed_total_tax"] == approx(18263.60)
+        assert result["tax_saving"] == approx(1546.00)
