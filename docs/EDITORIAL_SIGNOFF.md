@@ -189,3 +189,36 @@ in Admin remains the separate four-eyes act.
 distinct 2026/27 row; all other parameters carry forward on their open
 2025/26 ranges and must be closed with a confirmed 2026/27 figure (and
 re-reviewed) before that year's advice relies on them.
+
+## Addendum, 6 July 2026 — 2024/25 intra-year CGT (30 October 2024)
+
+**Reviewing professional:** kfrem.
+
+**Scope:** prior-year 2024/25 CGT under release `2024.2`, modelling the
+30 October 2024 mid-year rate change with two intra-year effective ranges
+of `cgt.rates` plus the 2024/25 `cgt.annual_exempt_amount`. These are
+prior-year rows (before the 2025/26 review anchor) so they do not appear
+in the forward-looking pack; they are validated by golden cases and
+hand-computed tests instead.
+
+**Verified against HMRC guidance:**
+- Non-residential / other-asset CGT rose from **10%/20%** to **18%/24%**
+  for disposals **on or after 30 October 2024** (Autumn Budget 2024);
+  disposals before that date keep 10%/20%.
+- Residential rates were **18%/24% throughout 2024/25** (unchanged by the
+  30 October change), so a residential disposal is taxed the same either
+  side of the boundary — pinned by a test.
+- Reconciled: a £20,000 other-asset gain (£17,000 after AEA, within the
+  basic band) is £1,700 before 30 Oct and £3,060 on/after — the two
+  2024/25 golden cases.
+
+**Engine change reviewed:** `get_parameter` gained an optional `as_of`
+disposal date. It resolves the intra-year row by that date, rejects a date
+outside the stated tax year (a mismatched fact is an error, not a wrong
+answer), and remains deterministic (the date is a fact, not a wall clock).
+When omitted it uses the 6 April anchor, so every existing year-boundary
+parameter is unchanged.
+
+**Verdict:** YES. Rates and the intra-year boundary are correct for
+2024/25 and held as data; the effective-dating model now spans intra-year,
+year-boundary, and future-year changes.
