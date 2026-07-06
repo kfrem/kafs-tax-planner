@@ -42,6 +42,18 @@ def _apply_band_rates_with_offset(amount: float, bands: list[dict], offset: floa
     return round(tax, 2)
 
 
+def _class4_nic(profit: float, tax_year: str) -> float:
+    """Class 4 NIC on self-employed / partnership trading profit."""
+    p = get_parameter("national_insurance.class4", tax_year)
+    lpl, upl, rate, upper_rate = (
+        p["lower_profits_limit"], p["upper_profits_limit"], p["rate"], p["upper_rate"],
+    )
+    profit = max(0.0, float(profit))
+    return round(
+        max(0.0, min(profit, upl) - lpl) * rate + max(0.0, profit - upl) * upper_rate, 2
+    )
+
+
 @register(
     "income_tax_on_earned_income",
     consumes=["income_tax.personal_allowance", "income_tax.bands"],
