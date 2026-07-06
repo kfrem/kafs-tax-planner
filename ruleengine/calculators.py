@@ -693,6 +693,97 @@ def strategy_pension_carry_forward(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.personal_pension_contribution",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Standalone recommendation to make a personal pension contribution (relief at "
+    "source). Quantifies the basic-rate credit HMRC adds to the pot, the higher-rate and "
+    "personal-allowance-taper relief given through band extension, the effective relief rate "
+    "(up to 60% inside the 100,000-125,140 taper) and the net cost to the member. Relief is "
+    "capped at the greater of 3,600 and relevant UK earnings (FA 2004 s.190) — dividends and "
+    "savings/rental income do not count towards that cap.",
+)
+def strategy_personal_pension_contribution(facts: dict, tax_year: str) -> dict:
+    earned = float(facts.get("earned_income", 0))
+    dividends = float(facts.get("dividend_income", 0))
+    desired = max(0.0, float(facts.get("desired_contribution", 0)))
+    relevant_earnings = float(facts.get("relevant_uk_earnings", earned))
+
+    relievable = min(desired, max(3600.0, relevant_earnings))
+    unrelieved = round(desired - relievable, 2)
+    basic_rate = get_parameter("income_tax.bands", tax_year)["bands"][0]["rate"]
+    basic_credit = round(relievable * basic_rate, 2)
+
+    without = combined_personal_tax(
+        {"earned_income": earned, "dividend_income": dividends}, tax_year
+    )
+    with_contribution = combined_personal_tax(
+        {
+            "earned_income": earned,
+            "dividend_income": dividends,
+            "gross_pension_contribution": relievable,
+        },
+        tax_year,
+    )
+    personal_saving = round(without["total_tax"] - with_contribution["total_tax"], 2)
+    pa_restored = round(
+        with_contribution["personal_allowance"] - without["personal_allowance"], 2
+    )
+    total_relief = round(basic_credit + personal_saving, 2)
+    net_cost = round(relievable - total_relief, 2)
+    effective_rate = round(total_relief / relievable, 4) if relievable else 0.0
+
+    return {
+        "relievable_gross": round(relievable, 2),
+        "unrelieved_amount": unrelieved,
+        "basic_rate_credit_to_pension": basic_credit,
+        "higher_rate_and_taper_saving": personal_saving,
+        "personal_allowance_restored": pa_restored,
+        "total_relief_value": total_relief,
+        "effective_relief_rate": effective_rate,
+        "net_cost_to_member": net_cost,
+    }
+
+
+@register(
+    "strategy.employer_pension_contribution",
+    consumes=["corporation_tax.rates", "national_insurance.employer_class1"],
+    description="Standalone recommendation for a company to make an employer pension "
+    "contribution instead of extra salary. There is no relevant-earnings cap and no NICs; the "
+    "company gets a corporation-tax deduction (subject to the wholly-and-exclusively test, "
+    "CTA 2009 s.54 — the reviewing accountant owns that judgement). Quantifies the corporation "
+    "tax saved, the employer NIC saved versus paying the same amount as salary, and the net "
+    "cost to the company.",
+)
+def strategy_employer_pension_contribution(facts: dict, tax_year: str) -> dict:
+    profit = max(0.0, float(facts.get("company_profit", 0)))
+    requested = max(0.0, float(facts.get("contribution", 0)))
+    contribution = min(profit, requested) if profit > 0 else requested
+
+    ct_before = corporation_tax({"taxable_profit": profit}, tax_year)["tax_due"]
+    ct_after = corporation_tax(
+        {"taxable_profit": max(0.0, profit - contribution)}, tax_year
+    )["tax_due"]
+    ct_saving = round(ct_before - ct_after, 2)
+
+    secondary_rate = get_parameter("national_insurance.employer_class1", tax_year)["rate"]
+    employer_ni_saved = round(contribution * secondary_rate, 2)
+    net_cost = round(contribution - ct_saving, 2)
+
+    return {
+        "contribution": round(contribution, 2),
+        "corporation_tax_saving": ct_saving,
+        "employer_ni_saved_vs_salary": employer_ni_saved,
+        "no_relevant_earnings_cap": True,
+        "net_cost_to_company": net_cost,
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
