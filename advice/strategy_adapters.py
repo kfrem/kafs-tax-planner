@@ -182,6 +182,23 @@ def _dividend_income(facts: dict) -> float:
     return personal.get("dividends_from_own_company", 0) + personal.get("other_dividends", 0)
 
 
+@adapter("strategy.gift_aid_relief")
+class GiftAidAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("gift_aid_donation", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        return {
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+            "gross_pension_contribution": personal.get("gross_pension_contribution", 0),
+            "gift_aid_donation": personal.get("gift_aid_donation", 0),
+        }
+
+
 @adapter("strategy.cgt_ppr_relief")
 class CgtPprReliefAdapter:
     @staticmethod
