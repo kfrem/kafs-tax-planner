@@ -1332,6 +1332,22 @@ class Command(BaseCommand):
                                  "first_year_allowance": 50000.0, "tax_saved_year_one": 12500.0},
             ),
             dict(
+                calculator_key="strategy.salary_sacrifice",
+                description="5,000 salary sacrifice from a 50,000 salary, 2025/26",
+                source="Hand-computed: IT on 50k=7,486 & EE NIC=2,994.40; on 45k IT=6,486 & "
+                "EE NIC=2,594.40 -> employee saves 1,400. ER NIC 6,750 vs 6,000 -> 750. "
+                "5,000 into pension.",
+                input_facts={"salary": 50000, "sacrifice_amount": 5000},
+                expected_output={
+                    "salary_sacrificed": 5000.0,
+                    "employee_income_tax_and_ni_saved": 1400.0,
+                    "employer_ni_saved": 750.0,
+                    "into_pension": 5000.0,
+                    "net_cost_of_pension_to_employee": 3600.0,
+                    "total_saving": 2150.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
