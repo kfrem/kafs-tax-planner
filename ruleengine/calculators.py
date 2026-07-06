@@ -792,6 +792,47 @@ def cgt_liability(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.cgt_timing_of_disposals",
+    consumes=[
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Splitting a divisible holding's disposal across two tax years so two annual "
+    "exempt amounts (and two basic-rate bands) are used instead of one (TCGA 1992 ss.1H-1K). "
+    "Only applies to divisible assets such as shares/units — a single property cannot be "
+    "part-sold across years. The second year is modelled at the same rates and income "
+    "position (a documented planning assumption).",
+)
+def strategy_cgt_timing_of_disposals(facts: dict, tax_year: str) -> dict:
+    gain = max(0.0, float(facts["disposal_gain"]))
+    asset_type = facts.get("asset_type", "other")
+    earned_income = float(facts.get("earned_income", 0))
+    dividend_income = float(facts.get("dividend_income", 0))
+
+    common = {
+        "asset_type": asset_type,
+        "earned_income": earned_income,
+        "dividend_income": dividend_income,
+    }
+    whole = cgt_liability({**common, "chargeable_gain": gain}, tax_year)
+    first_half = round(gain / 2, 2)
+    leg1 = cgt_liability({**common, "chargeable_gain": first_half}, tax_year)
+    leg2 = cgt_liability({**common, "chargeable_gain": round(gain - first_half, 2)}, tax_year)
+    split_total = round(leg1["tax_due"] + leg2["tax_due"], 2)
+
+    return {
+        "disposal_gain": gain,
+        "cgt_if_sold_in_one_year": whole["tax_due"],
+        "cgt_if_split_over_two_years": split_total,
+        "saving_from_splitting": round(whole["tax_due"] - split_total, 2),
+    }
+
+
+@register(
     "sdlt_residential",
     consumes=["sdlt.residential_bands"],
     description="SDLT on a residential purchase (England/NI): banded rates, the "
