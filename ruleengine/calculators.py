@@ -819,6 +819,51 @@ def strategy_group_loss_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.isa_bed_and_isa",
+    consumes=[
+        "isa.allowance",
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "dividend_tax.bands",
+    ],
+    description="Bed-and-ISA: sell unwrapped investments — realising a gain that, kept within "
+    "the CGT annual exempt amount, bears no CGT — and repurchase them inside an ISA so future "
+    "dividends and growth are tax-free. Quantifies the amount sheltered (capped at the ISA "
+    "subscription limit), any CGT crystallised on the transfer, and the annual dividend tax "
+    "saved once the holding is inside the ISA (ITTOIA 2005 s.694; TCGA 1992 s.151). Future "
+    "capital growth is also CGT-free but is not projected here (it depends on the growth rate).",
+)
+def strategy_isa_bed_and_isa(facts: dict, tax_year: str) -> dict:
+    isa_limit = get_parameter("isa.allowance", tax_year)["amount"]
+    aea = get_parameter("cgt.annual_exempt_amount", tax_year)["amount"]
+    cgt_rates = get_parameter("cgt.rates", tax_year)["other"]
+    div_bands = get_parameter("dividend_tax.bands", tax_year)["bands"]
+
+    is_higher = bool(facts.get("is_higher_rate", True))
+    amount = max(0.0, float(facts.get("amount_to_shelter", 0)))
+    realised_gain = max(0.0, float(facts.get("realised_gain", 0)))
+    aea_already_used = max(0.0, float(facts.get("aea_already_used", 0)))
+    annual_dividends = max(0.0, float(facts.get("annual_dividend_income", 0)))
+
+    sheltered = min(amount, isa_limit)
+    aea_remaining = max(0.0, aea - aea_already_used)
+    taxable_gain_now = max(0.0, realised_gain - aea_remaining)
+    cgt_rate = cgt_rates["higher"] if is_higher else cgt_rates["lower"]
+    cgt_now = round(taxable_gain_now * cgt_rate, 2)
+
+    div_rate = div_bands[1]["rate"] if is_higher else div_bands[0]["rate"]
+    annual_dividend_tax_saved = round(annual_dividends * div_rate, 2)
+
+    return {
+        "amount_sheltered": round(sheltered, 2),
+        "isa_allowance_remaining": round(isa_limit - sheltered, 2),
+        "gain_covered_by_exemption": round(min(realised_gain, aea_remaining), 2),
+        "cgt_payable_on_transfer": cgt_now,
+        "annual_dividend_tax_saved": annual_dividend_tax_saved,
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
