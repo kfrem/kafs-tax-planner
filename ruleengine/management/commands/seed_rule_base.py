@@ -140,6 +140,19 @@ class Command(BaseCommand):
                 "reviewer": reviewer if mark_released else None,
             },
         )
+        release_cgt_2024, _ = RuleBaseRelease.objects.update_or_create(
+            version="2024.2",
+            defaults={
+                "changelog": "2024/25 CGT rates, including the 30 October 2024 intra-year "
+                "change: non-residential/other-asset gains rise from 10%/20% to 18%/24% for "
+                "disposals on or after 30 October 2024 (Autumn Budget 2024); residential "
+                "rates stay 18%/24% throughout. Modelled as two intra-year effective ranges.",
+                "effective_date": datetime.date(2024, 4, 6),
+                "status": status,
+                "editor": editor,
+                "reviewer": reviewer if mark_released else None,
+            },
+        )
         release_2026, _ = RuleBaseRelease.objects.update_or_create(
             version="2026.1",
             defaults={
