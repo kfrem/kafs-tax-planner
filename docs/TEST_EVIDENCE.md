@@ -18,7 +18,7 @@ python -m pytest -q --create-db   # force-rebuild the test DB after migrations c
 python -m pytest -q ruleengine/tests/test_iht.py   # one module
 ```
 
-**Expected result: `229 passed`** (≈6 minutes; the seed fixture rebuilds
+**Expected result: `232 passed`** (≈6 minutes; the seed fixture rebuilds
 the rule base per test class, which dominates runtime).
 
 The same suite runs in **GitHub Actions on every push and pull request**
