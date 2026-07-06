@@ -214,6 +214,25 @@ class GiftAidAdapter:
         }
 
 
+@adapter("strategy.cgt_timing_of_disposals")
+class CgtTimingOfDisposalsAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        # Divisible holdings only (shares/units); a single property can't be
+        # part-sold across years, so this is a distinct fact from a property
+        # disposal.
+        return facts.get("personal", {}).get("divisible_capital_gain", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        return {
+            "disposal_gain": facts.get("personal", {}).get("divisible_capital_gain", 0),
+            "asset_type": "other",
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+        }
+
+
 @adapter("strategy.cgt_ppr_relief")
 class CgtPprReliefAdapter:
     @staticmethod
