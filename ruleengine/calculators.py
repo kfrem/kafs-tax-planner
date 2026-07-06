@@ -342,6 +342,36 @@ def strategy_directors_loan_s455(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.capital_allowances",
+    consumes=["capital_allowances.aia", "corporation_tax.rates"],
+    description="Capital allowances on qualifying plant and machinery (CAA 2001): the Annual "
+    "Investment Allowance gives 100% relief on spend up to the AIA limit; spend above it "
+    "enters the main pool at the 18% writing-down allowance. Shows the first-year deduction "
+    "and the tax it saves at the client's marginal rate (defaulting to the CT main rate).",
+)
+def strategy_capital_allowances(facts: dict, tax_year: str) -> dict:
+    spend = max(0.0, float(facts.get("qualifying_spend", 0)))
+    param = get_parameter("capital_allowances.aia", tax_year)
+    ct_param = get_parameter("corporation_tax.rates", tax_year)
+    marginal_rate = float(facts.get("marginal_rate", ct_param["main_rate"]))
+
+    aia_used = min(spend, param["aia_limit"])
+    above_aia = round(spend - aia_used, 2)
+    written_down = round(above_aia * param["main_pool_wda"], 2)
+    first_year_allowance = round(aia_used + written_down, 2)
+    tax_saved = round(first_year_allowance * marginal_rate, 2)
+
+    return {
+        "qualifying_spend": round(spend, 2),
+        "annual_investment_allowance_used": round(aia_used, 2),
+        "written_down_first_year": written_down,
+        "first_year_allowance": first_year_allowance,
+        "marginal_rate": marginal_rate,
+        "tax_saved_year_one": tax_saved,
+    }
+
+
+@register(
     "pension_available_annual_allowance",
     consumes=["pension.annual_allowance"],
     description="Available pension annual allowance for a tax year including up to 3 years' carry-forward, with tapering for high earners.",
