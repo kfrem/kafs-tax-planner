@@ -359,6 +359,49 @@ class LttNonResidentialAdapter:
     to_facts = staticmethod(_non_residential_price)
 
 
+def _lease_facts(facts: dict) -> dict:
+    prop = facts.get("property", {})
+    return {
+        "annual_rent": prop.get("lease_annual_rent", 0),
+        "term_years": prop.get("lease_term_years", 0),
+    }
+
+
+def _lease_eligible(facts: dict, jurisdictions, exclude=False) -> bool:
+    prop = facts.get("property", {})
+    if prop.get("lease_annual_rent", 0) <= 0 or prop.get("lease_term_years", 0) <= 0:
+        return False
+    juris = prop.get("jurisdiction", "england")
+    return (juris not in jurisdictions) if exclude else (juris in jurisdictions)
+
+
+@adapter("strategy.sdlt_lease_npv")
+class SdltLeaseAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _lease_eligible(facts, ("scotland", "wales"), exclude=True)
+
+    to_facts = staticmethod(_lease_facts)
+
+
+@adapter("strategy.lbtt_lease_npv")
+class LbttLeaseAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _lease_eligible(facts, ("scotland",))
+
+    to_facts = staticmethod(_lease_facts)
+
+
+@adapter("strategy.ltt_lease_npv")
+class LttLeaseAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return _lease_eligible(facts, ("wales",))
+
+    to_facts = staticmethod(_lease_facts)
+
+
 @adapter("strategy.iht_spousal_transfer_nil_rate_bands")
 class IhtSpousalTransferAdapter:
     @staticmethod
