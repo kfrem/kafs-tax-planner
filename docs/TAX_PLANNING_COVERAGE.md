@@ -27,7 +27,7 @@ Last updated: 6 July 2026.
 | Marriage Allowance | ✓ | `marriage-allowance-transfer` | — |
 | ISA maximisation | ○ | Needs an investments/ISA-allowance fact set; the "saving" is sheltering future growth (more advisory than a point calc). | Med |
 | Salary sacrifice (pension / EV / childcare) | ○ | Build on the NIC + pension engine — IT + employee/employer NI saved. | High |
-| Gift Aid (extends basic-rate band) | ○ | Quick — same band-extension mechanic as pension. Shared with the Charities section. | High |
+| Gift Aid (extends basic-rate band) | ✓ | `gift-aid-relief` — basic-rate gross-up, higher-rate band relief + PA restoration in the taper (ITA 2007 s.414). | — |
 | Dividend vs salary optimisation | ✓ | `salary-dividend-mix` | — |
 | EIS / SEIS / VCT (IT relief + CGT defer/exempt) | ○ | Real module: income-tax relief calc + CGT deferral/exemption. Ties to reinvestment reliefs below. | Med |
 | Timing of income (shift between years) | ○ | The engine is multi-tax-year; needs a strategy that compares landing income in year A vs B. | Med |
