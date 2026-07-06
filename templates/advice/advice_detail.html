@@ -10,6 +10,24 @@
     {% if record.rendered_report %}<a href="{{ record.rendered_report.url }}">Download PDF</a>{% endif %}
 </p>
 
+{% if intake_gaps %}
+<section style="border:2px solid #b7791f; border-radius:6px; padding:1rem; margin:1rem 0; background:#fffbea;">
+    <h2 style="margin-top:0;">Questions to confirm before relying on this advice</h2>
+    <p style="margin-top:0;">The advice was generated from the facts on file. The engine made the
+    following assumptions where a material fact was not recorded — confirm or correct each with
+    the client, then update the facts and regenerate.</p>
+    <ul style="margin-bottom:0;">
+        {% for gap in intake_gaps %}
+        <li style="margin-bottom:0.6rem;">
+            <strong>{{ gap.question }}</strong><br>
+            <span style="color:#555;">Why it matters: {{ gap.why }}</span><br>
+            <span style="color:#b7791f;">Assumed for now: {{ gap.assumption }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
 <section style="border:2px solid #0b3d59; border-radius:6px; padding:1rem; margin:1rem 0; background:#f6fafd;">
     <h2 style="margin-top:0;">Expert panel review</h2>
     {% with review=record.latest_panel_review decision=record.latest_decision %}
