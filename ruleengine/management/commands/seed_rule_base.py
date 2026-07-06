@@ -1649,6 +1649,53 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.venture_capital_investment",
+                description="EIS: 30% income tax relief plus CGT deferral, 2025/26",
+                source="Hand-computed: 100,000 EIS -> 30,000 income tax relief (within the "
+                "50,000 IT bill); a 40,000 gain reinvested is deferred = 40,000*24% = 9,600 "
+                "CGT deferred; net cost 70,000.",
+                input_facts={"scheme": "eis", "amount_invested": 100000,
+                             "income_tax_liability": 50000, "gain_reinvested": 40000,
+                             "is_higher_rate": True},
+                expected_output={
+                    "eligible_investment": 100000.0,
+                    "income_tax_relief": 30000.0,
+                    "cgt_deferred": 9600.0,
+                    "cgt_permanently_saved": 0.0,
+                    "net_cost_after_relief": 70000.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.venture_capital_investment",
+                description="SEIS: 50% income tax relief plus 50% CGT reinvestment relief, 2025/26",
+                source="Hand-computed: 100,000 SEIS -> 50,000 income tax relief; half of a "
+                "40,000 reinvested gain (20,000) is exempt = 20,000*24% = 4,800 CGT saved; net "
+                "cost 45,200.",
+                input_facts={"scheme": "seis", "amount_invested": 100000,
+                             "income_tax_liability": 60000, "gain_reinvested": 40000,
+                             "is_higher_rate": True},
+                expected_output={
+                    "income_tax_relief": 50000.0,
+                    "cgt_permanently_saved": 4800.0,
+                    "net_cost_after_relief": 45200.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.venture_capital_investment",
+                description="VCT: 30% relief capped at the income tax bill, tax-free dividends, 2025/26",
+                source="Hand-computed: 50,000 VCT would give 15,000 relief but the IT bill is "
+                "only 10,000, so relief is capped at 10,000; dividends are tax-free; net cost "
+                "40,000.",
+                input_facts={"scheme": "vct", "amount_invested": 50000,
+                             "income_tax_liability": 10000, "is_higher_rate": True},
+                expected_output={
+                    "income_tax_relief": 10000.0,
+                    "capped_by_income_tax_liability": True,
+                    "tax_free_dividends": True,
+                    "net_cost_after_relief": 40000.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Earned income and dividends together, no taper, 2025/26",
                 source="Hand-computed: earned 40,000 (tax 5,486) + dividends 60,000 stacked "
