@@ -166,7 +166,14 @@ class Command(BaseCommand):
                 "reviewer": reviewer if mark_released else None,
             },
         )
-        return release_2024, release_2025, release_iht, release_property, release_2026
+        return (
+            release_2024,
+            release_2025,
+            release_iht,
+            release_property,
+            release_cgt_2024,
+            release_2026,
+        )
 
     def _create_authorities(self) -> dict[str, Authority]:
         specs = [
