@@ -213,6 +213,13 @@ class Command(BaseCommand):
         if compute_strategy_results(facts, TAX_YEAR) != compute_strategy_results(facts, TAX_YEAR):
             problems.append(f"{reference}: non-deterministic recomputation (same facts, different output).")
 
+        # Guided intake must run cleanly and be deterministic for every case.
+        try:
+            if intake_gaps(facts) != intake_gaps(facts):
+                problems.append(f"{reference}: non-deterministic intake gaps.")
+        except Exception as exc:  # noqa: BLE001
+            problems.append(f"{reference}: intake_gaps error: {exc}")
+
         # PDF must render.
         try:
             render_advice_pdf(record)
