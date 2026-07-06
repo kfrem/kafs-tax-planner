@@ -947,6 +947,7 @@ def strategy_cgt_business_asset_disposal_relief(facts: dict, tax_year: str) -> d
     """
     gain = max(0.0, float(facts["disposal_gain"]))
     earned_income = max(0.0, float(facts.get("earned_income", 0)))
+    dividend_income = max(0.0, float(facts.get("dividend_income", 0)))
     prior_badr_used = max(0.0, float(facts.get("badr_lifetime_limit_used", 0)))
 
     badr_param = get_parameter("cgt.business_asset_disposal_relief", tax_year)
