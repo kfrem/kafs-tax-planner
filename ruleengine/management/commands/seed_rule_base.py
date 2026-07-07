@@ -1709,7 +1709,7 @@ class Command(BaseCommand):
                 "in bands (0% to 150,000, 2% to 250,000, 5% above) and — unlike residential — carry "
                 "no additional-dwelling surcharge and no first-time buyer relief. A mixed-use "
                 "property is charged wholly at these non-residential rates.",
-                authority_keys=["fa2003_s55_table_b"],
+                authority_keys=["fa2003_s55"],
                 eligibility_conditions={"all": [
                     {"path": "property.purchase_price", "op": "gt", "value": 0},
                     {"path": "property.property_type", "op": "eq", "value": "non_residential"},
