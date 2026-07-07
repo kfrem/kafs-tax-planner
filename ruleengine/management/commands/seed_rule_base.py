@@ -256,6 +256,20 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="tcga1992_s162",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.162",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/162",
+                verbatim_extract="Incorporation relief: where a person transfers a business as a "
+                "going concern, together with the whole of its assets (other than cash), to a "
+                "company wholly or partly in exchange for shares, the chargeable gain on the "
+                "transferred assets is rolled into the base cost of the shares to the extent the "
+                "consideration is shares. Whether a property letting activity is a 'business' for "
+                "s.162 depends on the degree of activity (Ramsay v HMRC [2013] UKUT 226). The "
+                "transfer is at market value and a company acquiring residential property pays SDLT "
+                "including the additional-dwelling surcharge (and potentially ATED).",
+            ),
+            dict(
                 key="ihta1984_relevant_property",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Inheritance Tax Act 1984 ss.58-69 (relevant property)",
