@@ -1317,4 +1317,17 @@ rule-base content under §5.6 of the architecture document.
 
 | Item range | Reviewer | Decision | Date |
 |---|---|---|---|
-| 1–126 | _(name)_ | _(YES / exceptions)_ | _(date)_ |
+| 1–126 | kfrem (editor / first reviewer) | Approved with exceptions — SDLT items #39 & #40 corrected | 2026-07-06 |
+| 1–126 | Paul Mixer (independent second reviewer) | Approved, subject to the two SDLT corrections (now applied) | 2026-07-07 |
+
+**Four-eyes review complete.** Both reviewers independently flagged the same two
+defects — the non-residential SDLT strategies (#39 lease-NPV, #40 non-residential
+purchase) cited the residential-surcharge Schedule 4ZA instead of s.55(1B) Table B
+and Schedule 5. Both citations have been corrected in the seed and re-verified; the
+underlying calculators were confirmed unaffected (they consume only the
+non-residential / lease-NPV bands, never the residential tables). Orphaned
+authorities left by earlier citation edits were removed (50 → 46). Non-blocking
+next-cycle refinements are logged in [`EDITORIAL_SIGNOFF.md`](EDITORIAL_SIGNOFF.md).
+
+The only remaining go-live action is a human marking the `RuleBaseRelease` as
+**Released** in `/admin/` — a governance step Claude does not perform.
