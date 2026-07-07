@@ -2098,6 +2098,29 @@ class Command(BaseCommand):
             ),
             dict(
                 calculator_key="strategy.partnership_profit_allocation",
+                description="Three-partner firm, each taxed on their share, 2025/26",
+                source="Hand-computed: 90,000 profit split 40/35/25 = 36,000/31,500/22,500; "
+                "partners' other income 50,000/10,000/0 -> tax 23,237.80 + 6,921.80 + 2,581.80 "
+                "= 32,741.40.",
+                input_facts={"total_profit": 90000, "partners": [
+                    {"profit_share": 0.4, "other_income": 50000},
+                    {"profit_share": 0.35, "other_income": 10000},
+                    {"profit_share": 0.25, "other_income": 0},
+                ]},
+                expected_output={"number_of_partners": 3, "total_tax": 32741.40},
+            ),
+            dict(
+                calculator_key="strategy.relevant_property_trust_charges",
+                description="Trust NRB reduced by same-day related settlements, 2025/26",
+                source="Hand-computed: 500,000 settled; 200,000 of same-day related settlements "
+                "cut the available band from 325,000 to 125,000, so the 20% entry charge bites on "
+                "375,000 = 75,000.",
+                input_facts={"amount_settled": 500000, "trust_value": 500000,
+                             "same_day_settlements_value": 200000},
+                expected_output={"available_nrb": 125000.0, "entry_charge": 75000.0},
+            ),
+            dict(
+                calculator_key="strategy.partnership_profit_allocation",
                 description="Two-partner split, one with other income, 2025/26",
                 source="Hand-computed: 100k profit; partner A has 40k other income. 50/50 -> "
                 "tax 25,677.80 + 9,731.80 = 35,409.60; shifting to 30/70 -> 16,477.80 + "
