@@ -222,6 +222,21 @@ for "is X covered?" and what to pick up next.
    [`SCOPE_landlord_planning_and_guided_intake.md`](SCOPE_landlord_planning_and_guided_intake.md).
    Heavy tax-editor involvement is required for every item above.
 
+   d. **Editorial next-cycle refinements** — logged by the two reviewers (see
+      the 7 July addenda in [`EDITORIAL_SIGNOFF.md`](EDITORIAL_SIGNOFF.md)); none
+      are release-blocking: relabel the `venture_capital.schemes` block order to
+      EIS/SEIS/VCT; seed the April-2026 changes (BPR/APR £1m cap, BADR 18%) with
+      effective dates; consider citing ITTOIA 2005 s.850C on the partnership
+      strategy, CTA 2009 s.55 on employer pension, and the LBTT Sch 2A / LTT
+      higher-rate schedules where ADS planning is in scope; tidy the `cgt.rates`
+      duplicate-looking display.
+
+   **Governance status (7 Jul 2026):** the rule base has completed its four-eyes
+   editorial review — the editor (kfrem) and a distinct second reviewer (Paul
+   Mixer) both reviewed the full checklist and approved it; two SDLT citation
+   defects were found and fixed. The only remaining go-live step is a human
+   marking the `RuleBaseRelease` as **Released** in `/admin/`.
+
 1. **CGT/SDLT depth** — done so far: **Business Asset Disposal Relief**
    (`strategy.cgt_business_asset_disposal_relief`: 14% rate + £1m lifetime
    limit as data, TCGA 1992 ss.169H-169S, `test_property.py::TestBadr`);

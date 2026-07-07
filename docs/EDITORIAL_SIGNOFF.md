@@ -844,3 +844,55 @@ regenerated. The remaining checklist rows were all confirmed correct.
 **Verdict:** approved subject to the two SDLT-citation corrections above, which
 have now been made and re-verified. A second reviewer distinct from the editor
 must still countersign before a `RuleBaseRelease` is marked Released.
+
+## Addendum, 7 July 2026 — Second-reviewer sign-off (four-eyes complete)
+
+**Second reviewer:** Paul Mixer (Big-4 background, all-service-line experience),
+distinct from the editor per §5.6.
+
+**Scope:** an independent second pass over the complete
+`docs/EDITORIAL_REVIEW_CHECKLIST.md` — all 36 parameters, 41 strategies and the
+authorities. Every parameter value was independently confirmed against the
+2025/26 position (AIA £1m permanent; BADR 14% for 2025/26; CGT 18/24% from
+30 Oct 2024; employer NIC 15% / £5,000 and Employment Allowance £10,500 from
+6 Apr 2025; LBTT ADS 8% from 5 Dec 2024; Welsh higher rates +1pp from
+11 Dec 2024; SDLT residential thresholds reverting 1 Apr 2025 with the 5%
+additional-dwelling surcharge). Every strategy's logic and risk status confirmed.
+
+**Independent finding — same two SDLT citation errors:** the second reviewer
+independently identified the Schedule 4ZA mis-citation on the non-residential
+lease (#39) and non-residential purchase (#40), confirming the correction already
+applied (lease → s.55 + Sch 5; purchase → s.55(1B) Table B). This is the
+four-eyes rule working: two reviewers, same defect, corrected before release.
+
+**Housekeeping actioned from the second review:**
+- Removed four orphaned authorities (cited by no strategy) — ITA 2007 s.10,
+  ITA 2007 ss.55B-55E (the pre-correction Marriage Allowance citation),
+  ITTOIA 2005 s.383, and NICA 2014 s.1. Authorities: 50 → 46, each now cited by
+  at least one strategy.
+- Renamed the residential SDLT strategy to "SDLT on planned residential property
+  purchase (England/NI)" to avoid confusion with the non-residential rows.
+
+**Non-blocking refinements logged for the next rule-base cycle** (the second
+reviewer explicitly recorded these as improvements, not errors — see
+DEVELOPER_HANDOVER §6):
+1. Relabel the `venture_capital.schemes` block order to read EIS/SEIS/VCT.
+2. April-2026 changes to seed with effective dates: BPR/APR £1m cap, BADR 18%.
+3. Consider citing ITTOIA 2005 s.850C (mixed-member anti-avoidance) on the
+   partnership strategy; CTA 2009 s.55 (spreading) on employer pension; and the
+   LBTT Sch 2A / LTT higher-rate schedules where ADS/additional-dwelling planning
+   is in scope.
+4. Tidy the `cgt.rates` display (the "other" and "residential" classes carry the
+   same 18/24% figures, which reads as a duplicate).
+
+**Verdict (second reviewer):** approve, subject to the SDLT corrections and the
+authority additions being in the live rule base before release — both now
+confirmed present and verified (self-audit green; editorial machine pre-check 0
+failures across 39 parameters, 41 strategies, 46 authorities).
+
+**Status:** the four-eyes review is complete — the editor (kfrem) and a distinct
+second reviewer (Paul Mixer) have both reviewed the full rule base and approved
+it, with the two blocking SDLT citation defects found and fixed. The remaining
+step is the human act of marking the `RuleBaseRelease` as **Released** in
+`/admin/` (recording both signatures), after which advice can be generated for
+real clients.
