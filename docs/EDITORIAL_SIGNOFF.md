@@ -754,3 +754,35 @@ auto-applied.
 
 **Verdict:** YES for the modelled headline mechanics; the flagged judgements
 gate real-client use.
+
+## Addendum, 7 July 2026 — Tier 3 batch 2: EOT sale, pension death-benefit, life-in-trust
+
+**Reviewing professional:** kfrem.
+
+**Scope:** three exit/estate strategies — `eot-disposal-relief`
+(`strategy.eot_disposal_relief`, TCGA 1992 s.236H), `pension-death-benefit`
+(`strategy.pension_death_benefit`, **BORDERLINE / forward-looking**, IHTA 1984
+as to be amended April 2027) and `life-policy-in-trust`
+(`strategy.life_policy_in_trust`, IHTA 1984 s.5). No new parameters — compose the
+BADR/CGT rates and the IHT death rate/NRB already in the store.
+
+**Verified:**
+- **EOT:** a sale to an EOT is CGT-exempt; the saving is the CGT a normal sale
+  would bear. Reconciled: £2m gain → BADR 14% on £1m (£140k) + 24% on £1m
+  (£240k) = £380k saved; without BADR, £500k at 24% = £120k.
+- **Pension death-benefit (from 6 April 2027):** £500k pot in an above-NRB
+  estate → 40% = £200k extra IHT (nil today). Flagged **borderline** — this is
+  the announced Autumn 2024 measure, not yet enacted, and is to be reviewed as
+  Finance Bill 2025-26 progresses. The panel raises the risk-disclosure caution.
+- **Life-in-trust:** £400k sum assured, above-NRB estate → held personally it
+  would add £160k of IHT; in trust it is outside the estate (nil), so £160k is
+  saved and the full £400k is available to fund the bill.
+
+**Documented scope:** EOT qualifying conditions (UK-resident trustees, no
+retained control, clawback, valuation), the final form and detail of the pension
+IHT change, and valid trust settlement with no reservation of benefit are the
+adviser's to confirm — flagged in the strategy text and, for the assumptions,
+surfaced by the guided intake.
+
+**Verdict:** YES, with the pension measure carried as an explicitly
+forward-looking, borderline projection.
