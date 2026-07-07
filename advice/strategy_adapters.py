@@ -484,7 +484,7 @@ class PartnershipProfitAllocationAdapter:
     @staticmethod
     def to_facts(facts: dict) -> dict:
         p = facts.get("partnership", {})
-        return {
+        mapped = {
             "total_profit": p.get("total_profit", 0),
             "partner1_other_income": p.get("partner1_other_income", 0),
             "partner2_other_income": p.get("partner2_other_income", 0),
@@ -493,6 +493,10 @@ class PartnershipProfitAllocationAdapter:
                 "proposed_partner1_share", p.get("current_partner1_share", 0.5)
             ),
         }
+        # N-partner firms record an explicit partner list.
+        if p.get("partners"):
+            mapped["partners"] = p["partners"]
+        return mapped
 
 
 @adapter("strategy.property_income_finance_cost")
