@@ -339,6 +339,26 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.property_incorporation")
+class PropertyIncorporationAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("property", {}).get("portfolio_value", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "portfolio_value": prop.get("portfolio_value", 0),
+            # rental profit net of non-finance expenses, before interest
+            "rental_profit": prop.get("rental_income", 0) - prop.get("allowable_expenses", 0),
+            "finance_costs": prop.get("finance_costs", 0),
+            "other_income": _earned_income(facts),
+            "latent_gain": prop.get("latent_gain", 0),
+            "s162_relief_available": prop.get("s162_relief_available", False),
+        }
+
+
 @adapter("strategy.relevant_property_trust_charges")
 class RelevantPropertyTrustAdapter:
     @staticmethod
