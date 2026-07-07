@@ -519,13 +519,13 @@ class Command(BaseCommand):
             dict(
                 key="fa2003_s55",
                 authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)",
+                canonical_citation="Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed)",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/section/55",
                 verbatim_extract="Amount of stamp duty land tax chargeable: s.55 sets the rates by "
-                "reference to Table A (residential property) and Table B (non-residential or "
-                "mixed-use property). The residential additional-dwelling surcharge (Sch 4ZA) and "
-                "first-time buyer relief (Sch 6ZA), and the lease-rent charge (Sch 5), sit in the "
-                "referenced schedules.",
+                "reference to Table A (residential property) and, under s.55(1B), Table B "
+                "(non-residential or mixed-use property). The residential additional-dwelling "
+                "surcharge (Sch 4ZA) and first-time buyer relief (Sch 6ZA), and the lease-rent "
+                "charge on net present value (Sch 5), sit in the referenced schedules.",
             ),
             dict(
                 key="fa2003_sch4za",
