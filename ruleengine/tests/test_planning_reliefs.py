@@ -546,6 +546,20 @@ class TestPartnershipProfitAllocation:
         assert result["proposed_total_tax"] == approx(18263.60)
         assert result["tax_saving"] == approx(1546.00)
 
+    def test_n_partner_firm_taxes_each_share(self):
+        # 90k profit split 40/35/25 (36k/31.5k/22.5k); partners' other income
+        # 50k/10k/0 -> tax 23,237.80 + 6,921.80 + 2,581.80 = 32,741.40.
+        result = strategy_partnership_profit_allocation(
+            {"total_profit": 90000, "partners": [
+                {"profit_share": 0.4, "other_income": 50000},
+                {"profit_share": 0.35, "other_income": 10000},
+                {"profit_share": 0.25, "other_income": 0},
+            ]}, TAX_YEAR
+        )
+        assert result["number_of_partners"] == 3
+        assert result["total_tax"] == approx(32741.40)
+        assert result["partners"][0]["tax"] == approx(23237.80)
+
 
 class TestRelevantPropertyTrust:
     def test_all_three_charges_hand_computed(self):
