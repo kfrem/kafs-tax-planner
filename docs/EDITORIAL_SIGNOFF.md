@@ -811,3 +811,36 @@ golden cases unchanged) plus a UI view:
 partnership/trust/incorporation variants and Tier-3 modules the coverage map
 lists as remaining are limited to the specialist items (holding-company
 structuring, charity VAT, Payroll Giving).
+
+## Addendum, 7 July 2026 — Tax-editor review of the full rule base (defects found & fixed)
+
+**Reviewing professional:** kfrem (senior UK tax reviewer).
+
+**Scope:** the complete `docs/EDITORIAL_REVIEW_CHECKLIST.md` — all 36 parameters,
+41 strategies and (then) 48 authorities. Every parameter value was confirmed
+against the current HMRC / legislation figure for 2025/26 (including the
+post-Autumn-Budget-2024 changes: BADR 14% from 6 April 2025, CGT main rates
+18%/24% from 30 October 2024, employer NIC 15% / £5,000 secondary threshold,
+Employment Allowance £10,500, SDLT residential thresholds reverting from 1 April
+2025). Every strategy's mechanics and risk status were confirmed.
+
+**Two defects found and corrected (the four-eyes rule working as intended):**
+1. `sdlt-non-residential-purchase` cited "Finance Act 2003 s.55 and Sch 4ZA".
+   Sch 4ZA is the *residential* additional-dwelling surcharge and does not apply
+   to non-residential/mixed transactions — those are charged under s.55 **Table
+   B**. **Fixed:** the s.55 authority is now neutral (Table A residential / Table
+   B non-residential) and the non-residential purchase cites it without Sch 4ZA.
+2. `sdlt-lease-npv` cited the same residential authority. A non-residential
+   lease's rent is charged under **Finance Act 2003 Sch 5** (NPV of rent).
+   **Fixed:** a new `fa2003_sch5` authority was added and the lease strategy now
+   cites it.
+   Sch 4ZA was split into its own authority (`fa2003_sch4za`) and correctly
+   retained on the *residential* purchase strategy alongside s.55 and Sch 6ZA.
+
+**Post-fix verification:** self-audit green, editorial machine pre-check 0
+failures across 39 parameters, 41 strategies, 50 authorities; the review pack
+regenerated. The remaining checklist rows were all confirmed correct.
+
+**Verdict:** approved subject to the two SDLT-citation corrections above, which
+have now been made and re-verified. A second reviewer distinct from the editor
+must still countersign before a `RuleBaseRelease` is marked Released.

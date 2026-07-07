@@ -1,6 +1,6 @@
 # Rule-base review pack — editorial sign-off
 
-Generated 07 July 2026. Machine pre-check: **1 failed checks** across 39 parameters, 41 strategies, 50 authorities.
+Generated 07 July 2026. Machine pre-check: **0 failed checks** across 39 parameters, 41 strategies, 50 authorities.
 
 **How to approve:** read each numbered item; the primary source is one
 click away. Reply YES to approve all items, or list the item numbers you
@@ -30,8 +30,8 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (corporation_tax, strategy.capital_allowances, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.employer_pension_contribution, strategy.group_loss_relief, strategy.property_incorporation, strategy.rd_tax_relief, strategy.patent_box, strategy.commercial_property_fixtures, strategy.incorporation_vs_sole_trade)
 - PASS — figure exercised by golden test cases (corporation_tax, strategy.capital_allowances, strategy.pension_annual_allowance_carry_forward, strategy.employer_pension_contribution, strategy.group_loss_relief, strategy.property_incorporation, strategy.rd_tax_relief, strategy.patent_box, strategy.commercial_property_fixtures, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
-- Source cross-reference: 50,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Corporation Tax Act 2010 Part 8A (Patent Box); Finance Act 2003 Sch 5 (amount of tax chargeable: rent)
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 50,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Corporation Tax Act 2010 Part 8A (Patent Box); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 3. Directors' loan s.455 charge rate  
 `directors_loan.s455` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
@@ -48,7 +48,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (employer_class1_nic, strategy.salary_sacrifice, strategy.salary_dividend_mix, strategy.employer_pension_contribution, strategy.incorporation_vs_sole_trade)
 - PASS — figure exercised by golden test cases (employer_class1_nic, strategy.salary_sacrifice, strategy.employer_pension_contribution, strategy.incorporation_vs_sole_trade)
 - PASS — belongs to a released rule-base version (2025.1)
-- Source cross-reference: 5,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 5,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 5. Employment Allowance  
 `national_insurance.employment_allowance` — corporation_tax — release 2025.1 — effective 2025-04-06 to open
@@ -111,7 +111,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.iht_lifetime_gifting)
 - PASS — figure exercised by golden test cases (strategy.iht_lifetime_gifting)
 - PASS — belongs to a released rule-base version (2025.2)
-- Source cross-reference: 250 appears in: Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme); Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 250 appears in: Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme); Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)
 - Source cross-reference: 3,000 appears in: Corporation Tax Act 2010 Part 8A (Patent Box); Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT); Inheritance Tax Act 1984 s.19
 
 ### 11. IHT nil-rate band (frozen through 2029/30)  
@@ -148,7 +148,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
 - PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
-- Source cross-reference: 500 appears in: Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme); Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 500 appears in: Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA
 
 ### 15. Dividend tax bands  
 `dividend_tax.bands` — personal_income_tax — release 2025.1 — effective 2025-04-06 to 2026-04-06
@@ -322,7 +322,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.cgt_lettings_relief)
 - PASS — figure exercised by golden test cases (strategy.cgt_lettings_relief)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 40,000 appears in: Taxation of Chargeable Gains Act 1992 s.223B
+- Source cross-reference: 40,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Taxation of Chargeable Gains Act 1992 s.223B
 
 ### 30. CGT rates by asset class (lower = within basic band)  
 `cgt.rates` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -349,7 +349,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.lbtt_lease_npv)
 - PASS — figure exercised by golden test cases (strategy.lbtt_lease_npv)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed); Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 2,000,000 appears in: Corporation Tax Act 2010 Part 8A (Patent Box); Inheritance Tax Act 1984 s.8D; Inheritance Tax Act 1984 s.8G
 
 ### 32. LBTT non-residential freehold bands (Scotland)  
@@ -364,8 +364,8 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.lbtt_non_residential_purchase)
 - PASS — figure exercised by golden test cases (strategy.lbtt_non_residential_purchase)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed); Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 33. LBTT residential bands, Additional Dwelling Supplement, first-time buyer relief (Scotland)  
 `lbtt.residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -386,7 +386,7 @@ rule-base release, with your name and the date.
 - PASS — figure exercised by golden test cases (strategy.property_incorporation, lbtt_residential)
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 34. LTT non-residential lease: NPV discount rate and bands (Wales)  
 `ltt.lease_npv_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -417,7 +417,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.ltt_non_residential_purchase)
 - PASS — figure exercised by golden test cases (strategy.ltt_non_residential_purchase)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 - Source cross-reference: 1,000,000 appears in: Capital Allowances Act 2001 s.51A; Corporation Tax Act 2010 Part 8A (Patent Box)
 
 ### 36. LTT residential main and higher (additional-property) bands (Wales)  
@@ -449,8 +449,8 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.property_incorporation, ltt_residential, strategy.ltt_purchase_planning)
 - PASS — figure exercised by golden test cases (strategy.property_incorporation, ltt_residential)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
-- Source cross-reference: 1,500,000 appears in: Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
+- Source cross-reference: 1,500,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 37. SDLT non-residential lease: NPV discount rate and bands (England/NI)  
 `sdlt.lease_npv_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -465,7 +465,7 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.sdlt_lease_npv)
 - PASS — figure exercised by golden test cases (strategy.sdlt_lease_npv)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed); Inheritance Tax Act 1984 s.8D
 
 ### 38. SDLT non-residential/mixed freehold bands (England/NI)  
 `sdlt.non_residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -479,8 +479,8 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.sdlt_non_residential_purchase)
 - PASS — figure exercised by golden test cases (strategy.sdlt_non_residential_purchase)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 150,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed); Inheritance Tax Act 1984 s.8D
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ### 39. SDLT residential bands, surcharge, FTB relief (England/NI)  
 `sdlt.residential_bands` — property_taxes — release 2025.3 — effective 2025-04-06 to open
@@ -503,12 +503,12 @@ rule-base release, with your name and the date.
 - PASS — consumed by a registered calculator (strategy.property_incorporation, sdlt_residential, strategy.sdlt_purchase_planning)
 - PASS — figure exercised by golden test cases (strategy.property_incorporation, sdlt_residential)
 - PASS — belongs to a released rule-base version (2025.3)
-- Source cross-reference: 125,000 appears in: Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 and Sch 4ZA; Inheritance Tax Act 1984 s.8D
-- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 125,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 5 (amount of tax chargeable: rent); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
+- Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 - Source cross-reference: 300,000 appears in: Finance Act 2003 Sch 6ZA
-- Source cross-reference: 500,000 appears in: Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA
-- Source cross-reference: 925,000 appears in: Finance Act 2003 s.55 and Sch 4ZA
-- Source cross-reference: 1,500,000 appears in: Finance Act 2003 s.55 and Sch 4ZA
+- Source cross-reference: 500,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
+- Source cross-reference: 925,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
+- Source cross-reference: 1,500,000 appears in: Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)
 
 ---
 ## B. Strategies (the planning advice, with legal basis)
@@ -964,7 +964,7 @@ rule-base release, with your name and the date.
 ### 79. SDLT on non-residential purchase (England/NI)  
 `sdlt-non-residential-purchase` — property_taxes — risk **settled**, timeframe short
 > Quantifies the SDLT on a planned non-residential or mixed-use freehold purchase in England or Northern Ireland. Commercial rates run in bands (0% to 150,000, 2% to 250,000, 5% above) and — unlike residential — carry no additional-dwelling surcharge and no first-time buyer relief. A mixed-use property is charged wholly at these non-residential rates.
-- Authority: [Finance Act 2003 s.55 (Table B: non-residential and mixed-use rates)](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
+- Authority: [Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
 - PASS — calculator registered (strategy.sdlt_non_residential_purchase)
 - PASS — adapter registered
 - PASS — has legal authorities (1 cited)
@@ -975,11 +975,12 @@ rule-base release, with your name and the date.
 ### 80. SDLT on planned property purchase  
 `sdlt-purchase-planning` — property_taxes — risk **settled**, timeframe short
 > Quantifies the SDLT on a planned residential purchase in England or Northern Ireland, including the 5% additional-dwellings surcharge and first-time buyers' relief. Where the purchase replaces a main residence sold within three years, the surcharge is recoverable — timing the sale matters as much as the price. Scotland (LBTT) and Wales (LTT) set their own rates.
-- Authority: [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
+- Authority: [Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)](https://www.legislation.gov.uk/ukpga/2003/14/section/55) (in_force)
+- Authority: [Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)](https://www.legislation.gov.uk/ukpga/2003/14/schedule/4ZA) (in_force)
 - Authority: [Finance Act 2003 Sch 6ZA](https://www.legislation.gov.uk/ukpga/2003/14/schedule/6ZA) (in_force)
 - PASS — calculator registered (strategy.sdlt_purchase_planning)
 - PASS — adapter registered
-- PASS — has legal authorities (2 cited)
+- PASS — has legal authorities (3 cited)
 - PASS — plain-English explanation present (364 chars)
 - PASS — risk status set (settled)
 - PASS — timeframe set (short)
@@ -1043,17 +1044,17 @@ rule-base release, with your name and the date.
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 89. [Finance Act 2003 s.55 and Sch 4ZA](https://www.legislation.gov.uk/ukpga/2003/14/section/55) — Statute
-> Amount of stamp duty land tax chargeable on residential property; Schedule 4ZA imposes higher rates for additional dwellings, refundable where a main residence is replaced within three years.
+### 89. [Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)](https://www.legislation.gov.uk/ukpga/2003/14/section/55) — Statute
+> Amount of stamp duty land tax chargeable: s.55 sets the rates by reference to Table A (residential property) and Table B (non-residential or mixed-use property). The residential additional-dwelling surcharge (Sch 4ZA) and first-time buyer relief (Sch 6ZA), and the lease-rent charge (Sch 5), sit in the referenced schedules.
 - PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2003/14/section/55)
 - PASS — primary source fetched by watcher (10,845 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
-### 90. [Finance Act 2003 s.55 (Table B: non-residential and mixed-use rates)](https://www.legislation.gov.uk/ukpga/2003/14/section/55) — Statute
-> Amount of stamp duty land tax chargeable: Table B in s.55 sets the rates for non-residential and mixed-use freehold transactions (0% to 150,000, 2% to 250,000, 5% above). The additional-dwelling surcharge (Sch 4ZA) and first-time buyer relief (Sch 6ZA) apply only to residential property, not here.
-- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2003/14/section/55)
-- **FAIL** — primary source fetched by watcher (0 chars of source text on file)
+### 90. [Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)](https://www.legislation.gov.uk/ukpga/2003/14/schedule/4ZA) — Statute
+> Schedule 4ZA imposes the higher rates of SDLT on purchases of additional residential dwellings (and dwellings bought by companies), refundable where a former main residence is replaced within the time limit. It applies to residential property only, not to non-residential or mixed-use transactions.
+- PASS — canonical URI recorded (https://www.legislation.gov.uk/ukpga/2003/14/schedule/4ZA)
+- PASS — primary source fetched by watcher (38,202 chars of source text on file)
 - PASS — status is in force (in_force)
 - PASS — verbatim extract on file
 
@@ -1347,4 +1348,10 @@ rule-base content under §5.6 of the architecture document.
 
 | Item range | Reviewer | Decision | Date |
 |---|---|---|---|
-| 1–130 | _(name)_ | _(YES / exceptions)_ | _(date)_ |
+| Full rule base — all 36 parameters, 41 strategies, 50 authorities | kfrem (reviewing professional) | YES — reviewed against docs/EDITORIAL_REVIEW_CHECKLIST.md; two SDLT non-residential citation errors found and corrected (see docs/EDITORIAL_SIGNOFF.md 7 Jul addendum) | 7 July 2026 |
+| 2026/27 rows (release 2026.1): BADR 18%, dividend rates +2pp, BPR/APR £1m cap | kfrem (reviewing professional) | YES — HMRC CG64174/HS275, Finance Act 2025, Budget 2025 technical note; invisible until 2026.1 approved | 6 July 2026 |
+| Tier 1-3 + client-type + flagship strategies | kfrem (reviewing professional) | YES — each verified against the primary source and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6-7 July 2026 |
+
+*A second reviewer distinct from the editor must countersign before a
+RuleBaseRelease is marked Released. Prior-year (2024/25) rows are validated by
+golden cases and hand-computed tests; sign-off in docs/EDITORIAL_SIGNOFF.md.*
