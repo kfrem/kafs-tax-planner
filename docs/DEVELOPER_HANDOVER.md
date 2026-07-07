@@ -183,16 +183,44 @@ maps every mainstream UK planning strategy (~38) to built / partial /
 planned, with a value×frequency build order. Use it as the source of truth
 for "is X covered?" and what to pick up next.
 
-0. **FLAGSHIP NEXT BUILD — Landlord & property planning + guided adaptive
-   intake.** Fully specified in
-   [`SCOPE_landlord_planning_and_guided_intake.md`](SCOPE_landlord_planning_and_guided_intake.md):
-   the personal-vs-company-vs-trust decision for property portfolios
-   (Section 24, s.162 incorporation relief, SDLT-on-transfer, ATED,
-   break-even), plus a questions-as-data intake that asks the follow-ups
-   (married? spouse income? mortgaged? hours managed?) and surfaces its
-   assumptions, so advice is never built on silent guesses. This is the
-   differentiated, high-value use case (UK landlords; no US-tool
-   competition) — start here. Heavy tax-editor involvement required.
+0. **CURRENT STATE (7 Jul 2026) — 35 strategies, 47 calculators, 270 tests.**
+   Tier 1 and Tier 2 of `TAX_PLANNING_COVERAGE.md` are **complete, including
+   the property-incorporation flagship** (`strategy.property_incorporation`:
+   s.24-vs-company annual tax, SDLT-on-transfer, s.162 CGT deferral,
+   break-even in years). The **client-type expansion** is done — the entity
+   label is display-only and eligibility is fact-driven, so sole traders,
+   landlords, partnerships (`partnership-profit-allocation`), trusts
+   (`relevant-property-trust-charges`) and estates are all served today. The
+   **guided-intake engine** (`advice/intake.py`) surfaces the material
+   assumptions as questions on the advice page. And the **self-audit**
+   (`python manage.py self_audit --passes 3`, `advice/tests/test_self_audit.py`)
+   regenerates every strategy through advice → PDF → four-expert panel →
+   independent recomputation, and is the mandatory release gate — see the
+   README "Mandatory self-audit" section and [[self-audit-gate]]. Verified:
+   nothing overwritten (every strategy has a unique code/calculator/adapter).
+
+   **What is genuinely left to build, in order (each to the self-audit
+   protocol):**
+   a. **Flagship depth (v2)** — extend `property_incorporation` beyond v1's
+      simplifications: model profit *extraction* (dividend/salary tax on
+      drawing profits out, vs the retained-profit assumption), the LBTT/LTT
+      variants of the SDLT-on-transfer (currently England-only), and the
+      **ATED** annual charge for high-value enveloped dwellings.
+   b. **Depth variants** — N-partner / LLP salaried-member rules for
+      `partnership_profit_allocation`; multiple-trust / same-day-addition and
+      IIP/bereaved-minor variants for `relevant_property_trust_charges`; and
+      the **pre-generation** dynamic intake questionnaire (ask the questions
+      *before* generating, not only flag assumptions after — the engine in
+      `advice/intake.py` is ready to drive it).
+   c. **Tier 3 specialist modules** (see the coverage map): R&D relief
+      (merged scheme), Employee Ownership Trust CGT-free sale, pension
+      death-benefit (Apr 2027) & life-insurance-in-trust, capital allowances
+      on commercial-property fixtures, Patent Box, holding-company
+      structuring, charity VAT reliefs.
+
+   The landlord/property scope remains fully specified in
+   [`SCOPE_landlord_planning_and_guided_intake.md`](SCOPE_landlord_planning_and_guided_intake.md).
+   Heavy tax-editor involvement is required for every item above.
 
 1. **CGT/SDLT depth** — done so far: **Business Asset Disposal Relief**
    (`strategy.cgt_business_asset_disposal_relief`: 14% rate + £1m lifetime
