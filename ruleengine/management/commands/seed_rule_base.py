@@ -1348,6 +1348,66 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="eot-disposal-relief",
+                name="Employee Ownership Trust sale (CGT-free)",
+                tax_domain=TaxDomain.CROSS_CUTTING,
+                calculator_key="strategy.eot_disposal_relief",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="An owner who sells a controlling stake in their trading "
+                "company to an Employee Ownership Trust pays no capital gains tax on the sale — a "
+                "full exemption. This quantifies the CGT a normal third-party sale would cost "
+                "instead (Business Asset Disposal Relief at 14% on the first £1m, then the standard "
+                "share rate) and therefore the tax saved by the EOT route. The qualifying "
+                "conditions were tightened by Finance Act 2024/2025 (UK-resident trustees, the "
+                "former owners not keeping control, a four-year clawback and an independent "
+                "valuation) — the adviser confirms them.",
+                authority_keys=["tcga1992_s236h"],
+                eligibility_conditions={"all": [
+                    {"path": "company.eot_disposal_gain", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="pension-death-benefit",
+                name="Pension death-benefit IHT (from April 2027)",
+                tax_domain=TaxDomain.INHERITANCE_TAX,
+                calculator_key="strategy.pension_death_benefit",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.BORDERLINE,
+                gaar_exposure=False,
+                plain_english_explanation="Today an unused pension pot normally passes on death "
+                "outside the estate, free of inheritance tax. From 6 April 2027 (announced at "
+                "Autumn Budget 2024) most pension funds are expected to be brought into the estate "
+                "for IHT. This shows the extra inheritance tax a pot would attract from that date — "
+                "40% where the estate is already above the nil-rate band — so a client can plan "
+                "(for example, drawing the pension down or gifting) ahead of the change. It is a "
+                "forward-looking projection based on the announcement and is flagged borderline "
+                "until the Finance Bill 2025-26 is enacted.",
+                authority_keys=["ihta1984_pension_2027"],
+                eligibility_conditions={"all": [
+                    {"path": "estate.pension_pot_value", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="life-policy-in-trust",
+                name="Life policy in trust to fund the IHT bill",
+                tax_domain=TaxDomain.INHERITANCE_TAX,
+                calculator_key="strategy.life_policy_in_trust",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A whole-of-life policy written in trust pays out on "
+                "death to the trust, outside the estate, giving the family tax-free cash to pay the "
+                "inheritance tax bill without having to sell assets. If the same policy were held "
+                "personally, its proceeds would instead add to the estate and attract 40% IHT. "
+                "This quantifies the IHT saved by writing it in trust and the payout available to "
+                "meet the bill. The trust must be validly set up with no benefit reserved to the "
+                "settlor.",
+                authority_keys=["ihta1984_s5"],
+                eligibility_conditions={"all": [
+                    {"path": "estate.life_policy_sum_assured", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
