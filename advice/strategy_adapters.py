@@ -466,6 +466,7 @@ class RelevantPropertyTrustAdapter:
             "trust_value": t.get("trust_value", 0),
             "amount_distributed": t.get("amount_distributed", 0),
             "quarters_since_last_charge": t.get("quarters_since_last_charge", 0),
+            "same_day_settlements_value": t.get("same_day_settlements_value", 0),
         }
         # Only override the settlor's available nil-rate band when the firm has
         # recorded it (prior chargeable transfers reduce it); else the
