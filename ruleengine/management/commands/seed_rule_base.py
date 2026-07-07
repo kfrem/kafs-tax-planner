@@ -213,15 +213,6 @@ class Command(BaseCommand):
                 "profession or vocation carried on by a self-employed earner.",
             ),
             dict(
-                key="_removed_nica2014_s1_placeholder",
-                authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="National Insurance Contributions Act 2014 s.1",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2014/7/section/1",
-                verbatim_extract="Employment Allowance against employer Class 1 NIC liability, "
-                "subject to the excluded-companies regulations (SI 2016/344), which exclude a "
-                "company whose sole employee is also a director.",
-            ),
-            dict(
                 key="cta2010_part3a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Corporation Tax Act 2010 Part 3A (ss.18A-18M)",
