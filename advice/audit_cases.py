@@ -96,6 +96,22 @@ CGT_HOMEOWNER_FACTS = {
 }
 
 
+# An innovative trading company: R&D spend, patented products, and a commercial
+# building with integral-feature fixtures.
+INNOVATIVE_COMPANY_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {
+        "profit_before_remuneration": 0,
+        "qualifying_rd_spend": 100000,
+        "patent_profit": 200000,
+        "fixtures_value": 200000,
+        "marginal_rate": 0.25,
+    },
+    "sole_trade": {"annual_profit": 0},
+    "estate": {},
+}
+
+
 # A settlor funding a discretionary (relevant-property) trust — entry,
 # ten-year and exit charges.
 TRUST_FACTS = {
