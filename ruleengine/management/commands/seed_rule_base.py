@@ -1650,7 +1650,7 @@ class Command(BaseCommand):
                 "first-time buyers' relief. Where the purchase replaces a main residence sold "
                 "within three years, the surcharge is recoverable — timing the sale matters as "
                 "much as the price. Scotland (LBTT) and Wales (LTT) set their own rates.",
-                authority_keys=["fa2003_s55", "fa2003_sch6za"],
+                authority_keys=["fa2003_s55", "fa2003_sch4za", "fa2003_sch6za"],
                 eligibility_conditions={"all": [
                     {"path": "property.purchase_price", "op": "gt", "value": 0},
                     {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
