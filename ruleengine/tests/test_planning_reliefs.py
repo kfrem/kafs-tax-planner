@@ -573,3 +573,48 @@ class TestRelevantPropertyTrust:
             TAX_YEAR
         )
         assert result["entry_charge"] == approx(75000.0)
+
+
+class TestPropertyIncorporation:
+    def test_break_even_with_s162_relief(self):
+        # Higher-rate landlord: 50k rental profit + 40k other income. Personal
+        # s.24 tax on the rental = IT(90k)-IT(40k) (17,946) less a 6,000 reducer
+        # = 11,946. Company CT on 20k (after 30k interest) = 3,800; annual
+        # saving 8,146. SDLT on a £1m transfer at additional rates = 93,750;
+        # s.162 defers the CGT, so break-even = 93,750 / 8,146 = 11.51 years.
+        result = strategy_property_incorporation(
+            {"portfolio_value": 1000000, "rental_profit": 50000, "finance_costs": 30000,
+             "other_income": 40000, "latent_gain": 300000, "s162_relief_available": True},
+            TAX_YEAR
+        )
+        assert result["personal_annual_tax"] == approx(11946.0)
+        assert result["company_annual_tax"] == approx(3800.0)
+        assert result["annual_tax_saving"] == approx(8146.0)
+        assert result["sdlt_on_transfer"] == approx(93750.0)
+        assert result["cgt_on_transfer"] == approx(0.0)
+        assert result["break_even_years"] == approx(11.51)
+
+    def test_without_s162_the_cgt_lengthens_the_payback(self):
+        # No s.162 relief: the 300k latent gain is taxed now at the 24%
+        # residential rate = 72,000, so the one-off cost is 93,750 + 72,000 =
+        # 165,750 and the break-even stretches to 20.35 years.
+        result = strategy_property_incorporation(
+            {"portfolio_value": 1000000, "rental_profit": 50000, "finance_costs": 30000,
+             "other_income": 40000, "latent_gain": 300000, "s162_relief_available": False},
+            TAX_YEAR
+        )
+        assert result["cgt_on_transfer"] == approx(72000.0)
+        assert result["one_off_cost"] == approx(165750.0)
+        assert result["break_even_years"] == approx(20.35)
+
+    def test_basic_rate_landlord_gets_no_benefit(self):
+        # A basic-rate landlord suffers no real s.24 penalty, so the company's
+        # 19% CT actually costs more than staying personal — no saving, and the
+        # break-even is undefined (incorporation would not pay).
+        result = strategy_property_incorporation(
+            {"portfolio_value": 300000, "rental_profit": 20000, "finance_costs": 15000,
+             "other_income": 10000, "s162_relief_available": True},
+            TAX_YEAR
+        )
+        assert result["annual_tax_saving"] < 0
+        assert result["break_even_years"] is None
