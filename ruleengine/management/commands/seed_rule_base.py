@@ -256,6 +256,40 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="tcga1992_s236h",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.236H (Employee Ownership Trust)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/236H",
+                verbatim_extract="A disposal of shares in a trading company to an Employee "
+                "Ownership Trust that acquires a controlling interest is treated as made on a "
+                "no-gain/no-loss basis — the gain is fully exempt from capital gains tax — provided "
+                "the qualifying conditions are met. Finance Act 2024/2025 tightened the rules "
+                "(UK-resident trustees, former owners not to retain control, a longer clawback "
+                "period and an independent valuation), which the adviser must confirm.",
+            ),
+            dict(
+                key="ihta1984_s5",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Inheritance Tax Act 1984 s.5 (meaning of estate)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/section/5",
+                verbatim_extract="A person's estate is the aggregate of all the property to which "
+                "they are beneficially entitled at death. Property held in a properly constituted "
+                "trust to which the deceased was not beneficially entitled — such as the proceeds "
+                "of a life policy written in trust — does not form part of the estate, so the "
+                "proceeds pass free of inheritance tax and can fund the estate's IHT bill.",
+            ),
+            dict(
+                key="ihta1984_pension_2027",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="IHTA 1984 s.3 (as to be amended from 6 April 2027, Finance Bill 2025-26)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/section/3",
+                verbatim_extract="Announced at Autumn Budget 2024: from 6 April 2027 most unused "
+                "pension funds and death benefits will be brought within the value of a person's "
+                "estate for inheritance tax, reversing the current position where they normally "
+                "pass outside the estate. This is a forward-looking planning point subject to final "
+                "legislation — modelled here as a clearly-flagged borderline projection.",
+            ),
+            dict(
                 key="cta2009_part13",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme)",
