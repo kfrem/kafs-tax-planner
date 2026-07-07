@@ -539,6 +539,24 @@ class VentureCapitalInvestmentAdapter:
         }
 
 
+@adapter("strategy.termination_payment")
+class TerminationPaymentAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("employment", {}).get("termination_payment", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        emp = facts.get("employment", {})
+        # ``termination_payment`` is the qualifying (non-contractual) s.401 amount
+        # only; PENP/contractual pay is excluded upstream and flagged at intake.
+        # ``other_income`` sets the marginal rate the excess is top-sliced at.
+        return {
+            "termination_payment": emp.get("termination_payment", 0),
+            "other_income": emp.get("other_income", _earned_income(facts)),
+        }
+
+
 @adapter("strategy.gift_aid_relief")
 class GiftAidAdapter:
     @staticmethod
