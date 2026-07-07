@@ -1101,8 +1101,11 @@ def _transfer_land_tax(price: float, jurisdiction: str, tax_year: str) -> float:
     "retained), then weighs that annual saving against the one-off cost of incorporating — the "
     "SDLT on transferring the properties at market value (with the 5% additional-dwelling "
     "surcharge) plus any CGT, which is deferred where s.162 incorporation relief applies. Reports "
-    "the break-even in years. Assumes profits are retained (extraction adds dividend tax) and, for "
-    "v1, an England/SDLT portfolio — the accountant confirms s.162 conditions and any ATED.",
+    "the break-even in years. The land tax on transfer follows the property's UK nation "
+    "(SDLT/LBTT/LTT); the headline saving assumes profits are retained, and a separate "
+    "after-extraction figure shows the position once the post-tax profit is drawn as dividends. "
+    "The accountant confirms the s.162 'business' test and any ATED (usually relieved for a "
+    "commercial letting business).",
 )
 def strategy_property_incorporation(facts: dict, tax_year: str) -> dict:
     portfolio_value = max(0.0, float(facts.get("portfolio_value", 0)))
