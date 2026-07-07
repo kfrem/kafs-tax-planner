@@ -1243,6 +1243,88 @@ def strategy_venture_capital_investment(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.rd_tax_relief",
+    consumes=["rd.merged_scheme", "corporation_tax.rates"],
+    description="R&D tax relief under the merged scheme (accounting periods from 1 April 2024): a "
+    "20% taxable expenditure credit (RDEC) on qualifying R&D spend. Because the credit is itself "
+    "chargeable to corporation tax, the net benefit is 20% less tax at the company's rate. "
+    "Quantifies the gross credit, the tax on it and the net cash benefit (CTA 2009 Part 13). "
+    "Loss-making R&D-intensive SMEs use a different rate — flagged for the adviser.",
+)
+def strategy_rd_tax_relief(facts: dict, tax_year: str) -> dict:
+    spend = max(0.0, float(facts.get("qualifying_rd_spend", 0)))
+    rdec_rate = get_parameter("rd.merged_scheme", tax_year)["rdec_rate"]
+    ct = get_parameter("corporation_tax.rates", tax_year)
+    marginal = float(facts.get("marginal_rate", ct["main_rate"]))
+
+    gross_credit = round(spend * rdec_rate, 2)
+    tax_on_credit = round(gross_credit * marginal, 2)
+    net_benefit = round(gross_credit - tax_on_credit, 2)
+    return {
+        "qualifying_rd_spend": round(spend, 2),
+        "rdec_rate": rdec_rate,
+        "gross_credit": gross_credit,
+        "tax_on_credit": tax_on_credit,
+        "net_benefit": net_benefit,
+    }
+
+
+@register(
+    "strategy.patent_box",
+    consumes=["patent_box.rate", "corporation_tax.rates"],
+    description="Patent Box: profits attributable to patented inventions can be taxed at an "
+    "effective 10% corporation-tax rate instead of the main rate. Quantifies the tax at the main "
+    "rate, the tax under the Patent Box and the saving (CTA 2010 Part 8A). The apportionment of "
+    "profit to qualifying IP and the modified-nexus R&D fraction are the adviser's to establish.",
+)
+def strategy_patent_box(facts: dict, tax_year: str) -> dict:
+    patent_profit = max(0.0, float(facts.get("patent_profit", 0)))
+    pb_rate = get_parameter("patent_box.rate", tax_year)["rate"]
+    ct = get_parameter("corporation_tax.rates", tax_year)
+    marginal = float(facts.get("marginal_rate", ct["main_rate"]))
+
+    tax_at_main_rate = round(patent_profit * marginal, 2)
+    tax_under_patent_box = round(patent_profit * pb_rate, 2)
+    return {
+        "patent_profit": round(patent_profit, 2),
+        "patent_box_rate": pb_rate,
+        "tax_at_main_rate": tax_at_main_rate,
+        "tax_under_patent_box": tax_under_patent_box,
+        "tax_saving": round(tax_at_main_rate - tax_under_patent_box, 2),
+    }
+
+
+@register(
+    "strategy.commercial_property_fixtures",
+    consumes=["capital_allowances.aia", "corporation_tax.rates"],
+    description="Capital allowances on integral features and fixtures within a commercial "
+    "building (heating, electrics, lifts, etc.): the identified fixtures value attracts plant and "
+    "machinery allowances — 100% via the Annual Investment Allowance up to its limit, then the "
+    "special-rate writing-down allowance on any excess. Quantifies the first-year allowance and "
+    "the tax it saves at the company's marginal rate (CAA 2001 ss.33A/187A). On a second-hand "
+    "building the s.187A pooling/fixed-value conditions must be met — the adviser confirms.",
+)
+def strategy_commercial_property_fixtures(facts: dict, tax_year: str) -> dict:
+    fixtures_value = max(0.0, float(facts.get("fixtures_value", 0)))
+    aia = get_parameter("capital_allowances.aia", tax_year)
+    aia_limit, special_wda = aia["aia_limit"], aia["special_rate_wda"]
+    ct = get_parameter("corporation_tax.rates", tax_year)
+    marginal = float(facts.get("marginal_rate", ct["main_rate"]))
+
+    aia_used = min(fixtures_value, aia_limit)
+    excess = max(0.0, fixtures_value - aia_limit)
+    written_down_first_year = round(excess * special_wda, 2)
+    first_year_allowance = round(aia_used + written_down_first_year, 2)
+    return {
+        "fixtures_value": round(fixtures_value, 2),
+        "aia_used": round(aia_used, 2),
+        "written_down_first_year": written_down_first_year,
+        "first_year_allowance": first_year_allowance,
+        "tax_saved_year_one": round(first_year_allowance * marginal, 2),
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
