@@ -82,7 +82,7 @@ following are **green** on this change:
 | **Editorial machine pre-check** | **0 failures** across 40 parameters, 42 strategies, 50 authorities |
 | **Golden cases** (hand-computed, incl. 2 new termination cases) | **all 62 match to the penny** |
 | **Change watchers** — all cited authorities fetched from legislation.gov.uk | **errors=0** (4 new sources baselined) |
-| **Full automated test suite** | **{{SUITE_RESULT}}** (incl. 10 new hand-written tests) |
+| **Full automated test suite** | **297 passed, 0 failed** (incl. 10 new hand-written tests) |
 | **Coverage** | **all 42 live strategies** exercised end to end |
 
 ## 5. What remains for the human four-eyes review
