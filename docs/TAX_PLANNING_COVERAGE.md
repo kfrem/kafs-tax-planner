@@ -51,7 +51,7 @@ Last updated: 6 July 2026.
 
 | Strategy | Status | Notes / what's needed | Priority |
 |---|---|---|---|
-| Partnership profit-share allocation | ✓ | `partnership-profit-allocation` — a partnership is tax-transparent; each partner is taxed on their share (income tax + Class 4 NIC) on top of their other income. Compares the current split with a proposed one and quantifies the household tax difference; flagged **borderline** because the ratio must reflect genuine commercial contribution, not tax (ITTOIA 2005 s.850). | — |
+| Partnership profit-share allocation | ✓ | `partnership-profit-allocation` — a partnership is tax-transparent; each partner is taxed on their share (income tax + Class 4 NIC) on top of their other income. Two-partner current-vs-proposed comparison **and an N-partner mode** (an explicit partner list, each taxed on their share); flagged **borderline** — the ratio must reflect genuine commercial contribution (ITTOIA 2005 s.850). | — |
 
 ## Property & landlords
 

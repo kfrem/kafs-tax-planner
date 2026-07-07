@@ -1343,4 +1343,3 @@ rule-base content under §5.6 of the architecture document.
 | Tier 3 batch 2: EOT sale (TCGA 1992 s.236H), pension death-benefit from Apr 2027 (IHTA 1984, borderline/forward-looking), life-policy-in-trust (IHTA 1984 s.5) | kfrem (reviewing professional) | YES — CGT-saved / 40% projection / trust-payout mechanics hand-computed; pension change flagged borderline pending Finance Bill 2025-26 — see docs/EDITORIAL_SIGNOFF.md | 7 July 2026 |
 
 *Prior-year (2024/25) rows are validated by golden cases and hand-computed
-tests rather than this forward-looking pack; sign-off in docs/EDITORIAL_SIGNOFF.md.*
