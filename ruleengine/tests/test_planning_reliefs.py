@@ -656,3 +656,52 @@ class TestPropertyIncorporation:
         assert eng["land_tax_on_transfer"] == approx(93750.0)          # SDLT
         assert sco["land_tax_on_transfer"] == approx(expected_lbtt)    # LBTT
         assert sco["one_off_cost"] == approx(expected_lbtt)
+
+
+class TestRdTaxRelief:
+    def test_merged_scheme_net_benefit(self):
+        # 100k qualifying spend -> 20% RDEC = 20k gross; taxable at 25% (5k);
+        # net benefit 15k (about 15% of the spend for a main-rate company).
+        result = strategy_rd_tax_relief(
+            {"qualifying_rd_spend": 100000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["gross_credit"] == approx(20000.0)
+        assert result["tax_on_credit"] == approx(5000.0)
+        assert result["net_benefit"] == approx(15000.0)
+
+    def test_marginal_rate_defaults_to_ct_main_rate(self):
+        result = strategy_rd_tax_relief({"qualifying_rd_spend": 100000}, TAX_YEAR)
+        assert result["net_benefit"] == approx(15000.0)  # 25% default
+
+
+class TestPatentBox:
+    def test_saving_vs_main_rate(self):
+        # 200k patented-product profit at 10% (20k) vs the 25% main rate (50k)
+        # = 30k saved.
+        result = strategy_patent_box({"patent_profit": 200000, "marginal_rate": 0.25}, TAX_YEAR)
+        assert result["tax_at_main_rate"] == approx(50000.0)
+        assert result["tax_under_patent_box"] == approx(20000.0)
+        assert result["tax_saving"] == approx(30000.0)
+
+
+class TestCommercialPropertyFixtures:
+    def test_fixtures_within_the_aia(self):
+        # 200k fixtures fully within the 1m AIA -> 200k first-year allowance;
+        # at 25% that saves 50k.
+        result = strategy_commercial_property_fixtures(
+            {"fixtures_value": 200000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["aia_used"] == approx(200000.0)
+        assert result["first_year_allowance"] == approx(200000.0)
+        assert result["tax_saved_year_one"] == approx(50000.0)
+
+    def test_excess_over_aia_uses_special_rate_wda(self):
+        # 1.2m fixtures: 1m AIA + 200k at the 6% special rate (12k) = 1,012,000
+        # first-year allowance; at 25% that saves 253,000.
+        result = strategy_commercial_property_fixtures(
+            {"fixtures_value": 1200000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["aia_used"] == approx(1000000.0)
+        assert result["written_down_first_year"] == approx(12000.0)
+        assert result["first_year_allowance"] == approx(1012000.0)
+        assert result["tax_saved_year_one"] == approx(253000.0)
