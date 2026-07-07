@@ -71,7 +71,7 @@ across the whole client-complexity range; see TEST_EVIDENCE.md §3.
 > MFA, and a `/healthz` probe — plus Tier-1/Tier-2 planning (salary
 > sacrifice, both pension routes, group relief, bed-and-ISA, BPR/APR with the
 > April-2026 cap, EIS/SEIS/VCT) and the landlord s.24 restriction —
-> **34 strategies, 261 tests, and an end-to-end self-audit** (above). See
+> **34 strategies, 267 tests, and an end-to-end self-audit** (above). See
 > [docs/ONBOARDING.md](docs/ONBOARDING.md) §6 for the current picture.
 > Still out of scope (Phase 2/3): HMRC MTD integration, LLM narrative
 > drafting, practice-management integrations.
@@ -189,7 +189,7 @@ year, click "Generate advice".
 ## Tests
 
 ```bash
-python -m pytest        # expect: 261 passed (~7 min); this is the reproduction checkpoint
+python -m pytest        # expect: 267 passed (~7 min); this is the reproduction checkpoint
 ```
 
 Covers: calculator correctness against hand-verified HMRC-rate worked
