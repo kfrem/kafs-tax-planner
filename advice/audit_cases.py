@@ -139,6 +139,10 @@ LANDLORD_FACTS = {
         "rental_income": 24000,
         "allowable_expenses": 4000,
         "finance_costs": 12000,
+        # ...and weighing whether to incorporate the portfolio.
+        "portfolio_value": 1000000,
+        "latent_gain": 300000,
+        "s162_relief_available": True,
     },
     "estate": {},
 }
