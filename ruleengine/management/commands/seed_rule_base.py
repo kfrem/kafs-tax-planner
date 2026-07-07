@@ -1767,7 +1767,7 @@ class Command(BaseCommand):
                 "its net present value over the term, discounted at 3.5%, with 0% up to "
                 "150,000 of NPV, 1% to 5,000,000 and 2% above. Any lease premium is charged "
                 "separately at the freehold rates and is not included here.",
-                authority_keys=["fa2003_s55"],
+                authority_keys=["fa2003_sch5"],
                 eligibility_conditions={"all": [
                     {"path": "property.lease_annual_rent", "op": "gt", "value": 0},
                     {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
