@@ -1152,17 +1152,19 @@ def strategy_property_incorporation(facts: dict, tax_year: str) -> dict:
     # landlord who actually wants the income now.
     post_ct_profit = round(max(0.0, company_profit - company_annual_tax), 2)
     extract = bool(facts.get("extract_profits", False))
-    dividend_tax_on_extraction = (
-        round(
-            dividend_tax(
-                {"other_taxable_income": other_income, "dividend_income": post_ct_profit},
-                tax_year,
-            )["tax_due"],
-            2,
-        )
-        if extract and post_ct_profit > 0
-        else 0.0
-    )
+    if extract and post_ct_profit > 0:
+        # Incremental dividend tax on drawing the post-CT profit, composed
+        # through combined_personal_tax so the personal allowance and band
+        # interaction with the owner's other income is handled correctly.
+        without_div = combined_personal_tax(
+            {"earned_income": other_income, "dividend_income": 0}, tax_year
+        )["total_tax"]
+        with_div = combined_personal_tax(
+            {"earned_income": other_income, "dividend_income": post_ct_profit}, tax_year
+        )["total_tax"]
+        dividend_tax_on_extraction = round(with_div - without_div, 2)
+    else:
+        dividend_tax_on_extraction = 0.0
     company_total_tax_if_extracted = round(company_annual_tax + dividend_tax_on_extraction, 2)
     annual_saving_after_extraction = round(
         personal_annual_tax - company_total_tax_if_extracted, 2
