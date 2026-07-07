@@ -34,7 +34,7 @@ def test_self_audit_passes_end_to_end(sources_with_snapshots, firm, staff_user, 
     )
     out = capsys.readouterr().out
     assert "SELF-AUDIT PASSED" in out
-    assert "all 41 live strategies exercised end to end" in out
+    assert "all 42 live strategies exercised end to end" in out
 
 
 def test_self_audit_fails_loudly_on_an_uncited_strategy(sources_with_snapshots, firm, staff_user):
