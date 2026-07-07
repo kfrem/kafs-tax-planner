@@ -594,6 +594,17 @@ class TestRelevantPropertyTrust:
         )
         assert result["entry_charge"] == approx(75000.0)
 
+    def test_same_day_related_settlements_share_the_nil_rate_band(self):
+        # 200,000 of same-day related settlements cut the 325,000 band to
+        # 125,000, so the entry charge bites on 375,000 = 75,000 (the
+        # anti-Rysaffe multiple-trust rule).
+        result = strategy_relevant_property_trust_charges(
+            {"amount_settled": 500000, "trust_value": 500000,
+             "same_day_settlements_value": 200000}, TAX_YEAR
+        )
+        assert result["available_nrb"] == approx(125000.0)
+        assert result["entry_charge"] == approx(75000.0)
+
 
 class TestPropertyIncorporation:
     def test_break_even_with_s162_relief(self):
