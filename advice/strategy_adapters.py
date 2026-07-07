@@ -339,6 +339,52 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.eot_disposal_relief")
+class EotDisposalReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("eot_disposal_gain", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        return {
+            "disposal_gain": company.get("eot_disposal_gain", 0),
+            "badr_available": company.get("badr_available", True),
+            "badr_lifetime_used": company.get("badr_lifetime_used", 0),
+        }
+
+
+@adapter("strategy.pension_death_benefit")
+class PensionDeathBenefitAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("estate", {}).get("pension_pot_value", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        estate = facts.get("estate", {})
+        return {
+            "pension_pot_value": estate.get("pension_pot_value", 0),
+            "estate_above_nrb": estate.get("estate_above_nrb", True),
+        }
+
+
+@adapter("strategy.life_policy_in_trust")
+class LifePolicyInTrustAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("estate", {}).get("life_policy_sum_assured", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        estate = facts.get("estate", {})
+        return {
+            "sum_assured": estate.get("life_policy_sum_assured", 0),
+            "estate_above_nrb": estate.get("estate_above_nrb", True),
+        }
+
+
 @adapter("strategy.rd_tax_relief")
 class RdTaxReliefAdapter:
     @staticmethod
