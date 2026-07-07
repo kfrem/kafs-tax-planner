@@ -143,6 +143,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 if not DEBUG:
     # UK-region hosting with TLS 1.2+ in transit (Section 7.2) — these only
     # bite once a real deployment terminates TLS in front of the app.
+    #
+    # Railway/Render/Fly terminate TLS at their edge and forward plain HTTP to
+    # the container with an X-Forwarded-Proto header. Without this, Django sees
+    # "http", and SECURE_SSL_REDIRECT below redirects to https forever (loop).
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
