@@ -708,3 +708,54 @@ class TestCommercialPropertyFixtures:
         assert result["written_down_first_year"] == approx(12000.0)
         assert result["first_year_allowance"] == approx(1012000.0)
         assert result["tax_saved_year_one"] == approx(253000.0)
+
+
+class TestEotDisposalRelief:
+    def test_eot_sale_saves_the_whole_cgt(self):
+        # 2m gain: a normal sale bears BADR 14% on the first 1m (140k) + 24% on
+        # the next 1m (240k) = 380k; the EOT sale is exempt, so 380k is saved.
+        result = strategy_eot_disposal_relief(
+            {"disposal_gain": 2000000, "badr_available": True, "badr_lifetime_used": 0}, TAX_YEAR
+        )
+        assert result["cgt_without_eot"] == approx(380000.0)
+        assert result["cgt_under_eot"] == approx(0.0)
+        assert result["cgt_saved"] == approx(380000.0)
+
+    def test_without_badr_the_whole_gain_is_at_the_standard_rate(self):
+        # No BADR: 500k gain all at the 24% share rate = 120k, all saved by EOT.
+        result = strategy_eot_disposal_relief(
+            {"disposal_gain": 500000, "badr_available": False}, TAX_YEAR
+        )
+        assert result["cgt_saved"] == approx(120000.0)
+
+
+class TestPensionDeathBenefit:
+    def test_pot_brought_into_estate_from_2027(self):
+        # 500k pot, estate above the NRB -> 40% = 200k extra IHT from April 2027
+        # (zero before).
+        result = strategy_pension_death_benefit(
+            {"pension_pot_value": 500000, "estate_above_nrb": True}, TAX_YEAR
+        )
+        assert result["iht_before_april_2027"] == approx(0.0)
+        assert result["iht_from_april_2027"] == approx(200000.0)
+        assert result["extra_iht_from_reform"] == approx(200000.0)
+
+    def test_estate_within_nrb_bears_no_charge(self):
+        result = strategy_pension_death_benefit(
+            {"pension_pot_value": 500000, "estate_above_nrb": False}, TAX_YEAR
+        )
+        assert result["extra_iht_from_reform"] == approx(0.0)
+
+
+class TestLifePolicyInTrust:
+    def test_in_trust_saves_iht_on_the_payout(self):
+        # 400k sum assured, estate above the NRB: held personally it would add
+        # 40% = 160k IHT; in trust it is outside the estate (0), so 160k saved
+        # and the full 400k is available to pay the bill.
+        result = strategy_life_policy_in_trust(
+            {"sum_assured": 400000, "estate_above_nrb": True}, TAX_YEAR
+        )
+        assert result["iht_if_held_personally"] == approx(160000.0)
+        assert result["iht_if_written_in_trust"] == approx(0.0)
+        assert result["iht_saved_by_writing_in_trust"] == approx(160000.0)
+        assert result["payout_available_for_iht_bill"] == approx(400000.0)
