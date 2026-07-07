@@ -1064,7 +1064,11 @@ _QUARTERS_PER_CYCLE = 40
 def strategy_relevant_property_trust_charges(facts: dict, tax_year: str) -> dict:
     nrb = get_parameter("iht.nil_rate_band", tax_year)["amount"]
     lifetime_rate = get_parameter("iht.rates", tax_year)["lifetime_clt_rate"]
-    available_nrb = float(facts.get("available_nrb", nrb))
+    # Related settlements made on the same day share one nil-rate band, so
+    # their value reduces the band available to this trust (IHTA 1984 s.62;
+    # anti-Rysaffe multiple-trust rule). Additive: defaults to no reduction.
+    related_settlements = max(0.0, float(facts.get("same_day_settlements_value", 0)))
+    available_nrb = max(0.0, float(facts.get("available_nrb", nrb)) - related_settlements)
 
     amount_settled = max(0.0, float(facts.get("amount_settled", 0)))
     trust_value = max(0.0, float(facts.get("trust_value", 0)))
