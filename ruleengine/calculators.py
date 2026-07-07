@@ -1325,6 +1325,84 @@ def strategy_commercial_property_fixtures(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.eot_disposal_relief",
+    consumes=["cgt.business_asset_disposal_relief", "cgt.rates"],
+    description="Employee Ownership Trust sale: an owner who sells a controlling interest in a "
+    "trading company to an EOT pays no capital gains tax on the disposal (a full exemption), "
+    "against the CGT a normal third-party sale would bear (Business Asset Disposal Relief at 14% "
+    "on the first £1m, then the standard share rate). Quantifies the CGT saved. The qualifying "
+    "conditions — tightened by Finance Act 2024/2025 (UK-resident trustees, no retained control, "
+    "clawback period, independent valuation) — are the adviser's to confirm (TCGA 1992 s.236H).",
+)
+def strategy_eot_disposal_relief(facts: dict, tax_year: str) -> dict:
+    gain = max(0.0, float(facts.get("disposal_gain", 0)))
+    badr_available = bool(facts.get("badr_available", True))
+    badr_used = max(0.0, float(facts.get("badr_lifetime_used", 0)))
+
+    badr = get_parameter("cgt.business_asset_disposal_relief", tax_year)
+    badr_rate, lifetime_limit = badr["rate"], badr["lifetime_limit"]
+    higher_rate = get_parameter("cgt.rates", tax_year)["other"]["higher"]
+
+    badr_amount = min(gain, max(0.0, lifetime_limit - badr_used)) if badr_available else 0.0
+    excess = gain - badr_amount
+    cgt_without_eot = round(badr_amount * badr_rate + excess * higher_rate, 2)
+    return {
+        "disposal_gain": round(gain, 2),
+        "cgt_without_eot": cgt_without_eot,
+        "cgt_under_eot": 0.0,
+        "cgt_saved": cgt_without_eot,
+    }
+
+
+@register(
+    "strategy.pension_death_benefit",
+    consumes=["iht.rates", "iht.nil_rate_band"],
+    description="Pension death-benefit IHT (announced Autumn Budget 2024): from 6 April 2027 most "
+    "unused pension funds are expected to fall within the estate for inheritance tax, where today "
+    "they normally pass outside it. Quantifies the extra IHT a pension pot would attract from that "
+    "date (40% where the estate is already above the nil-rate band). This is a forward-looking "
+    "projection subject to final legislation — flagged borderline; the plan is to review as the "
+    "Finance Bill 2025-26 is enacted (amending IHTA 1984).",
+)
+def strategy_pension_death_benefit(facts: dict, tax_year: str) -> dict:
+    pot = max(0.0, float(facts.get("pension_pot_value", 0)))
+    estate_above_nrb = bool(facts.get("estate_above_nrb", True))
+    death_rate = get_parameter("iht.rates", tax_year)["death_rate"]
+
+    iht_from_2027 = round(pot * death_rate, 2) if estate_above_nrb else 0.0
+    return {
+        "pension_pot_value": round(pot, 2),
+        "iht_before_april_2027": 0.0,
+        "iht_from_april_2027": iht_from_2027,
+        "extra_iht_from_reform": iht_from_2027,
+    }
+
+
+@register(
+    "strategy.life_policy_in_trust",
+    consumes=["iht.rates"],
+    description="Writing a life policy in trust: the sum assured is paid to the trust on death, "
+    "outside the estate, providing tax-free funds to meet the inheritance tax bill. If instead the "
+    "policy were held personally, the proceeds would add to the estate and attract 40% IHT. "
+    "Quantifies the IHT saved by writing it in trust and confirms the payout available to cover "
+    "the bill (IHTA 1984 s.5). The policy must be validly settled with no reservation of benefit.",
+)
+def strategy_life_policy_in_trust(facts: dict, tax_year: str) -> dict:
+    sum_assured = max(0.0, float(facts.get("sum_assured", 0)))
+    estate_above_nrb = bool(facts.get("estate_above_nrb", True))
+    death_rate = get_parameter("iht.rates", tax_year)["death_rate"]
+
+    iht_if_held_personally = round(sum_assured * death_rate, 2) if estate_above_nrb else 0.0
+    return {
+        "sum_assured": round(sum_assured, 2),
+        "iht_if_held_personally": iht_if_held_personally,
+        "iht_if_written_in_trust": 0.0,
+        "iht_saved_by_writing_in_trust": iht_if_held_personally,
+        "payout_available_for_iht_bill": round(sum_assured, 2),
+    }
+
+
+@register(
     "strategy.incorporation_vs_sole_trade",
     consumes=[
         "income_tax.personal_allowance",
