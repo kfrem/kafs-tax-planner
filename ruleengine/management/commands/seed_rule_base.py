@@ -650,6 +650,42 @@ class Command(BaseCommand):
                 "higher and additional-rate taxpayers. The grossed-up gift also reduces "
                 "adjusted net income for the personal-allowance taper.",
             ),
+            dict(
+                key="itepa2003_s401",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Earnings and Pensions) Act 2003 s.401",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/1/section/401",
+                verbatim_extract="Charges to income tax on payments and other benefits received "
+                "in connection with the termination of a person's employment, or a change in its "
+                "duties or earnings, so far as they are not otherwise chargeable as earnings.",
+            ),
+            dict(
+                key="itepa2003_s403",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Earnings and Pensions) Act 2003 s.403",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/1/section/403",
+                verbatim_extract="Termination payments within s.401 are only chargeable to income "
+                "tax on the amount by which they exceed the £30,000 threshold; the first £30,000 "
+                "is exempt. The excess is treated as employment income for the year of receipt.",
+            ),
+            dict(
+                key="itepa2003_s402d",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Earnings and Pensions) Act 2003 s.402D",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/1/section/402D",
+                verbatim_extract="Post-employment notice pay (PENP) is treated as earnings and "
+                "taxed in full; it does not benefit from the £30,000 termination exemption. PENP "
+                "is calculated by the statutory formula on basic pay for the unworked notice period.",
+            ),
+            dict(
+                key="sscba1992_s10",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Social Security Contributions and Benefits Act 1992 s.10",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/4/section/10",
+                verbatim_extract="Class 1A National Insurance contributions are payable by the "
+                "employer on the amount of a termination award that exceeds the £30,000 threshold "
+                "and is chargeable to income tax under ITEPA 2003, at the Class 1A percentage.",
+            ),
         ]
         result = {}
         for spec in specs:
