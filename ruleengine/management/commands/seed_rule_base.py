@@ -213,7 +213,7 @@ class Command(BaseCommand):
                 "profession or vocation carried on by a self-employed earner.",
             ),
             dict(
-                key="nica2014_s1",
+                key="_removed_nica2014_s1_placeholder",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="National Insurance Contributions Act 2014 s.1",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/2014/7/section/1",
