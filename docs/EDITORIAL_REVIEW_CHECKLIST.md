@@ -11,9 +11,9 @@ correction in *Comments*.
 | Date | _______________________ |
 | Rule-base version | 2025.x |
 
-Totals: **36 parameters · 41 strategies · 46 authorities = 123 items.**
+Totals: **37 parameters · 42 strategies · 50 authorities = 129 items.**
 
-## A. Parameters — rates & thresholds (36)
+## A. Parameters — rates & thresholds (37)
 
 | # | Parameter | Value (2025/26) | Correct? (Y/N) | Comments / corrections |
 |---|---|---|---|---|
@@ -52,9 +52,10 @@ Totals: **36 parameters · 41 strategies · 46 authorities = 123 items.**
 | 33 | SDLT non-residential lease: NPV discount rate and bands (England/NI) (`sdlt.lease_npv_bands`) | bands: [rate=0; upper=150,000; rate=1%; upper=5,000,000; rate=2%; upper=none]; discount_rate=3.5% |  |  |
 | 34 | SDLT non-residential/mixed freehold bands (England/NI) (`sdlt.non_residential_bands`) | bands: [rate=0; upper=150,000; rate=2%; upper=250,000; rate=5%; upper=none] |  |  |
 | 35 | SDLT residential bands, surcharge, FTB relief (England/NI) (`sdlt.residential_bands`) | bands: [rate=0; upper=125,000; rate=2%; upper=250,000; rate=5%; upper=925,000; rate=10%; upper=1,500,000; rate=12%; upper=none]; cap=500,000; relief_threshold=300,000; rate_above_threshold=5%; additional_dwelling_surcharge=5% |  |  |
-| 36 | EIS/SEIS/VCT income-tax relief rates, annual limits and CGT treatment (`venture_capital.schemes`) | relief_rate=30%; annual_limit=1,000,000; cgt_deferral=yes; min_holding_years=3; tax_free_dividends=no; cgt_reinvestment_relief_rate=0; relief_rate=30%; annual_limit=200,000; cgt_deferral=no; min_holding_years=5; tax_free_dividends=yes; cgt_reinvestment_relief_rate=0; relief_rate=50%; annual_limit=200,000; cgt_deferral=no; min_holding_years=3; tax_free_dividends=no; cgt_reinvestment_relief_rate=50% |  |  |
+| 36 | Termination payment income-tax exemption (ITEPA 2003 s.403) (`termination_payment.exemption`) | amount=30,000 |  |  |
+| 37 | EIS/SEIS/VCT income-tax relief rates, annual limits and CGT treatment (`venture_capital.schemes`) | relief_rate=30%; annual_limit=1,000,000; cgt_deferral=yes; min_holding_years=3; tax_free_dividends=no; cgt_reinvestment_relief_rate=0; relief_rate=30%; annual_limit=200,000; cgt_deferral=no; min_holding_years=5; tax_free_dividends=yes; cgt_reinvestment_relief_rate=0; relief_rate=50%; annual_limit=200,000; cgt_deferral=no; min_holding_years=3; tax_free_dividends=no; cgt_reinvestment_relief_rate=50% |  |  |
 
-## B. Strategies — tax logic & risk status (41)
+## B. Strategies — tax logic & risk status (42)
 
 Rows marked **borderline** carry a professional-judgement caveat.
 
@@ -86,23 +87,24 @@ Rows marked **borderline** carry a professional-judgement caveat.
 | 24 | Personal pension contribution (relief at source) | settled | Finance Act 2004 s.190 |  |  |
 | 25 | Landlord finance-cost restriction (s.24) | settled | Income Tax (Trading and Other Income) Act 2005 ss.272A-274C |  |  |
 | 26 | Salary sacrifice into an employer pension | settled | Social Security Contributions and Benefits Act 1992 s.6 |  |  |
-| 27 | EIS / SEIS / VCT investment relief | settled | Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT) |  |  |
-| 28 | Business Asset Disposal Relief | settled | Taxation of Chargeable Gains Act 1992 ss.169H-169S; Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
-| 29 | Lettings relief (shared-occupancy let) | settled | Taxation of Chargeable Gains Act 1992 s.223B; Taxation of Chargeable Gains Act 1992 ss.1H-1K; Taxation of Chargeable Gains Act 1992 ss.222-223 |  |  |
-| 30 | Private residence relief on property disposal | settled | Taxation of Chargeable Gains Act 1992 ss.1H-1K; Taxation of Chargeable Gains Act 1992 ss.222-223 |  |  |
-| 31 | Spousal transfer before disposal | settled | Taxation of Chargeable Gains Act 1992 s.58; Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
-| 32 | Timing of disposals across tax years | settled | Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
-| 33 | LBTT on a lease (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
-| 34 | LBTT on non-residential purchase (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
-| 35 | LBTT on planned property purchase (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
-| 36 | LTT on a non-residential lease (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
-| 37 | LTT on non-residential purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
-| 38 | LTT on planned property purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
-| 39 | SDLT on a non-residential lease (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 5 (amount of tax chargeable: rent) |  |  |
-| 40 | SDLT on non-residential purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed) |  |  |
-| 41 | SDLT on planned residential property purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA |  |  |
+| 27 | Termination payment (£30,000 exemption) | settled | Income Tax (Earnings and Pensions) Act 2003 s.401; Income Tax (Earnings and Pensions) Act 2003 s.402D; Income Tax (Earnings and Pensions) Act 2003 s.403; Social Security Contributions and Benefits Act 1992 s.10 |  |  |
+| 28 | EIS / SEIS / VCT investment relief | settled | Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT) |  |  |
+| 29 | Business Asset Disposal Relief | settled | Taxation of Chargeable Gains Act 1992 ss.169H-169S; Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
+| 30 | Lettings relief (shared-occupancy let) | settled | Taxation of Chargeable Gains Act 1992 s.223B; Taxation of Chargeable Gains Act 1992 ss.1H-1K; Taxation of Chargeable Gains Act 1992 ss.222-223 |  |  |
+| 31 | Private residence relief on property disposal | settled | Taxation of Chargeable Gains Act 1992 ss.1H-1K; Taxation of Chargeable Gains Act 1992 ss.222-223 |  |  |
+| 32 | Spousal transfer before disposal | settled | Taxation of Chargeable Gains Act 1992 s.58; Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
+| 33 | Timing of disposals across tax years | settled | Taxation of Chargeable Gains Act 1992 ss.1H-1K |  |  |
+| 34 | LBTT on a lease (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
+| 35 | LBTT on non-residential purchase (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
+| 36 | LBTT on planned property purchase (Scotland) | settled | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 |  |  |
+| 37 | LTT on a non-residential lease (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
+| 38 | LTT on non-residential purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
+| 39 | LTT on planned property purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
+| 40 | SDLT on a non-residential lease (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 5 (amount of tax chargeable: rent) |  |  |
+| 41 | SDLT on non-residential purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed) |  |  |
+| 42 | SDLT on planned residential property purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA |  |  |
 
-## C. Authorities — citations still good law (46)
+## C. Authorities — citations still good law (50)
 
 | # | Citation | Status | Correct? (Y/N) | Comments / corrections |
 |---|---|---|---|---|
@@ -126,32 +128,36 @@ Rows marked **borderline** carry a professional-judgement caveat.
 | 18 | Income Tax Act 2007 s.35 | in force |  |  |
 | 19 | Income Tax Act 2007 s.414 | in force |  |  |
 | 20 | Income Tax Act 2007 ss.55A-55E | in force |  |  |
-| 21 | Income Tax (Trading and Other Income) Act 2005 s.694 | in force |  |  |
-| 22 | Income Tax (Trading and Other Income) Act 2005 s.850 | in force |  |  |
-| 23 | Income Tax (Trading and Other Income) Act 2005 ss.272A-274C | in force |  |  |
-| 24 | Inheritance Tax Act 1984 s.18 | in force |  |  |
-| 25 | Inheritance Tax Act 1984 s.19 | in force |  |  |
-| 26 | Inheritance Tax Act 1984 s.3A | in force |  |  |
-| 27 | Inheritance Tax Act 1984 s.5 (meaning of estate) | in force |  |  |
-| 28 | Inheritance Tax Act 1984 s.7 and Sch 1 | in force |  |  |
-| 29 | Inheritance Tax Act 1984 s.8A | in force |  |  |
-| 30 | Inheritance Tax Act 1984 s.8D | in force |  |  |
-| 31 | Inheritance Tax Act 1984 s.8G | in force |  |  |
-| 32 | Inheritance Tax Act 1984 Sch 1A | in force |  |  |
-| 33 | Inheritance Tax Act 1984 ss.103-114 (BPR) and ss.115-124C (APR) | in force |  |  |
-| 34 | Inheritance Tax Act 1984 ss.58-69 (relevant property) | in force |  |  |
-| 35 | Jones v Garnett (Arctic Systems) [2007] UKHL 35 | in force |  |  |
-| 36 | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 | in force |  |  |
-| 37 | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 | in force |  |  |
-| 38 | Social Security Contributions and Benefits Act 1992 s.15 | in force |  |  |
-| 39 | Social Security Contributions and Benefits Act 1992 s.6 | in force |  |  |
-| 40 | Taxation of Chargeable Gains Act 1992 s.162 | in force |  |  |
-| 41 | Taxation of Chargeable Gains Act 1992 s.223B | in force |  |  |
-| 42 | Taxation of Chargeable Gains Act 1992 s.236H (Employee Ownership Trust) | in force |  |  |
-| 43 | Taxation of Chargeable Gains Act 1992 s.58 | in force |  |  |
-| 44 | Taxation of Chargeable Gains Act 1992 ss.169H-169S | in force |  |  |
-| 45 | Taxation of Chargeable Gains Act 1992 ss.1H-1K | in force |  |  |
-| 46 | Taxation of Chargeable Gains Act 1992 ss.222-223 | in force |  |  |
+| 21 | Income Tax (Earnings and Pensions) Act 2003 s.401 | in force |  |  |
+| 22 | Income Tax (Earnings and Pensions) Act 2003 s.402D | in force |  |  |
+| 23 | Income Tax (Earnings and Pensions) Act 2003 s.403 | in force |  |  |
+| 24 | Income Tax (Trading and Other Income) Act 2005 s.694 | in force |  |  |
+| 25 | Income Tax (Trading and Other Income) Act 2005 s.850 | in force |  |  |
+| 26 | Income Tax (Trading and Other Income) Act 2005 ss.272A-274C | in force |  |  |
+| 27 | Inheritance Tax Act 1984 s.18 | in force |  |  |
+| 28 | Inheritance Tax Act 1984 s.19 | in force |  |  |
+| 29 | Inheritance Tax Act 1984 s.3A | in force |  |  |
+| 30 | Inheritance Tax Act 1984 s.5 (meaning of estate) | in force |  |  |
+| 31 | Inheritance Tax Act 1984 s.7 and Sch 1 | in force |  |  |
+| 32 | Inheritance Tax Act 1984 s.8A | in force |  |  |
+| 33 | Inheritance Tax Act 1984 s.8D | in force |  |  |
+| 34 | Inheritance Tax Act 1984 s.8G | in force |  |  |
+| 35 | Inheritance Tax Act 1984 Sch 1A | in force |  |  |
+| 36 | Inheritance Tax Act 1984 ss.103-114 (BPR) and ss.115-124C (APR) | in force |  |  |
+| 37 | Inheritance Tax Act 1984 ss.58-69 (relevant property) | in force |  |  |
+| 38 | Jones v Garnett (Arctic Systems) [2007] UKHL 35 | in force |  |  |
+| 39 | Land and Buildings Transaction Tax (Scotland) Act 2013 s.24 | in force |  |  |
+| 40 | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 | in force |  |  |
+| 41 | Social Security Contributions and Benefits Act 1992 s.10 | in force |  |  |
+| 42 | Social Security Contributions and Benefits Act 1992 s.15 | in force |  |  |
+| 43 | Social Security Contributions and Benefits Act 1992 s.6 | in force |  |  |
+| 44 | Taxation of Chargeable Gains Act 1992 s.162 | in force |  |  |
+| 45 | Taxation of Chargeable Gains Act 1992 s.223B | in force |  |  |
+| 46 | Taxation of Chargeable Gains Act 1992 s.236H (Employee Ownership Trust) | in force |  |  |
+| 47 | Taxation of Chargeable Gains Act 1992 s.58 | in force |  |  |
+| 48 | Taxation of Chargeable Gains Act 1992 ss.169H-169S | in force |  |  |
+| 49 | Taxation of Chargeable Gains Act 1992 ss.1H-1K | in force |  |  |
+| 50 | Taxation of Chargeable Gains Act 1992 ss.222-223 | in force |  |  |
 
 ## Sign-off
 
