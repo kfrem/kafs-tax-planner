@@ -692,3 +692,33 @@ and surfaced by the guided intake — hence the borderline status.
 
 **Verdict:** YES for the modelled England/retained-profits break-even; the
 listed variants are documented next steps. **This completes Tier 2.**
+
+## Addendum, 7 July 2026 — Property-incorporation flagship v2 depth
+
+**Reviewing professional:** kfrem.
+
+**Scope:** deepened `strategy.property_incorporation` (no new strategy,
+authority or parameter — all outputs additive so the v1 golden is unchanged):
+(a) the transfer land tax now follows the property's UK nation via a
+`_transfer_land_tax` helper composing `sdlt/lbtt/ltt_residential`; (b) a
+profit-*extraction* view, composing `combined_personal_tax`, showing the tax
+once the post-CT profit is drawn as dividends; and (c) ATED added as a guided-
+intake question (relief is the norm for a commercial let, so it is a question,
+not an auto-charge).
+
+**Defect caught and fixed during build:** the first extraction implementation
+passed the owner's *gross* other income to the dividend calculator, which
+expects income *after* the personal allowance — overstating the dividend tax
+(£5,298.75 instead of £2,856.25). Refactored to compose `combined_personal_tax`
+(incremental dividend tax = tax-with-dividends minus tax-without), which handles
+the PA/band interaction correctly. This is exactly the class of single-figure
+error the hand-computation-plus-verification discipline exists to catch.
+
+**Verified:** the extraction case — £16,200 post-CT profit drawn over £40,000
+income (taxable £27,430) costs £2,856.25 dividend tax, so the after-extraction
+saving falls from £8,146 (retained) to £5,289.75. And the Scotland routing —
+the £1m transfer uses LBTT (£158,350 with the 8% ADS) not SDLT (£93,750),
+flowing into the one-off cost (test composes `lbtt_residential` directly).
+
+**Verdict:** YES. Remaining v2 next steps: a full multi-year NPV of the
+extraction path and an explicit ATED charge table for non-relieved dwellings.
