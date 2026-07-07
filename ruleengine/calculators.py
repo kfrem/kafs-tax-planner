@@ -331,6 +331,62 @@ def strategy_salary_sacrifice(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.termination_payment",
+    consumes=[
+        "termination_payment.exemption",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "national_insurance.employer_class1",
+    ],
+    description="Taxation of a termination payment (ITEPA 2003 ss.401-403): the first "
+    "£30,000 of a qualifying (non-contractual) termination payment is exempt from income "
+    "tax; the excess is taxed as the top slice of the employee's income, and the employer "
+    "pays Class 1A NIC on that excess (SSCBA 1992 s.10). Any post-employment notice pay "
+    "(PENP) and contractual sums are taxed in full as earnings and must be excluded from "
+    "the figure passed in as the qualifying payment.",
+)
+def strategy_termination_payment(facts: dict, tax_year: str) -> dict:
+    """Termination-payment tax. The ``termination_payment`` passed in is the
+    *qualifying* s.401 amount only — PENP (s.402D) and contractual pay are
+    taxed in full as ordinary earnings and are surfaced as an intake question,
+    not silently swept into the exemption. The excess over the £30,000
+    exemption is taxed as the top slice: on top of the employee's other income,
+    which also captures any personal-allowance taper the payment triggers.
+    """
+    payment = max(0.0, float(facts.get("termination_payment", 0)))
+    other_income = max(0.0, float(facts.get("other_income", 0)))
+
+    exemption = get_parameter("termination_payment.exemption", tax_year)["amount"]
+    exempt_amount = round(min(payment, exemption), 2)
+    taxable_excess = round(max(0.0, payment - exemption), 2)
+
+    # Income tax on the excess as the top slice of income (marginal: the tax on
+    # other income + excess, less the tax on other income alone).
+    tax_with = income_tax_on_earned_income({"total_income": other_income + taxable_excess}, tax_year)["tax_due"]
+    tax_without = income_tax_on_earned_income({"total_income": other_income}, tax_year)["tax_due"]
+    income_tax_on_excess = round(tax_with - tax_without, 2)
+
+    # Employer Class 1A NIC on the excess (charged at the secondary Class 1 rate;
+    # the £30,000 exemption already removes the exempt slice, so no further
+    # threshold applies). This is an employer cost, not the employee's.
+    secondary_rate = get_parameter("national_insurance.employer_class1", tax_year)["rate"]
+    employer_class1a_nic = round(taxable_excess * secondary_rate, 2)
+
+    # The employee bears the income tax only (no employee NIC on termination payments).
+    net_to_employee = round(payment - income_tax_on_excess, 2)
+
+    return {
+        "termination_payment": round(payment, 2),
+        "exempt_amount": exempt_amount,
+        "taxable_excess": taxable_excess,
+        "income_tax_on_excess": income_tax_on_excess,
+        "employer_class1a_nic": employer_class1a_nic,
+        "net_to_employee": net_to_employee,
+        "total_employer_cost": round(payment + employer_class1a_nic, 2),
+    }
+
+
+@register(
     "corporation_tax",
     consumes=["corporation_tax.rates"],
     description="Corporation tax with marginal relief between the small profits and main rate limits.",
