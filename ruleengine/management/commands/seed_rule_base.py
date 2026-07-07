@@ -1191,6 +1191,30 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="property-incorporation",
+                name="Property portfolio incorporation (should the landlord incorporate?)",
+                tax_domain=TaxDomain.CROSS_CUTTING,
+                calculator_key="strategy.property_incorporation",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.BORDERLINE,
+                gaar_exposure=False,
+                plain_english_explanation="A landlord holding property personally is caught by the "
+                "s.24 restriction (mortgage interest relieved at only 20%); a company deducts the "
+                "interest in full and pays corporation tax. That gives an annual saving for a "
+                "higher-rate landlord — but moving the properties into a company is a disposal at "
+                "market value, so it triggers SDLT (with the 5% surcharge) and a capital gain "
+                "(deferred only if s.162 incorporation relief applies). This weighs the annual "
+                "saving against those one-off costs and reports the break-even in years, so the "
+                "landlord can see whether incorporation actually pays. It assumes profits are "
+                "retained (extracting them adds dividend tax) and an England/SDLT portfolio; "
+                "whether the letting is a 'business' for s.162, and any ATED charge, are matters "
+                "the accountant confirms — which is why it is flagged borderline.",
+                authority_keys=["tcga1992_s162", "ittoia2005_s272a"],
+                eligibility_conditions={"all": [
+                    {"path": "property.portfolio_value", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
