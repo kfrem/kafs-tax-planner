@@ -999,6 +999,27 @@ def strategy_partnership_profit_allocation(facts: dict, tax_year: str) -> dict:
         )["total_tax"]
         return round(income_tax + _class4_nic(share_profit, tax_year), 2)
 
+    # N-partner mode: an explicit list of partners, each taxed on their share
+    # plus their other income. Used for firms with more than two partners.
+    partners_input = facts.get("partners")
+    if partners_input:
+        partner_results = []
+        total_tax = 0.0
+        for i, p in enumerate(partners_input, 1):
+            share_profit = round(total_profit * float(p.get("profit_share", 0)), 2)
+            other = max(0.0, float(p.get("other_income", 0)))
+            tax = _partner_tax(share_profit, other)
+            partner_results.append(
+                {"partner": i, "profit_share": share_profit, "tax": tax}
+            )
+            total_tax += tax
+        return {
+            "total_profit": round(total_profit, 2),
+            "number_of_partners": len(partner_results),
+            "partners": partner_results,
+            "total_tax": round(total_tax, 2),
+        }
+
     def _allocation(p1_share: float) -> dict:
         p1_profit = round(total_profit * p1_share, 2)
         p2_profit = round(total_profit - p1_profit, 2)
