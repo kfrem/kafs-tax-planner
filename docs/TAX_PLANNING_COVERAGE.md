@@ -61,7 +61,7 @@ Last updated: 6 July 2026.
 | Incorporation of property portfolios | ✓ | `property-incorporation` — **the flagship (v2)**: compares personal s.24 tax against corporation tax, weighs the annual saving against the one-off land-tax-on-transfer (**SDLT/LBTT/LTT by nation**, additional-dwelling rate) and CGT (deferred under s.162), and reports the **break-even in years**; v2 adds a **profit-extraction** view (dividend tax on drawing profits out) and surfaces **ATED** via the guided intake (TCGA 1992 s.162). Remaining: a multi-year NPV of the extraction path and an explicit ATED charge table. Flagged borderline. | — |
 | Furnished Holiday Lettings transitional planning | ○ | FHL regime abolished from April 2025 — model the transitional position. | Low |
 | SDLT reliefs (multiple/mixed-use/uninhabitable) | ◐ | SDLT built with the additional-dwelling surcharge + FTB relief. Missing: mixed-use rate, uninhabitable/derelict. (Multiple Dwellings Relief was abolished June 2024.) | Med |
-| Capital allowances on commercial property (fixtures) | ○ | Fixtures/integral features within commercial buildings. | Med |
+| Capital allowances on commercial property (fixtures) | ✓ | `commercial-property-fixtures` — integral features/fixtures within a commercial building relieved via AIA (100% to the limit) then the special-rate WDA; quantifies the first-year allowance and tax saved (CAA 2001 ss.33A/187A). Second-hand s.187A pooling/fixed-value conditions flagged. | — |
 
 ## Family & inheritance tax
 
