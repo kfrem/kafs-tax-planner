@@ -6,18 +6,20 @@ set, then proceeds to generate.
 import pytest
 from django.urls import reverse
 
-from clients.models import Client, ClientFactSet
+from clients.models import Client, ClientAccess, ClientFactSet
 
 pytestmark = pytest.mark.usefixtures("seeded_rule_base")
 
 
-def _fact_set(firm, user, facts):
-    client = Client.objects.create(
-        firm=firm, reference="R1", name="Review Client",
+def _fact_set(firm, user, facts, reference="R1"):
+    obj = Client.objects.create(
+        firm=firm, reference=reference, name="Review Client",
         entity_type="individual", created_by=user,
     )
+    # Staff only see clients they are granted access to.
+    ClientAccess.objects.create(firm=firm, client=obj, user=user, granted_by=user)
     return ClientFactSet.objects.create(
-        firm=firm, client=client, tax_year="2025/26", facts=facts,
+        firm=firm, client=obj, tax_year="2025/26", facts=facts,
         source="manual", created_by=user,
     )
 
