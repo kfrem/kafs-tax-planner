@@ -93,6 +93,19 @@ CHECKS = [
         "contribution.",
     },
     {
+        "key": "ated_on_incorporation",
+        "question": "If the portfolio is incorporated, is any single dwelling worth over £500,000 "
+        "and not let to a third party on commercial terms?",
+        "why": "A company holding a dwelling over £500,000 pays the Annual Tax on Enveloped "
+        "Dwellings unless a relief applies. A genuine commercial letting business is normally "
+        "relieved, but an owner-occupied or connected-party dwelling is not — an annual cost that "
+        "changes the incorporation decision.",
+        "applies": lambda f: f.get("property", {}).get("portfolio_value", 0) > 0,
+        "answered": lambda f: _has(f.get("property", {}), "ated_relief_confirmed"),
+        "assumption": "Assumed ATED relief applies (a commercial letting business), so no ATED "
+        "charge was included.",
+    },
+    {
         "key": "trust_prior_transfers",
         "question": "Has the settlor made any chargeable transfers in the seven years before "
         "creating the trust?",
