@@ -31,6 +31,9 @@ USER appuser
 EXPOSE 8000
 
 # Bind to $PORT when the host provides one (Render, Railway, Fly all inject it),
-# falling back to 8000 for local/compose. Shell form so ${PORT} expands at runtime.
+# falling back to 8000 for local/compose. Worker count is WEB_CONCURRENCY
+# (default 2) so a small/free instance can run 1 worker to stay within memory;
+# 120s timeout gives WeasyPrint room to render a PDF on a low-CPU instance.
+# Shell form so the ${...} vars expand at runtime.
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 60"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers ${WEB_CONCURRENCY:-2} --timeout 120"]
