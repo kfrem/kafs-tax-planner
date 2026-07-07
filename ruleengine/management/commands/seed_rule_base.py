@@ -1796,6 +1796,25 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.property_incorporation",
+                description="Landlord incorporation break-even with s.162 relief, 2025/26",
+                source="Hand-computed: personal s.24 tax on 50k rental (40k other income) = "
+                "17,946 IT less 6,000 reducer = 11,946; company CT on 20k = 3,800; saving 8,146. "
+                "SDLT on 1m at additional rates = 93,750; s.162 defers CGT; break-even 11.51 yrs.",
+                input_facts={"portfolio_value": 1000000, "rental_profit": 50000,
+                             "finance_costs": 30000, "other_income": 40000,
+                             "latent_gain": 300000, "s162_relief_available": True},
+                expected_output={
+                    "personal_annual_tax": 11946.0,
+                    "company_annual_tax": 3800.0,
+                    "annual_tax_saving": 8146.0,
+                    "sdlt_on_transfer": 93750.0,
+                    "cgt_on_transfer": 0.0,
+                    "one_off_cost": 93750.0,
+                    "break_even_years": 11.51,
+                },
+            ),
+            dict(
                 calculator_key="strategy.relevant_property_trust_charges",
                 description="Discretionary trust: entry, ten-year and exit charges, 2025/26",
                 source="Hand-computed: 500k settled, 325k NRB -> 20% entry on 175k = 35,000; "
