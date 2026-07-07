@@ -339,6 +339,51 @@ class BusinessPropertyReliefAdapter:
         }
 
 
+@adapter("strategy.rd_tax_relief")
+class RdTaxReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("qualifying_rd_spend", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        result = {"qualifying_rd_spend": company.get("qualifying_rd_spend", 0)}
+        if company.get("marginal_rate"):
+            result["marginal_rate"] = company["marginal_rate"]
+        return result
+
+
+@adapter("strategy.patent_box")
+class PatentBoxAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("patent_profit", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        result = {"patent_profit": company.get("patent_profit", 0)}
+        if company.get("marginal_rate"):
+            result["marginal_rate"] = company["marginal_rate"]
+        return result
+
+
+@adapter("strategy.commercial_property_fixtures")
+class CommercialPropertyFixturesAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("fixtures_value", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        result = {"fixtures_value": company.get("fixtures_value", 0)}
+        if company.get("marginal_rate"):
+            result["marginal_rate"] = company["marginal_rate"]
+        return result
+
+
 @adapter("strategy.property_incorporation")
 class PropertyIncorporationAdapter:
     @staticmethod
