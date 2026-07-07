@@ -250,6 +250,8 @@ def _build_cases():
          "company", INNOVATIVE_COMPANY_FACTS),
         ("AUDIT-EXIT", "Audit: exit & estate (EOT/pension/life-in-trust)",
          "individual_with_company", EXIT_AND_ESTATE_FACTS),
+        ("AUDIT-TERMINATION", "Audit: employment termination payment",
+         "individual", TERMINATION_FACTS),
     ]
     for juris, tag in (("england", "ENG"), ("scotland", "SCO"), ("wales", "WAL")):
         cases.append((f"AUDIT-{tag}-RES", f"Audit: {juris} residential purchase",
