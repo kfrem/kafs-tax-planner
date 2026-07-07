@@ -1956,6 +1956,35 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.termination_payment",
+                description="50,000 ex-gratia termination payment, employee on 40,000 other income, 2025/26",
+                source="Hand-computed: 30,000 exempt -> 20,000 excess taxed as top slice on top of "
+                "40,000. IT(60,000)=11,432 less IT(40,000)=5,486 -> 5,946 (10,270 at 20% + 9,730 at "
+                "40%). Employer Class 1A = 20,000 at 15% = 3,000. Net to employee = 50,000 - 5,946 = 44,054.",
+                input_facts={"termination_payment": 50000, "other_income": 40000},
+                expected_output={
+                    "exempt_amount": 30000.0,
+                    "taxable_excess": 20000.0,
+                    "income_tax_on_excess": 5946.0,
+                    "employer_class1a_nic": 3000.0,
+                    "net_to_employee": 44054.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.termination_payment",
+                description="25,000 termination payment fully within the exemption, 2025/26",
+                source="Hand-computed: 25,000 is below the 30,000 exemption -> wholly exempt, no "
+                "income tax and no employer Class 1A NIC; the employee receives all 25,000.",
+                input_facts={"termination_payment": 25000, "other_income": 40000},
+                expected_output={
+                    "exempt_amount": 25000.0,
+                    "taxable_excess": 0.0,
+                    "income_tax_on_excess": 0.0,
+                    "employer_class1a_nic": 0.0,
+                    "net_to_employee": 25000.0,
+                },
+            ),
+            dict(
                 calculator_key="strategy.personal_pension_contribution",
                 description="Personal pension contribution in the 60% taper, 2025/26",
                 source="Hand-computed: earned 110,000, 10,000 gross. PA restored 7,570->12,570 "
