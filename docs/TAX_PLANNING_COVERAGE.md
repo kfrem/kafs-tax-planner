@@ -98,10 +98,12 @@ Last updated: 6 July 2026.
 
 ## Coverage tally
 
-Roughly **31 built, 2 partial, ~6 planned** of ~38 mainstream strategies (plus
+Roughly **34 built, 2 partial, ~3 planned** of ~38 mainstream strategies (plus
 new client-category strategies — partnership, trust — beyond the original ~38).
-**Tier 2 complete** (incl. the flagship); **Tier 3 in progress** — R&D relief,
-Patent Box and commercial-property fixtures built (7 Jul 2026).
+**Tier 2 complete** (incl. the flagship); **Tier 3 largely built** (7 Jul 2026):
+R&D relief, Patent Box, commercial-property fixtures, EOT sale, pension
+death-benefit (Apr 2027, borderline) and life-policy-in-trust. Remaining
+specialist items: holding-company structuring, Payroll Giving, charity VAT.
 (**Tier 1 complete, 6 Jul 2026**: Gift Aid, directors'-loan/s.455, timing of
 disposals, capital allowances / AIA, salary sacrifice, and the standalone
 personal + employer pension-contribution recommendations. **Tier 2 quick wins
