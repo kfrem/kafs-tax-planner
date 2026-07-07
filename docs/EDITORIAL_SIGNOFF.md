@@ -786,3 +786,28 @@ surfaced by the guided intake.
 
 **Verdict:** YES, with the pension measure carried as an explicitly
 forward-looking, borderline projection.
+
+## Addendum, 7 July 2026 — Depth variants: N-partner, multi-trust, pre-generation intake
+
+**Reviewing professional:** kfrem.
+
+**Scope:** additive extensions (no new strategy/authority/parameter; existing
+golden cases unchanged) plus a UI view:
+- **N-partner partnerships** (`strategy.partnership_profit_allocation`): an
+  explicit `partners` list, each taxed on their share. Reconciled a 3-partner
+  £90,000 firm split 40/35/25 with other income £50k/£10k/£0 → £23,237.80 +
+  £6,921.80 + £2,581.80 = £32,741.40.
+- **Multiple-trust rule** (`strategy.relevant_property_trust_charges`): same-day
+  related settlements reduce the available nil-rate band (anti-Rysaffe, IHTA
+  1984 s.62). Reconciled: £200,000 of same-day settlements cut the £325,000
+  band to £125,000, so the entry charge bites on £375,000 = £75,000.
+- **Pre-generation intake** (`advice/intake_review` view + template): the intake
+  questions now appear *before* generation at
+  `/advice/generate/<fact_set>/review/`, so the accountant confirms assumptions
+  first — verified rendering in the browser and via the authenticated test
+  client (staff access boundary respected).
+
+**Verdict:** YES. This completes the depth variants; the full set of
+partnership/trust/incorporation variants and Tier-3 modules the coverage map
+lists as remaining are limited to the specialist items (holding-company
+structuring, charity VAT, Payroll Giving).
