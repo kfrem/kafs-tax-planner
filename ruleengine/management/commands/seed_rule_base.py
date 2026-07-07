@@ -1895,6 +1895,33 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.rd_tax_relief",
+                description="R&D merged-scheme credit, main-rate company, 2025/26",
+                source="Hand-computed: 100,000 qualifying spend -> 20% RDEC = 20,000 gross; "
+                "the credit is taxable at 25% (5,000); net benefit 15,000.",
+                input_facts={"qualifying_rd_spend": 100000, "marginal_rate": 0.25},
+                expected_output={"gross_credit": 20000.0, "tax_on_credit": 5000.0,
+                                 "net_benefit": 15000.0},
+            ),
+            dict(
+                calculator_key="strategy.patent_box",
+                description="Patent Box vs the 25% main rate, 2025/26",
+                source="Hand-computed: 200,000 patented-product profit at 10% (20,000) vs the "
+                "25% main rate (50,000) = 30,000 saved.",
+                input_facts={"patent_profit": 200000, "marginal_rate": 0.25},
+                expected_output={"tax_at_main_rate": 50000.0, "tax_under_patent_box": 20000.0,
+                                 "tax_saving": 30000.0},
+            ),
+            dict(
+                calculator_key="strategy.commercial_property_fixtures",
+                description="Commercial fixtures within the AIA, main-rate company, 2025/26",
+                source="Hand-computed: 200,000 fixtures fully within the 1,000,000 AIA -> "
+                "200,000 first-year allowance; at 25% that saves 50,000.",
+                input_facts={"fixtures_value": 200000, "marginal_rate": 0.25},
+                expected_output={"aia_used": 200000.0, "first_year_allowance": 200000.0,
+                                 "tax_saved_year_one": 50000.0},
+            ),
+            dict(
                 calculator_key="strategy.property_incorporation",
                 description="Landlord incorporation break-even with s.162 relief, 2025/26",
                 source="Hand-computed: personal s.24 tax on 50k rental (40k other income) = "
