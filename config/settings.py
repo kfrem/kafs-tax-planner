@@ -27,6 +27,22 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
+# Origins trusted for CSRF-protected POSTs (login, forms). Django requires the
+# scheme, e.g. https://app.example.com. Needed once the app is served over a
+# public HTTPS hostname behind a proxy (Railway/Render/Fly).
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+
+# Railway (and similar PaaS) expose the app's public hostname as an env var.
+# Auto-trust it so a deploy works without hand-listing the generated domain in
+# two places. Harmless elsewhere (the var is simply absent).
+_railway_domain = env("RAILWAY_PUBLIC_DOMAIN", default="")
+if _railway_domain:
+    if _railway_domain not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_railway_domain)
+    _railway_origin = f"https://{_railway_domain}"
+    if _railway_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_railway_origin)
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
