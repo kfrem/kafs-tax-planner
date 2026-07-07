@@ -117,6 +117,58 @@ CHECKS = [
         "assumption": "Assumed a full nil-rate band is available to the trust; prior chargeable "
         "transfers would reduce it.",
     },
+    # --- Checks derived from professional tax-examination material (see the Tax
+    # Intelligence Brain milestone). Each surfaces a make-or-break fact that the
+    # examiners' reports show is commonly missed. Pure issue-spotting: they flag
+    # an assumption, they do not change any computed figure. ---
+    {
+        "key": "fixtures_s198_election",
+        "question": "For fixtures within an acquired property, did the seller pool the fixtures "
+        "and has a s.198 CAA 2001 election been signed by both parties?",
+        "why": "Without the seller pooling the fixtures and a signed s.198 election, the buyer can "
+        "claim NO capital allowances on those fixtures — the single fact that decides whether the "
+        "relief exists at all.",
+        "applies": lambda f: f.get("company", {}).get("fixtures_value", 0) > 0,
+        "answered": lambda f: _has(f.get("company", {}), "fixtures_s198_confirmed"),
+        "assumption": "Assumed the fixtures qualify for capital allowances; without seller pooling "
+        "and a signed s.198 election no allowances are available on them.",
+    },
+    {
+        "key": "venture_capital_connection",
+        "question": "Is the investor connected with the EIS/SEIS company — an employee, a director "
+        "outside the permitted limits, or holding more than 30% of the shares or voting rights?",
+        "why": "Connection can deny EIS/SEIS income-tax relief, although CGT deferral/reinvestment "
+        "relief may still be available, so the connection changes which relief the client gets.",
+        "applies": lambda f: f.get("personal", {}).get("venture_capital_investment", 0) > 0,
+        "answered": lambda f: _has(f.get("personal", {}), "venture_capital_connection_confirmed"),
+        "assumption": "Assumed the investor is not connected with the company, so full EIS/SEIS "
+        "income-tax relief was considered.",
+    },
+    {
+        "key": "badr_qualifying_conditions",
+        "question": "Does the disposal meet every Business Asset Disposal Relief condition throughout "
+        "the two years to disposal — at least 5% of ordinary shares and voting rights, an officer or "
+        "employee, and a trading company?",
+        "why": "BADR gives the 10% rate only if all conditions are met for the qualifying period; if "
+        "any fails, the gain is taxed at the normal CGT rate — a materially different result.",
+        "applies": lambda f: f.get("property", {}).get("badr_qualifying_gain", 0) > 0,
+        "answered": lambda f: _has(f.get("property", {}), "badr_conditions_confirmed"),
+        "assumption": "Assumed all BADR conditions are met (5% shareholding and votes, officer/"
+        "employee, trading company, two-year period), so the 10% rate was applied.",
+    },
+    {
+        "key": "termination_penp",
+        "question": "Of the termination package, how much is a genuine ex-gratia termination payment, "
+        "and how much is post-employment notice pay (PENP) or contractual (e.g. notice, bonus, "
+        "restraint of trade, garden leave)?",
+        "why": "Only the genuine ex-gratia element gets the £30,000 exemption. PENP and contractual "
+        "sums are taxed in full as earnings; if they are wrongly included in the qualifying figure "
+        "the tax is understated.",
+        "applies": lambda f: f.get("employment", {}).get("termination_payment", 0) > 0,
+        "answered": lambda f: _has(f.get("employment", {}), "penp_confirmed"),
+        "assumption": "Assumed the whole amount entered is a qualifying ex-gratia termination "
+        "payment; any PENP or contractual sums must be taxed in full and excluded from it.",
+    },
 ]
 
 
