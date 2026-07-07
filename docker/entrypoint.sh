@@ -13,4 +13,12 @@ until python manage.py migrate --noinput; do
     sleep 5
 done
 
+# Optional one-shot demo bootstrap for hosts without a shell (e.g. Render Free).
+# Idempotent and run in the background so it never blocks startup or health
+# checks; after the first boot it finds everything present and returns fast.
+if [ "${SEED_DEMO_DATA:-}" = "true" ]; then
+    echo "SEED_DEMO_DATA=true: ensuring demo data in the background..."
+    (python manage.py ensure_demo_seed || echo "demo seed failed (continuing)") &
+fi
+
 exec "$@"
