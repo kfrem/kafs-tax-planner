@@ -722,3 +722,35 @@ flowing into the one-off cost (test composes `lbtt_residential` directly).
 
 **Verdict:** YES. Remaining v2 next steps: a full multi-year NPV of the
 extraction path and an explicit ATED charge table for non-relieved dwellings.
+
+## Addendum, 7 July 2026 — Tier 3 batch 1: R&D relief, Patent Box, commercial fixtures
+
+**Reviewing professional:** kfrem.
+
+**Scope:** three corporate strategies — `rd-tax-relief`
+(`strategy.rd_tax_relief`, CTA 2009 Part 13, new param `rd.merged_scheme`),
+`patent-box` (`strategy.patent_box`, CTA 2010 Part 8A, new param
+`patent_box.rate`) and `commercial-property-fixtures`
+(`strategy.commercial_property_fixtures`, CAA 2001 ss.33A/187A, composes the
+existing `capital_allowances.aia` parameter).
+
+**Verified:**
+- **R&D merged scheme (from 1 April 2024):** 20% RDEC on qualifying spend; the
+  credit is itself taxable, so the net benefit is 20% less tax. Reconciled:
+  £100,000 spend → £20,000 gross credit, £5,000 tax at 25%, £15,000 net (~15%).
+- **Patent Box:** a 10% effective rate on patented-product profit. Reconciled:
+  £200,000 profit → £20,000 vs £50,000 at the 25% main rate = £30,000 saved.
+- **Commercial fixtures:** integral features relieved by AIA then the 6%
+  special-rate WDA. Reconciled: £200,000 within the AIA → £200,000 first-year
+  allowance, £50,000 saved at 25%; £1.2m → £1m AIA + £12,000 (6% of the £200k
+  excess) = £1,012,000, £253,000 saved.
+
+**Documented scope / adviser judgements:** what counts as qualifying R&D (and
+the loss-making R&D-intensive-SME 14.5% payable-credit route), the
+apportionment of profit to qualifying IP and the modified-nexus fraction, and
+the s.187A second-hand-fixtures pooling/fixed-value conditions are all technical
+determinations flagged for the adviser (often with a specialist), not
+auto-applied.
+
+**Verdict:** YES for the modelled headline mechanics; the flagged judgements
+gate real-client use.
