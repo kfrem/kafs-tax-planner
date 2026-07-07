@@ -1138,6 +1138,26 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="termination-payment",
+                name="Termination payment (£30,000 exemption)",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.termination_payment",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="When an employment ends, a genuine (non-contractual) "
+                "termination payment is exempt from income tax up to £30,000; only the excess is "
+                "taxed, and it is taxed as the top slice of the employee's income for the year, so "
+                "a large payment can also strip the personal allowance. The employer pays Class 1A "
+                "National Insurance on that same excess. Contractual sums and post-employment "
+                "notice pay (PENP) do NOT get the exemption — they are taxed in full as ordinary "
+                "earnings — so only the qualifying amount should be entered. This quantifies the "
+                "tax on the excess, the employer's NIC, and the employee's net receipt.",
+                authority_keys=["itepa2003_s401", "itepa2003_s403", "itepa2003_s402d", "sscba1992_s10"],
+                eligibility_conditions={"all": [
+                    {"path": "employment.termination_payment", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="personal-pension-contribution",
                 name="Personal pension contribution (relief at source)",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
