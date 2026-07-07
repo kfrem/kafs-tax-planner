@@ -16,6 +16,7 @@ from ruleengine.calculators import (
     strategy_partnership_profit_allocation,
     strategy_personal_pension_contribution,
     strategy_property_income_finance_cost,
+    strategy_property_incorporation,
     strategy_relevant_property_trust_charges,
     strategy_salary_sacrifice,
     strategy_venture_capital_investment,
