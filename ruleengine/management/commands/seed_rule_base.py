@@ -519,11 +519,23 @@ class Command(BaseCommand):
             dict(
                 key="fa2003_s55",
                 authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Finance Act 2003 s.55 and Sch 4ZA",
+                canonical_citation="Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed)",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/section/55",
-                verbatim_extract="Amount of stamp duty land tax chargeable on residential "
-                "property; Schedule 4ZA imposes higher rates for additional dwellings, "
-                "refundable where a main residence is replaced within three years.",
+                verbatim_extract="Amount of stamp duty land tax chargeable: s.55 sets the rates by "
+                "reference to Table A (residential property) and Table B (non-residential or "
+                "mixed-use property). The residential additional-dwelling surcharge (Sch 4ZA) and "
+                "first-time buyer relief (Sch 6ZA), and the lease-rent charge (Sch 5), sit in the "
+                "referenced schedules.",
+            ),
+            dict(
+                key="fa2003_sch4za",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/schedule/4ZA",
+                verbatim_extract="Schedule 4ZA imposes the higher rates of SDLT on purchases of "
+                "additional residential dwellings (and dwellings bought by companies), refundable "
+                "where a former main residence is replaced within the time limit. It applies to "
+                "residential property only, not to non-residential or mixed-use transactions.",
             ),
             dict(
                 key="fa2003_sch6za",
