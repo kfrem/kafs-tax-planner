@@ -98,9 +98,10 @@ Last updated: 6 July 2026.
 
 ## Coverage tally
 
-Roughly **27 built, 2 partial, ~10 planned** of ~38 mainstream strategies (the
+Roughly **28 built, 2 partial, ~9 planned** of ~38 mainstream strategies (the
 partnership allocation and relevant-property trust charges are new
-client-category strategies beyond the original ~38)
+client-category strategies beyond the original ~38). **The property-incorporation
+flagship is built**, so the whole Tier-2 list is now complete.
 (**Tier 1 complete, 6 Jul 2026**: Gift Aid, directors'-loan/s.455, timing of
 disposals, capital allowances / AIA, salary sacrifice, and the standalone
 personal + employer pension-contribution recommendations. **Tier 2 quick wins
