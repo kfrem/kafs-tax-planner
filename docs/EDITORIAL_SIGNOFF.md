@@ -661,3 +661,34 @@ interest-in-possession and bereaved-minor variants, and business/agricultural
 relief inside the trust are documented next steps, flagged for the adviser.
 
 **Verdict:** YES for the modelled single-trust relevant-property charges.
+
+## Addendum, 7 July 2026 — Property-incorporation flagship
+
+**Reviewing professional:** kfrem.
+
+**Scope:** strategy `property-incorporation`
+(`strategy.property_incorporation`, **BORDERLINE**), new authority TCGA 1992
+s.162. No new parameter — composes `sdlt_residential`, `corporation_tax`,
+`income_tax_on_earned_income`, the s.24 reducer and the CGT residential rate.
+
+**Verified:** the landlord incorporation decision end to end. Reconciled the
+worked case: a higher-rate landlord with £50k rental profit and £30k interest
+on top of £40k other income pays £11,946 personally under s.24 (£17,946
+incremental income tax less the £6,000 basic-rate reducer); a company pays
+£3,800 corporation tax on the £20k profit (interest fully deducted, profits
+retained) — an £8,146 annual saving. The one-off cost is £93,750 SDLT on the
+£1m market-value transfer (banded £43,750 + 5% surcharge £50,000), with CGT
+deferred by s.162, giving a **11.51-year break-even**. Confirmed that without
+s.162 the £300k gain is taxed at 24% (£72,000), stretching the break-even to
+20.35 years, and that a basic-rate landlord gets a *negative* saving (the 19%
+CT exceeds their negligible s.24 cost) so incorporation would not pay
+(break-even undefined) — exactly the honest result that stops a costly mistake.
+
+**Documented scope:** v1 assumes profits are retained (extraction adds dividend
+tax), an England/SDLT portfolio (LBTT/LTT variants next), and that the SDLT is
+computed on a single deemed transfer. Whether the letting is a 'business' for
+s.162 (Ramsay [2013] UKUT 226) and any ATED charge are flagged for the adviser
+and surfaced by the guided intake — hence the borderline status.
+
+**Verdict:** YES for the modelled England/retained-profits break-even; the
+listed variants are documented next steps. **This completes Tier 2.**
