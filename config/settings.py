@@ -37,8 +37,9 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 # two places. Harmless elsewhere (the var is simply absent).
 _railway_domain = env("RAILWAY_PUBLIC_DOMAIN", default="")
 if _railway_domain:
-    if _railway_domain not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append(_railway_domain)
+    for _host in (_railway_domain, ".railway.app"):  # exact domain + healthcheck subdomain
+        if _host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(_host)
     _railway_origin = f"https://{_railway_domain}"
     if _railway_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(_railway_origin)
