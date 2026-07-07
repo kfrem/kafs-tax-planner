@@ -256,6 +256,40 @@ class Command(BaseCommand):
                 "repaid under s.458 when the loan is repaid or written off.",
             ),
             dict(
+                key="cta2009_part13",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Corporation Tax Act 2009 Part 13 (as amended, merged R&D scheme)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2009/4/part/13",
+                verbatim_extract="Relief for expenditure on research and development. For "
+                "accounting periods beginning on or after 1 April 2024 the merged scheme gives a "
+                "20% taxable 'above the line' expenditure credit (RDEC) on qualifying R&D spend; "
+                "the credit is itself chargeable to corporation tax, so the net benefit is 20% "
+                "less tax. Loss-making R&D-intensive SMEs (qualifying R&D at least 30% of total "
+                "expenditure) instead claim enhanced support with a 14.5% payable credit.",
+            ),
+            dict(
+                key="cta2010_part8a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Corporation Tax Act 2010 Part 8A (Patent Box)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2010/4/part/8A",
+                verbatim_extract="A company may elect for profits attributable to patented "
+                "inventions (and certain other qualifying IP) to be taxed at an effective "
+                "corporation-tax rate of 10%, delivered by a deduction from those profits. Post-"
+                "2016 entrants must meet the modified nexus requirement linking the relief to the "
+                "company's own R&D.",
+            ),
+            dict(
+                key="caa2001_s33a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Capital Allowances Act 2001 ss.33A-33B & s.187A (integral features / fixtures)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2001/2/section/33A",
+                verbatim_extract="Expenditure on integral features and fixtures within a "
+                "commercial building (electrical, heating, water, lifts, etc.) qualifies for plant "
+                "and machinery capital allowances — the Annual Investment Allowance up to its limit "
+                "then the special-rate writing-down allowance. On a second-hand building the fixtures "
+                "claim depends on the s.187A pooling/fixed-value requirements being met by the seller.",
+            ),
+            dict(
                 key="tcga1992_s162",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Taxation of Chargeable Gains Act 1992 s.162",
