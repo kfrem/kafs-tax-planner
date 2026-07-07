@@ -618,3 +618,38 @@ class TestPropertyIncorporation:
         )
         assert result["annual_tax_saving"] < 0
         assert result["break_even_years"] is None
+
+    def test_extraction_reduces_the_saving(self):
+        # Drawing the 16,200 post-CT profit out as dividends (over 40k income,
+        # taxable 27,430) costs 2,856.25 dividend tax, so the after-extraction
+        # saving falls from 8,146 (retained) to 5,289.75.
+        result = strategy_property_incorporation(
+            {"portfolio_value": 1000000, "rental_profit": 50000, "finance_costs": 30000,
+             "other_income": 40000, "latent_gain": 300000, "s162_relief_available": True,
+             "extract_profits": True}, TAX_YEAR
+        )
+        assert result["annual_tax_saving"] == approx(8146.0)          # retained
+        assert result["dividend_tax_on_extraction"] == approx(2856.25)
+        assert result["company_total_tax_if_extracted"] == approx(6656.25)
+        assert result["annual_saving_after_extraction"] == approx(5289.75)
+
+    def test_transfer_land_tax_follows_the_jurisdiction(self):
+        # Scotland uses LBTT (with the 8% ADS), not SDLT — a materially higher
+        # transfer cost that must flow into the one-off cost.
+        from ruleengine.calculators import lbtt_residential
+
+        eng = strategy_property_incorporation(
+            {"portfolio_value": 1000000, "rental_profit": 50000, "finance_costs": 30000,
+             "other_income": 40000, "s162_relief_available": True}, TAX_YEAR
+        )
+        sco = strategy_property_incorporation(
+            {"portfolio_value": 1000000, "rental_profit": 50000, "finance_costs": 30000,
+             "other_income": 40000, "s162_relief_available": True, "jurisdiction": "scotland"},
+            TAX_YEAR
+        )
+        expected_lbtt = lbtt_residential(
+            {"price": 1000000, "additional_dwelling": True}, TAX_YEAR
+        )["total_lbtt"]
+        assert eng["land_tax_on_transfer"] == approx(93750.0)          # SDLT
+        assert sco["land_tax_on_transfer"] == approx(expected_lbtt)    # LBTT
+        assert sco["one_off_cost"] == approx(expected_lbtt)
