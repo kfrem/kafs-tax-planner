@@ -1989,6 +1989,37 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.eot_disposal_relief",
+                description="EOT sale vs a normal BADR sale, 2025/26",
+                source="Hand-computed: 2,000,000 gain — normal sale BADR 14% on 1,000,000 "
+                "(140,000) + 24% on 1,000,000 (240,000) = 380,000; EOT sale is exempt, so 380,000 "
+                "saved.",
+                input_facts={"disposal_gain": 2000000, "badr_available": True,
+                             "badr_lifetime_used": 0},
+                expected_output={"cgt_without_eot": 380000.0, "cgt_under_eot": 0.0,
+                                 "cgt_saved": 380000.0},
+            ),
+            dict(
+                calculator_key="strategy.pension_death_benefit",
+                description="Pension pot brought into the estate from April 2027, 2025/26",
+                source="Hand-computed: 500,000 pot, estate above the NRB -> 40% = 200,000 extra "
+                "IHT from 6 April 2027 (zero before).",
+                input_facts={"pension_pot_value": 500000, "estate_above_nrb": True},
+                expected_output={"iht_before_april_2027": 0.0, "iht_from_april_2027": 200000.0,
+                                 "extra_iht_from_reform": 200000.0},
+            ),
+            dict(
+                calculator_key="strategy.life_policy_in_trust",
+                description="Life policy in trust vs held personally, 2025/26",
+                source="Hand-computed: 400,000 sum assured, estate above the NRB — held personally "
+                "it would add 40% = 160,000 IHT; in trust it is outside the estate (0), so 160,000 "
+                "saved and 400,000 available for the bill.",
+                input_facts={"sum_assured": 400000, "estate_above_nrb": True},
+                expected_output={"iht_if_held_personally": 160000.0, "iht_if_written_in_trust": 0.0,
+                                 "iht_saved_by_writing_in_trust": 160000.0,
+                                 "payout_available_for_iht_bill": 400000.0},
+            ),
+            dict(
                 calculator_key="strategy.rd_tax_relief",
                 description="R&D merged-scheme credit, main-rate company, 2025/26",
                 source="Hand-computed: 100,000 qualifying spend -> 20% RDEC = 20,000 gross; "
