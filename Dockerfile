@@ -25,7 +25,13 @@ COPY . .
 RUN SECRET_KEY=build-time-only DATABASE_URL=postgres://x:x@localhost/x \
     python manage.py collectstatic --noinput
 
-RUN useradd --create-home appuser && chown -R appuser /app
+# Ensure the entrypoint is executable inside the image. Git on Windows does not
+# preserve the Unix +x bit, so the checked-out file can arrive as mode 644 on a
+# Linux build host (Render/CI); without this the exec-form ENTRYPOINT fails at
+# startup with a bare "exited with status 128" and no logs.
+RUN useradd --create-home appuser \
+    && chmod +x /app/docker/entrypoint.sh \
+    && chown -R appuser /app
 USER appuser
 
 EXPOSE 8000
