@@ -44,6 +44,15 @@ if _railway_domain:
     if _railway_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(_railway_origin)
 
+# Render exposes the service's public hostname the same way.
+_render_host = env("RENDER_EXTERNAL_HOSTNAME", default="")
+if _render_host:
+    if _render_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_render_host)
+    _render_origin = f"https://{_render_host}"
+    if _render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_render_origin)
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
