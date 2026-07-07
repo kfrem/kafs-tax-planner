@@ -1616,7 +1616,7 @@ class Command(BaseCommand):
             ),
             dict(
                 code="sdlt-purchase-planning",
-                name="SDLT on planned property purchase",
+                name="SDLT on planned residential property purchase (England/NI)",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
                 calculator_key="strategy.sdlt_purchase_planning",
                 timeframe=Timeframe.SHORT,
