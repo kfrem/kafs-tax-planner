@@ -1071,6 +1071,76 @@ def strategy_relevant_property_trust_charges(facts: dict, tax_year: str) -> dict
 
 
 @register(
+    "strategy.property_incorporation",
+    consumes=[
+        "sdlt.residential_bands",
+        "corporation_tax.rates",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "property_income.finance_cost_restriction",
+        "cgt.rates",
+    ],
+    description="The property-incorporation decision: should a landlord move their portfolio into "
+    "a company? Compares the ongoing personal tax on the rental business under the s.24 interest "
+    "restriction against the corporation tax a company pays (interest fully deductible, profits "
+    "retained), then weighs that annual saving against the one-off cost of incorporating — the "
+    "SDLT on transferring the properties at market value (with the 5% additional-dwelling "
+    "surcharge) plus any CGT, which is deferred where s.162 incorporation relief applies. Reports "
+    "the break-even in years. Assumes profits are retained (extraction adds dividend tax) and, for "
+    "v1, an England/SDLT portfolio — the accountant confirms s.162 conditions and any ATED.",
+)
+def strategy_property_incorporation(facts: dict, tax_year: str) -> dict:
+    portfolio_value = max(0.0, float(facts.get("portfolio_value", 0)))
+    rental_profit = max(0.0, float(facts.get("rental_profit", 0)))
+    finance_costs = max(0.0, float(facts.get("finance_costs", 0)))
+    other_income = max(0.0, float(facts.get("other_income", 0)))
+    latent_gain = max(0.0, float(facts.get("latent_gain", 0)))
+    s162_relief = bool(facts.get("s162_relief_available", False))
+
+    # Personal ongoing tax on the rental business, under the s.24 restriction:
+    # the incremental income tax on the rental profit, less the 20% reducer.
+    personal_allowance = get_parameter("income_tax.personal_allowance", tax_year)["amount"]
+    reducer_rate = get_parameter(
+        "property_income.finance_cost_restriction", tax_year
+    )["reducer_rate"]
+    it_with_rental = income_tax_on_earned_income(
+        {"total_income": other_income + rental_profit}, tax_year
+    )["tax_due"]
+    it_other_only = income_tax_on_earned_income({"total_income": other_income}, tax_year)["tax_due"]
+    adjusted_total_income = max(0.0, other_income + rental_profit - personal_allowance)
+    reducer = round(min(finance_costs, rental_profit, adjusted_total_income) * reducer_rate, 2)
+    personal_annual_tax = round((it_with_rental - it_other_only) - reducer, 2)
+
+    # Company ongoing tax: interest fully deductible, profits retained.
+    company_profit = max(0.0, rental_profit - finance_costs)
+    company_annual_tax = corporation_tax({"taxable_profit": company_profit}, tax_year)["tax_due"]
+
+    annual_saving = round(personal_annual_tax - company_annual_tax, 2)
+
+    # One-off cost of incorporating: SDLT on the deemed market-value transfer
+    # (companies pay the additional-dwelling surcharge) plus CGT unless s.162
+    # incorporation relief defers the gain into the shares.
+    sdlt_on_transfer = sdlt_residential(
+        {"price": portfolio_value, "additional_dwelling": True}, tax_year
+    )["total_sdlt"]
+    cgt_rate = get_parameter("cgt.rates", tax_year)["residential"]["higher"]
+    cgt_on_transfer = 0.0 if s162_relief else round(latent_gain * cgt_rate, 2)
+    one_off_cost = round(sdlt_on_transfer + cgt_on_transfer, 2)
+
+    break_even_years = round(one_off_cost / annual_saving, 2) if annual_saving > 0 else None
+
+    return {
+        "personal_annual_tax": personal_annual_tax,
+        "company_annual_tax": company_annual_tax,
+        "annual_tax_saving": annual_saving,
+        "sdlt_on_transfer": sdlt_on_transfer,
+        "cgt_on_transfer": cgt_on_transfer,
+        "one_off_cost": one_off_cost,
+        "break_even_years": break_even_years,
+    }
+
+
+@register(
     "strategy.venture_capital_investment",
     consumes=["venture_capital.schemes", "cgt.rates"],
     description="EIS / SEIS / VCT investment relief: income tax relief at the scheme rate on the "
