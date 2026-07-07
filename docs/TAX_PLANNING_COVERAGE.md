@@ -43,7 +43,7 @@ Last updated: 6 July 2026.
 | Employer pension contributions (CT relief, no NI) | ✓ | `employer-pension-contribution` — standalone recommendation: corporation-tax saving, employer NIC saved versus paying the same as salary, no relevant-earnings cap, net cost to the company (CTA 2009 s.54 wholly-and-exclusively test flagged for the reviewer). | — |
 | Employee Ownership Trust (EOT) — CGT-free sale | ○ | Specialist, high value; note the Autumn 2024 tightening. | Med |
 | Group relief / loss relief | ✓ | `group-loss-relief` — surrenders a current-period loss from a 75%-group company to a profitable member, relieving it at the claimant's marginal rate (26.5% in the marginal band vs a 19%/25% carry-forward), and carries forward any excess (CTA 2010 Part 5). Carry-back is a documented next step. | — |
-| Patent Box | ○ | Niche (10% CT on patented-product profits). | Low |
+| Patent Box | ✓ | `patent-box` — the 10% effective CT rate on patented-product profits vs the main rate; quantifies the saving (CTA 2010 Part 8A). IP-profit apportionment and the modified-nexus fraction flagged for the adviser. | — |
 | Business Asset Disposal Relief | ✓ | `cgt-business-asset-disposal-relief` (10%/14%/18% by year) | — |
 | Holding company structuring | ○ | Structural/advisory; ring-fencing + tax-efficient exit. | Low–Med |
 
