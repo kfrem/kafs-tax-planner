@@ -1815,6 +1815,22 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.property_incorporation",
+                description="Incorporation with profits extracted as dividends, 2025/26",
+                source="Hand-computed: post-CT profit 16,200 drawn as dividends over 40k income "
+                "(taxable 27,430) -> 2,856.25 dividend tax; company total 6,656.25; the after-"
+                "extraction saving falls from 8,146 to 5,289.75.",
+                input_facts={"portfolio_value": 1000000, "rental_profit": 50000,
+                             "finance_costs": 30000, "other_income": 40000,
+                             "latent_gain": 300000, "s162_relief_available": True,
+                             "extract_profits": True},
+                expected_output={
+                    "dividend_tax_on_extraction": 2856.25,
+                    "company_total_tax_if_extracted": 6656.25,
+                    "annual_saving_after_extraction": 5289.75,
+                },
+            ),
+            dict(
                 calculator_key="strategy.relevant_property_trust_charges",
                 description="Discretionary trust: entry, ten-year and exit charges, 2025/26",
                 source="Hand-computed: 500k settled, 325k NRB -> 20% entry on 175k = 35,000; "
