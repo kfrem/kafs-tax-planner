@@ -7,6 +7,9 @@ import pytest
 from ruleengine.calculators import (
     strategy_business_property_relief,
     strategy_capital_allowances,
+    strategy_commercial_property_fixtures,
+    strategy_patent_box,
+    strategy_rd_tax_relief,
     strategy_cgt_timing_of_disposals,
     strategy_directors_loan_s455,
     strategy_employer_pension_contribution,
