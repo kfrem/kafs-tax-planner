@@ -159,6 +159,20 @@ PARTNERSHIP_FACTS = {
 }
 
 
+# An employee leaving with a redundancy / settlement package — the termination
+# payment strategy (£30,000 exemption, excess top-sliced, employer Class 1A).
+TERMINATION_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {"profit_before_remuneration": 0},
+    "sole_trade": {"annual_profit": 0},
+    "employment": {
+        "termination_payment": 50000,   # qualifying ex-gratia amount only
+        "other_income": 40000,          # salary earned earlier in the year
+    },
+    "estate": {},
+}
+
+
 # A higher-rate landlord with a mortgaged residential let — the s.24
 # finance-cost restriction, plus the CGT position if the let is later sold.
 LANDLORD_FACTS = {
