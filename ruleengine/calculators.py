@@ -1070,13 +1070,28 @@ def strategy_relevant_property_trust_charges(facts: dict, tax_year: str) -> dict
     }
 
 
+def _transfer_land_tax(price: float, jurisdiction: str, tax_year: str) -> float:
+    """Land tax on the market-value transfer into the company, at the
+    additional-dwelling rate, for the right UK nation."""
+    facts = {"price": price, "additional_dwelling": True}
+    if jurisdiction == "scotland":
+        return lbtt_residential(facts, tax_year)["total_lbtt"]
+    if jurisdiction == "wales":
+        return ltt_residential(facts, tax_year)["total_ltt"]
+    return sdlt_residential(facts, tax_year)["total_sdlt"]
+
+
 @register(
     "strategy.property_incorporation",
     consumes=[
         "sdlt.residential_bands",
+        "lbtt.residential_bands",
+        "ltt.residential_bands",
         "corporation_tax.rates",
         "income_tax.personal_allowance",
         "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
         "property_income.finance_cost_restriction",
         "cgt.rates",
     ],
