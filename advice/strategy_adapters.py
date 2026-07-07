@@ -356,6 +356,8 @@ class PropertyIncorporationAdapter:
             "other_income": _earned_income(facts),
             "latent_gain": prop.get("latent_gain", 0),
             "s162_relief_available": prop.get("s162_relief_available", False),
+            "jurisdiction": prop.get("jurisdiction", "england"),
+            "extract_profits": prop.get("extract_profits", False),
         }
 
 
