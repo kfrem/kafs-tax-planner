@@ -57,7 +57,7 @@ Totals: **36 parameters · 41 strategies · 50 authorities = 127 items.**
 
 ## B. Strategies — tax logic & risk status (41)
 
-Rows marked **borderline** carry a professional-judgement caveat — review with particular care.
+Rows marked **borderline** carry a professional-judgement caveat.
 
 | # | Strategy | Risk | Authority cited | Correct? (Y/N) | Comments / corrections |
 |---|---|---|---|---|---|
@@ -99,9 +99,9 @@ Rows marked **borderline** carry a professional-judgement caveat — review with
 | 36 | LTT on a non-residential lease (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
 | 37 | LTT on non-residential purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
 | 38 | LTT on planned property purchase (Wales) | settled | Land Transaction Tax and Anti-avoidance of Devolved Taxes (Wales) Act 2017 s.24 |  |  |
-| 39 | SDLT on a non-residential lease (England/NI) | settled | Finance Act 2003 Sch 5 (amount of tax chargeable: rent) |  |  |
-| 40 | SDLT on non-residential purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed) |  |  |
-| 41 | SDLT on planned property purchase | settled | Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA |  |  |
+| 39 | SDLT on a non-residential lease (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 5 (amount of tax chargeable: rent) |  |  |
+| 40 | SDLT on non-residential purchase (England/NI) | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed) |  |  |
+| 41 | SDLT on planned property purchase | settled | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed); Finance Act 2003 Sch 4ZA (higher rates for additional dwellings); Finance Act 2003 Sch 6ZA |  |  |
 
 ## C. Authorities — citations still good law (50)
 
@@ -115,7 +115,7 @@ Rows marked **borderline** carry a professional-judgement caveat — review with
 | 6 | Corporation Tax Act 2010 Part 5 (ss.97-188) | in force |  |  |
 | 7 | Corporation Tax Act 2010 Part 8A (Patent Box) | in force |  |  |
 | 8 | Corporation Tax Act 2010 s.455 | in force |  |  |
-| 9 | Finance Act 2003 s.55 (SDLT rates: Table A residential, Table B non-residential/mixed) | in force |  |  |
+| 9 | Finance Act 2003 s.55 (SDLT rate tables: s.55(1A) Table A residential; s.55(1B) Table B non-residential/mixed) | in force |  |  |
 | 10 | Finance Act 2003 Sch 4ZA (higher rates for additional dwellings) | in force |  |  |
 | 11 | Finance Act 2003 Sch 5 (amount of tax chargeable: rent) | in force |  |  |
 | 12 | Finance Act 2003 Sch 6ZA | in force |  |  |
