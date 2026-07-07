@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Review before generating — {{ fact_set.client.name }}{% endblock %}
+{% block content %}
+<h1>Before generating advice for {{ fact_set.client.name }} — {{ fact_set.tax_year }}</h1>
+
+{% if intake_gaps %}
+<section style="border:2px solid #b7791f; border-radius:6px; padding:1rem; margin:1rem 0; background:#fffbea;">
+    <h2 style="margin-top:0;">Questions to confirm first</h2>
+    <p style="margin-top:0;">The facts on file leave these material points unanswered. The engine will
+    make the assumption shown for each — confirm or correct them with the client, update the facts,
+    then generate. You can also generate now and the same questions will appear on the advice.</p>
+    <ul style="margin-bottom:0;">
+        {% for gap in intake_gaps %}
+        <li style="margin-bottom:0.6rem;">
+            <strong>{{ gap.question }}</strong><br>
+            <span style="color:#555;">Why it matters: {{ gap.why }}</span><br>
+            <span style="color:#b7791f;">Will assume: {{ gap.assumption }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% else %}
+<p>No material assumptions — the recorded facts cover every follow-up question the engine checks.</p>
+{% endif %}
+
+<form method="post" action="{% url 'advice:advice-generate' fact_set.pk %}">
+    {% csrf_token %}
+    <button type="submit" style="font-size:1rem; padding:0.4rem 1rem;">Generate advice</button>
+    <a href="{% url 'clients:client-detail' fact_set.client_id %}" style="margin-left:1rem;">Edit facts first</a>
+</form>
+{% endblock %}
