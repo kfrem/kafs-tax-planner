@@ -1256,6 +1256,64 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="rd-tax-relief",
+                name="R&D tax relief (merged scheme)",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.rd_tax_relief",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A company carrying out qualifying research and "
+                "development can claim R&D tax relief. Under the merged scheme (from April 2024) "
+                "this is a 20% 'above the line' expenditure credit on the qualifying spend. The "
+                "credit is taxable, so the net cash benefit is 20% less corporation tax — about "
+                "15% of the spend for a main-rate company. This quantifies the gross credit, the "
+                "tax on it and the net benefit. What counts as qualifying R&D (the advance in "
+                "science or technology and the qualifying cost categories) is a technical "
+                "judgement the adviser and, often, an R&D specialist confirm.",
+                authority_keys=["cta2009_part13"],
+                eligibility_conditions={"all": [
+                    {"path": "company.qualifying_rd_spend", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="patent-box",
+                name="Patent Box (10% rate on patented-product profits)",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.patent_box",
+                timeframe=Timeframe.MEDIUM,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A company that owns or exclusively licenses patents can "
+                "elect for the profits attributable to those patented inventions to be taxed at an "
+                "effective 10% corporation-tax rate instead of the main rate. This quantifies the "
+                "tax at the main rate, the tax under the Patent Box and the saving. Identifying the "
+                "profit attributable to the qualifying IP, and meeting the modified-nexus R&D "
+                "requirement, are specialist steps the adviser establishes.",
+                authority_keys=["cta2010_part8a"],
+                eligibility_conditions={"all": [
+                    {"path": "company.patent_profit", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="commercial-property-fixtures",
+                name="Capital allowances on commercial-property fixtures",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.commercial_property_fixtures",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="When a business buys or refurbishes a commercial "
+                "building, a large part of the cost is often 'integral features' and fixtures "
+                "(heating, electrics, lifts, water systems) that qualify for capital allowances. "
+                "Claiming them gives 100% relief through the Annual Investment Allowance up to its "
+                "limit, then the special-rate writing-down allowance on the excess. This quantifies "
+                "the first-year allowance and the tax it saves. On a second-hand building the "
+                "fixtures claim depends on the seller's pooling/fixed-value position (CAA 2001 "
+                "s.187A) — the adviser confirms it, ideally with a specialist survey.",
+                authority_keys=["caa2001_s33a"],
+                eligibility_conditions={"all": [
+                    {"path": "company.fixtures_value", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="venture-capital-investment",
                 name="EIS / SEIS / VCT investment relief",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
