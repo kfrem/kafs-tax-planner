@@ -189,21 +189,6 @@ class Command(BaseCommand):
                 "and its reduction under section 35(2) where adjusted net income exceeds the income limit.",
             ),
             dict(
-                key="ita2007_s10",
-                authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Income Tax Act 2007 s.10",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/section/10",
-                verbatim_extract="Basic rate, higher rate, and additional rate of income tax on "
-                "non-savings, non-dividend income.",
-            ),
-            dict(
-                key="ittoia2005_s383",
-                authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="ITTOIA 2005 s.383",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/383",
-                verbatim_extract="Charge to tax on dividends and other distributions of a UK resident company.",
-            ),
-            dict(
                 key="ita2007_s13a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax Act 2007 s.13A",
