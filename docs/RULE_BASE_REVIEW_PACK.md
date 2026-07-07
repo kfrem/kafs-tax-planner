@@ -129,8 +129,8 @@ rule-base release, with your name and the date.
 ### 12. Dividend allowance  
 `dividend_tax.allowance` — personal_income_tax — release 2025.1 — effective 2025-04-06 to open
 - amount: **500**
-- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
+- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 500 appears in: Finance Act 2003 Sch 6ZA; Finance Act 2003 s.55 and Sch 4ZA; Income Tax Act 2007 Part 5 (EIS), Part 5A (SEIS), Part 6 (VCT)
 
@@ -143,8 +143,8 @@ rule-base release, with your name and the date.
   - upper: **125,140**
   - rate: **0.3935**
   - upper: **None**
-- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
+- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2025.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
@@ -157,8 +157,8 @@ rule-base release, with your name and the date.
   - upper: **125,140**
   - rate: **0.3935**
   - upper: **None**
-- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
-- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
+- PASS — consumed by a registered calculator (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.salary_dividend_mix, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_ppr_relief, strategy.cgt_lettings_relief, strategy.cgt_spousal_transfer_before_disposal, strategy.cgt_business_asset_disposal_relief)
+- PASS — figure exercised by golden test cases (dividend_tax, combined_personal_tax, strategy.gift_aid_relief, strategy.pension_annual_allowance_carry_forward, strategy.personal_pension_contribution, strategy.isa_bed_and_isa, strategy.partnership_profit_allocation, strategy.property_incorporation, strategy.incorporation_vs_sole_trade, cgt_liability, strategy.cgt_timing_of_disposals, strategy.cgt_lettings_relief, strategy.cgt_business_asset_disposal_relief)
 - PASS — belongs to a released rule-base version (2026.1)
 - Source cross-reference: 37,700 appears in: Income Tax Act 2007 s.10
 
@@ -365,8 +365,8 @@ rule-base release, with your name and the date.
   - upper: **None**
 - additional_dwelling_supplement: **0.08**
 - first_time_buyer_nil_rate_threshold: **175,000**
-- PASS — consumed by a registered calculator (lbtt_residential, strategy.lbtt_purchase_planning)
-- PASS — figure exercised by golden test cases (lbtt_residential)
+- PASS — consumed by a registered calculator (strategy.property_incorporation, lbtt_residential, strategy.lbtt_purchase_planning)
+- PASS — figure exercised by golden test cases (strategy.property_incorporation, lbtt_residential)
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 175,000 appears in: Inheritance Tax Act 1984 s.8D
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
@@ -429,8 +429,8 @@ rule-base release, with your name and the date.
   - upper: **1,500,000**
   - rate: **0.17**
   - upper: **None**
-- PASS — consumed by a registered calculator (ltt_residential, strategy.ltt_purchase_planning)
-- PASS — figure exercised by golden test cases (ltt_residential)
+- PASS — consumed by a registered calculator (strategy.property_incorporation, ltt_residential, strategy.ltt_purchase_planning)
+- PASS — figure exercised by golden test cases (strategy.property_incorporation, ltt_residential)
 - PASS — belongs to a released rule-base version (2025.3)
 - Source cross-reference: 250,000 appears in: Corporation Tax Act 2010 Part 3A (ss.18A-18M); Finance Act 2003 s.55 and Sch 4ZA
 - Source cross-reference: 1,500,000 appears in: Finance Act 2003 s.55 and Sch 4ZA
@@ -1213,7 +1213,7 @@ rule-base content under §5.6 of the architecture document.
 | Tier 1: Gift Aid (ITA 2007 s.414), directors' loan s.455 (CTA 2010 s.455), timing of disposals (TCGA 1992 ss.1H-1K), capital allowances / AIA (CAA 2001 s.51A), salary sacrifice (SSCBA 1992 s.6), personal + employer pension contribution (FA 2004 s.190 / CTA 2009 s.54) | kfrem (reviewing professional) | YES — each verified against the primary source and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 | Tier 2: group relief (CTA 2010 Part 5), bed-and-ISA (ITTOIA 2005 s.694), BPR/APR incl. April 2026 £1m cap (IHTA 1984 ss.103-124C), EIS/SEIS/VCT (ITA 2007 Parts 5/5A/6) | kfrem (reviewing professional) | YES — verified and hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
 | Client-type expansion: landlord s.24 (ITTOIA 2005 ss.272A-274C), partnership profit-share (ITTOIA 2005 s.850, borderline), relevant-property trust charges (IHTA 1984 ss.58-69) + richer entity labels | kfrem (reviewing professional) | YES — all hand-computed — see docs/EDITORIAL_SIGNOFF.md | 6 July 2026 |
-| Property-incorporation flagship: s.24-vs-company annual tax, SDLT-on-transfer, s.162 CGT deferral, break-even (TCGA 1992 s.162, borderline) | kfrem (reviewing professional) | YES — break-even mechanics hand-computed; s.162 'business' test and ATED flagged for the adviser — see docs/EDITORIAL_SIGNOFF.md | 7 July 2026 |
+| Property-incorporation flagship incl. v2 depth (jurisdiction-aware transfer land tax, profit extraction) — TCGA 1992 s.162, borderline | kfrem (reviewing professional) | YES — break-even, extraction dividend tax and LBTT/LTT routing hand-computed; s.162 'business' test and ATED flagged for the adviser and surfaced by the guided intake — see docs/EDITORIAL_SIGNOFF.md | 7 July 2026 |
 
 *Prior-year (2024/25) rows are validated by golden cases and hand-computed
 tests rather than this forward-looking pack; sign-off in docs/EDITORIAL_SIGNOFF.md.*
