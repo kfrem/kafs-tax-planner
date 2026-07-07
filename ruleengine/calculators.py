@@ -1117,26 +1117,53 @@ def strategy_property_incorporation(facts: dict, tax_year: str) -> dict:
 
     annual_saving = round(personal_annual_tax - company_annual_tax, 2)
 
-    # One-off cost of incorporating: SDLT on the deemed market-value transfer
-    # (companies pay the additional-dwelling surcharge) plus CGT unless s.162
-    # incorporation relief defers the gain into the shares.
-    sdlt_on_transfer = sdlt_residential(
-        {"price": portfolio_value, "additional_dwelling": True}, tax_year
-    )["total_sdlt"]
+    # One-off cost of incorporating: the land tax on the deemed market-value
+    # transfer (companies pay the additional-dwelling rate) — SDLT (England/NI),
+    # LBTT (Scotland) or LTT (Wales) — plus CGT unless s.162 incorporation relief
+    # defers the gain into the shares.
+    jurisdiction = str(facts.get("jurisdiction", "england")).lower()
+    land_tax_on_transfer = _transfer_land_tax(portfolio_value, jurisdiction, tax_year)
     cgt_rate = get_parameter("cgt.rates", tax_year)["residential"]["higher"]
     cgt_on_transfer = 0.0 if s162_relief else round(latent_gain * cgt_rate, 2)
-    one_off_cost = round(sdlt_on_transfer + cgt_on_transfer, 2)
+    one_off_cost = round(land_tax_on_transfer + cgt_on_transfer, 2)
 
     break_even_years = round(one_off_cost / annual_saving, 2) if annual_saving > 0 else None
+
+    # Extraction: drawing the company's post-CT profit out as dividends adds
+    # dividend tax, so the retained-profits saving overstates the benefit for a
+    # landlord who actually wants the income now.
+    post_ct_profit = round(max(0.0, company_profit - company_annual_tax), 2)
+    extract = bool(facts.get("extract_profits", False))
+    dividend_tax_on_extraction = (
+        round(
+            dividend_tax(
+                {"other_taxable_income": other_income, "dividend_income": post_ct_profit},
+                tax_year,
+            )["tax_due"],
+            2,
+        )
+        if extract and post_ct_profit > 0
+        else 0.0
+    )
+    company_total_tax_if_extracted = round(company_annual_tax + dividend_tax_on_extraction, 2)
+    annual_saving_after_extraction = round(
+        personal_annual_tax - company_total_tax_if_extracted, 2
+    )
 
     return {
         "personal_annual_tax": personal_annual_tax,
         "company_annual_tax": company_annual_tax,
         "annual_tax_saving": annual_saving,
-        "sdlt_on_transfer": sdlt_on_transfer,
+        # sdlt_on_transfer kept as the England figure for back-compat; use
+        # land_tax_on_transfer for the jurisdiction-correct charge.
+        "sdlt_on_transfer": land_tax_on_transfer,
+        "land_tax_on_transfer": land_tax_on_transfer,
         "cgt_on_transfer": cgt_on_transfer,
         "one_off_cost": one_off_cost,
         "break_even_years": break_even_years,
+        "dividend_tax_on_extraction": dividend_tax_on_extraction,
+        "company_total_tax_if_extracted": company_total_tax_if_extracted,
+        "annual_saving_after_extraction": annual_saving_after_extraction,
     }
 
 
