@@ -19,6 +19,20 @@ from .scenarios import run_scenario
 
 
 @login_required
+def intake_review(request, fact_set_id):
+    """Pre-generation intake: show the questions the engine would otherwise
+    assume for this fact set, so the accountant confirms or corrects them
+    before generating advice (guided intake, ask-before not just flag-after)."""
+    fact_set = get_object_or_404(ClientFactSet, pk=fact_set_id, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, fact_set.client_id)
+    return render(
+        request,
+        "advice/intake_review.html",
+        {"fact_set": fact_set, "intake_gaps": intake_gaps(fact_set.facts)},
+    )
+
+
+@login_required
 def advice_generate(request, fact_set_id):
     if request.method != "POST":
         return HttpResponseNotAllowed(["POST"])
