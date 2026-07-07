@@ -5,6 +5,7 @@ from . import views
 app_name = "advice"
 
 urlpatterns = [
+    path("generate/<int:fact_set_id>/review/", views.intake_review, name="intake-review"),
     path("generate/<int:fact_set_id>/", views.advice_generate, name="advice-generate"),
     path("<int:pk>/", views.advice_detail, name="advice-detail"),
     path("<int:pk>/panel/", views.panel_deploy, name="panel-deploy"),
