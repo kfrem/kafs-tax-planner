@@ -59,6 +59,13 @@ def test_partnership_and_pension_taper_questions():
     assert "pension_taper" in keys
 
 
+def test_ated_asked_when_a_portfolio_may_be_incorporated():
+    facts = {"personal": {"spouse_income": 0}, "property": {"portfolio_value": 1000000}}
+    assert "ated_on_incorporation" in _keys(facts)
+    facts["property"]["ated_relief_confirmed"] = True
+    assert "ated_on_incorporation" not in _keys(facts)
+
+
 def test_a_fully_recorded_simple_client_has_no_gaps():
     # An employee whose marital status is recorded and who has no property,
     # business, pension, partnership or trust facts: nothing is assumed.
