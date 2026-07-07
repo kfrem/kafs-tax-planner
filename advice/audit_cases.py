@@ -96,6 +96,20 @@ CGT_HOMEOWNER_FACTS = {
 }
 
 
+# A business owner planning an exit and their estate: an EOT sale, a pension pot
+# facing the April-2027 IHT change, and a life policy to fund the bill.
+EXIT_AND_ESTATE_FACTS = {
+    "personal": {"other_income": 0, "spouse_income": 0},
+    "company": {"profit_before_remuneration": 0, "eot_disposal_gain": 2000000},
+    "sole_trade": {"annual_profit": 0},
+    "estate": {
+        "pension_pot_value": 500000,
+        "life_policy_sum_assured": 400000,
+        "estate_above_nrb": True,
+    },
+}
+
+
 # An innovative trading company: R&D spend, patented products, and a commercial
 # building with integral-feature fixtures.
 INNOVATIVE_COMPANY_FACTS = {
