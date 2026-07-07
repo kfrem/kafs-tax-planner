@@ -547,16 +547,6 @@ class Command(BaseCommand):
                 "the cap.",
             ),
             dict(
-                key="fa2003_s55_table_b",
-                authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Finance Act 2003 s.55 (Table B: non-residential and mixed-use rates)",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/section/55",
-                verbatim_extract="Amount of stamp duty land tax chargeable: Table B in s.55 sets "
-                "the rates for non-residential and mixed-use freehold transactions (0% to 150,000, "
-                "2% to 250,000, 5% above). The additional-dwelling surcharge (Sch 4ZA) and "
-                "first-time buyer relief (Sch 6ZA) apply only to residential property, not here.",
-            ),
-            dict(
                 key="fa2003_sch5",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Finance Act 2003 Sch 5 (amount of tax chargeable: rent)",
