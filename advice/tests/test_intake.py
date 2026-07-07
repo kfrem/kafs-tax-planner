@@ -70,3 +70,40 @@ def test_a_fully_recorded_simple_client_has_no_gaps():
     # An employee whose marital status is recorded and who has no property,
     # business, pension, partnership or trust facts: nothing is assumed.
     assert intake_gaps({"personal": {"spouse_income": 30000}}) == []
+
+
+# --- Exam-derived issue-spotting checks (Tax Intelligence Brain). Each fires
+# only when its scenario is present and clears once the make-or-break fact is
+# recorded. ---
+
+
+def test_fixtures_s198_asked_when_fixtures_present():
+    facts = {"personal": {"spouse_income": 0}, "company": {"fixtures_value": 200000}}
+    assert "fixtures_s198_election" in _keys(facts)
+    facts["company"]["fixtures_s198_confirmed"] = True
+    assert "fixtures_s198_election" not in _keys(facts)
+
+
+def test_fixtures_s198_not_asked_without_fixtures():
+    assert "fixtures_s198_election" not in _keys({"personal": {"spouse_income": 0}})
+
+
+def test_vc_connection_asked_when_vc_investment_present():
+    facts = {"personal": {"spouse_income": 0, "venture_capital_investment": 50000}}
+    assert "venture_capital_connection" in _keys(facts)
+    facts["personal"]["venture_capital_connection_confirmed"] = False
+    assert "venture_capital_connection" not in _keys(facts)
+
+
+def test_badr_conditions_asked_when_badr_gain_present():
+    facts = {"personal": {"spouse_income": 0}, "property": {"badr_qualifying_gain": 500000}}
+    assert "badr_qualifying_conditions" in _keys(facts)
+    facts["property"]["badr_conditions_confirmed"] = True
+    assert "badr_qualifying_conditions" not in _keys(facts)
+
+
+def test_termination_penp_asked_when_termination_payment_present():
+    facts = {"personal": {"spouse_income": 0}, "employment": {"termination_payment": 50000}}
+    assert "termination_penp" in _keys(facts)
+    facts["employment"]["penp_confirmed"] = True
+    assert "termination_penp" not in _keys(facts)
