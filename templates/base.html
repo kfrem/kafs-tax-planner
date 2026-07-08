@@ -144,6 +144,22 @@
 
         .empty{text-align:center;padding:2.5rem 1rem;color:var(--muted)}
 
+        /* ---------- Glossary drill-downs ---------- */
+        .gloss{border-bottom:1px dashed var(--brand);cursor:help;position:relative;white-space:nowrap}
+        .gloss:hover{background:var(--info-soft)}
+        .gloss-i{display:inline-grid;place-items:center;width:14px;height:14px;margin-left:3px;
+            border-radius:50%;background:var(--brand);color:#fff;font-size:9px;font-weight:800;
+            font-style:normal;vertical-align:super;line-height:1}
+        .gloss-pop{position:absolute;z-index:200;width:340px;max-width:92vw;background:#fff;
+            border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+            padding:1rem 1.1rem;font-size:.86rem;color:var(--ink);line-height:1.5;font-weight:400}
+        .gloss-pop h5{margin:0 0 .3rem;font-size:.98rem;color:var(--ink)}
+        .gloss-pop .gp-plain{color:var(--ink-2);font-weight:600;margin-bottom:.5rem}
+        .gloss-pop .gp-detail{color:var(--muted);margin-bottom:.6rem}
+        .gloss-pop .gp-client{background:var(--accent-soft);color:var(--accent-2);border-radius:8px;
+            padding:.5rem .65rem;font-size:.82rem}
+        .gloss-pop .gp-more{display:inline-block;margin-top:.65rem;font-size:.8rem;font-weight:600}
+
         /* ---------- Auth screen ---------- */
         body.auth .site-header{display:none}
         body.auth{background:radial-gradient(1200px 600px at 50% -10%,#123a5e 0%,#0b1a2b 55%,#081320 100%);
