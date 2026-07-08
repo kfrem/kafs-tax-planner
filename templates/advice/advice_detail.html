@@ -121,16 +121,31 @@
         </p>
         <div style="white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--line);
              border-radius:var(--radius-sm);padding:1rem;font-size:.95rem">{{ narrative.text }}</div>
-        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}" style="margin-top:.75rem">
-            {% csrf_token %}<button type="submit" class="secondary">Redraft</button>
-        </form>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem">
+            <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
+                {% csrf_token %}<button type="submit" class="secondary">Redraft (standard)</button>
+            </form>
+            <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
+                {% csrf_token %}<input type="hidden" name="mode" value="ai">
+                <button type="submit" class="secondary">Redraft with AI ✨</button>
+            </form>
+        </div>
     {% else %}
         <p>No narrative drafted yet. The drafter composes client-facing prose from the computed
            figures only, and a validator rejects any draft containing a number or citation not
-           present in this record.</p>
-        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
-            {% csrf_token %}<button type="submit">Draft client narrative</button>
-        </form>
+           present in this record — including an AI draft.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
+                {% csrf_token %}<button type="submit">Draft client narrative</button>
+            </form>
+            <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
+                {% csrf_token %}<input type="hidden" name="mode" value="ai">
+                <button type="submit" class="secondary">Draft with AI ✨</button>
+            </form>
+        </div>
+        {% if not llm_enabled %}<p style="color:var(--faint);font-size:.8rem;margin-top:.5rem">
+            AI drafting activates once an <code>ANTHROPIC_API_KEY</code> is set — the standard
+            drafter works now, and the AI draft passes the same validator.</p>{% endif %}
     {% endif %}
 </section>
 
