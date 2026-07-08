@@ -72,27 +72,47 @@ class Command(BaseCommand):
         if changed:
             user.save()
 
-        # 3. Demo clients — only if this firm has none yet.
+        # 3. Demo clients. Per-client idempotent (only generates advice for a
+        #    client that has none yet), so new demo clients are added to an
+        #    existing demo firm on the next deploy.
         with connection.cursor() as c:
             c.execute("SET app.current_firm_id = %s", [str(firm.id)])
 
-        if Client.objects.filter(firm=firm).exists():
-            self.stdout.write("Demo clients already present; nothing to do.")
-            return
+        cases = list(PERSONAS) + [
+            ("D001", "Grace Okoye (review-tension case)", "individual_with_company", TENSION_FACTS),
+        ]
+        for reference, name, entity_type, facts in cases:
+            client, _ = Client.objects.get_or_create(
+                firm=firm, reference=reference,
+                defaults={"name": name, "entity_type": entity_type, "created_by": user},
+            )
+            if client.advice_records.filter(superseded_by__isnull=True).exists():
+                continue  # already seeded
+            fact_set = ClientFactSet.objects.create(
+                firm=firm, client=client, tax_year=TAX_YEAR,
+                facts=facts, source="manual", created_by=user,
+            )
+            record = generate_advice(client, fact_set, user)
+            note = f"{name} ({reference}): advice {record.pk}, {len(record.results)} strategies"
 
-        with transaction.atomic():
-            for reference, name, entity_type, facts in PERSONAS:
-                client, _ = Client.objects.get_or_create(
-                    firm=firm,
-                    reference=reference,
-                    defaults={"name": name, "entity_type": entity_type, "created_by": user},
-                )
-                fact_set = ClientFactSet.objects.create(
-                    firm=firm, client=client, tax_year=TAX_YEAR,
-                    facts=facts, source="manual", created_by=user,
-                )
-                record = generate_advice(client, fact_set, user)
-                self.stdout.write(
-                    f"{name} ({reference}): advice {record.pk}, {len(record.results)} strategies."
-                )
-        self.stdout.write(self.style.SUCCESS("Demo clients seeded (advice on screen; PDFs render on demand)."))
+            # The tension case gets a full panel review and a recorded professional
+            # decision, so the demo shows the four reviewers raising differing
+            # points and the human resolving them — not a rubber stamp.
+            if reference == "D001":
+                review = deploy_panel(record, user)
+                note += f"; panel: {len(review.findings)} findings, verdict '{review.verdicts['overall']}'"
+                try:
+                    record_decision(
+                        record, user, ProfessionalDecision.Decision.NEEDS_REVISION,
+                        "Panel raised commercial and disclosure concerns: the £400k gift is ~20% of "
+                        "the estate (affordability), the £80k pension contribution is largely "
+                        "unrelieved and triggers an annual-allowance charge, and spousal dividends "
+                        "engage the settlements rules. Revise the extraction, gift and pension plan "
+                        "with the client before issuing.",
+                    )
+                    note += "; decision recorded (needs revision)"
+                except DecisionError:
+                    pass
+            self.stdout.write(note)
+
+        self.stdout.write(self.style.SUCCESS("Demo clients ensured (advice on screen; PDFs render on demand)."))
