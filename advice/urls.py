@@ -8,6 +8,7 @@ urlpatterns = [
     path("generate/<int:fact_set_id>/review/", views.intake_review, name="intake-review"),
     path("generate/<int:fact_set_id>/", views.advice_generate, name="advice-generate"),
     path("<int:pk>/", views.advice_detail, name="advice-detail"),
+    path("<int:pk>/pdf/", views.advice_pdf, name="advice-pdf"),
     path("<int:pk>/panel/", views.panel_deploy, name="panel-deploy"),
     path("<int:pk>/decide/", views.advice_decide, name="advice-decide"),
     path("impact/", views.impact_alerts, name="impact-alerts"),
