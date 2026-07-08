@@ -195,7 +195,7 @@
                 <a href="{% url 'clients:csv-import' %}">Import CSV</a>
                 <a href="{% url 'glossary' %}">Glossary</a>
                 <a href="{% url 'firms:mfa-setup' %}">MFA</a>
-                {% if request.user.is_staff %}<a href="{% url 'monitoring:queue' %}">Change Queue{% if open_alert_count %} <span class="flag">{{ open_alert_count }}</span>{% endif %}</a>{% endif %}
+                {% if request.user.is_staff %}<a href="{% url 'monitoring:queue' %}">Change Queue{% if open_alert_count %} <span class="flag" title="Open editorial alerts">{{ open_alert_count }}</span>{% endif %}</a>{% endif %}
                 {% if request.user.is_superuser %}<a href="/admin/">Rule Base Admin</a>{% endif %}
                 <a class="logout" href="{% url 'firms:logout' %}">Log out ({{ request.user.username }})</a>
             {% else %}
