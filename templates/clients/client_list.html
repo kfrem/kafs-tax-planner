@@ -6,7 +6,10 @@
         <div class="eyebrow">Practice workspace</div>
         <h1>Clients</h1>
     </div>
-    <a class="btn" href="{% url 'clients:client-create' %}">+ New client</a>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <a class="btn-secondary" href="{% url 'clients:csv-import' %}">Import CSV</a>
+        <a class="btn" href="{% url 'clients:client-create' %}">+ New client</a>
+    </div>
 </div>
 {% if clients %}
 <table>
