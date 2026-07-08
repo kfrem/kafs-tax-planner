@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Glossary — plain English{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Plain-English reference</div>
+        <h1>Glossary</h1>
+        <p class="lead" style="margin:.2rem 0 0">Every technical term the app uses, in plain
+        language — plus a line you can say to a client. Anywhere you see a term with an
+        <span class="gloss-i" style="position:static">i</span>, click it to drill down.</p>
+    </div>
+</div>
+
+{% for t in terms %}
+<section class="card" id="{{ t.key }}" style="scroll-margin-top:90px">
+    <h2 style="margin-top:0">{{ t.term }}</h2>
+    <p class="gp-plain" style="font-weight:600;color:var(--ink-2);font-size:1.02rem;margin-top:0">{{ t.plain }}</p>
+    <p style="color:var(--muted)">{{ t.detail }}</p>
+    {% if t.client %}
+    <div class="callout callout-accent" style="margin-bottom:0">
+        <strong>Say it to the client:</strong> {{ t.client }}
+    </div>
+    {% endif %}
+</section>
+{% endfor %}
+{% endblock %}
