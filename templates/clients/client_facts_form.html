@@ -1,22 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Record facts — {{ client.name }}{% endblock %}
+{% block title %}About the client — {{ client.name }}{% endblock %}
 {% block content %}
 <div class="page-header">
     <div>
-        <div class="eyebrow">Manual entry &middot; {{ client.name }}</div>
-        <h1>Record financial facts</h1>
+        <div class="eyebrow">Guided intake &middot; {{ client.name }}</div>
+        <h1>Tell us about the client</h1>
     </div>
 </div>
 
 <div class="callout callout-accent">
-    Enter what you know — leave anything that doesn't apply at <strong>0</strong>. When you save,
-    you can <strong>generate advice</strong> for this client in one click to see which planning
-    strategies apply and the potential tax saving, before committing to anything.
+    You don't need to know the tax rules — just answer what applies. <strong>Tick the areas
+    relevant to this client below</strong> and only the right questions appear. Leave anything
+    that doesn't apply. When you save, generate advice to see the potential tax saving.
 </div>
 
 <form method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
+
+    <div class="card">
+        <h2 style="margin-top:0">Which of these apply to {{ client.name }}?</h2>
+        <div class="field-grid" style="gap:.4rem 2rem">
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="family"> Married or in a civil partnership</label>
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="company"> Owns a limited company</label>
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="sole"> Self-employed (sole trader)</label>
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="pension"> Wants to look at pension planning</label>
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="estate"> Has an estate / inheritance to plan</label>
+            <label style="font-weight:500"><input type="checkbox" class="q-toggle" data-section="property"> Buying or selling property</label>
+        </div>
+    </div>
 
     <div class="card">
         <label>Tax year</label>
@@ -25,27 +37,40 @@
     </div>
 
     <div class="card">
-        <h2 style="margin-top:0">Income &amp; dividends</h2>
+        <h2 style="margin-top:0">Income</h2>
+        <p style="color:var(--muted);margin-top:0">Employment and any other income (rent, savings, pensions in payment).</p>
         <div class="field-grid">
-            <p>{{ form.other_income.label_tag }}{{ form.other_income }}</p>
             <p>{{ form.employment_income.label_tag }}{{ form.employment_income }}</p>
-            <p>{{ form.salary_from_own_company.label_tag }}{{ form.salary_from_own_company }}</p>
-            <p>{{ form.dividends_from_own_company.label_tag }}{{ form.dividends_from_own_company }}</p>
+            <p>{{ form.other_income.label_tag }}{{ form.other_income }}</p>
+        </div>
+    </div>
+
+    <div class="card" data-section="family" hidden>
+        <h2 style="margin-top:0">Spouse / civil partner</h2>
+        <div class="field-grid">
             <p>{{ form.spouse_income.label_tag }}{{ form.spouse_income }}</p>
         </div>
     </div>
 
-    <div class="card">
-        <h2 style="margin-top:0">Company &amp; self-employment</h2>
+    <div class="card" data-section="company" hidden>
+        <h2 style="margin-top:0">Their limited company</h2>
         <div class="field-grid">
             <p>{{ form.company_profit_before_remuneration.label_tag }}{{ form.company_profit_before_remuneration }}</p>
+            <p>{{ form.salary_from_own_company.label_tag }}{{ form.salary_from_own_company }}</p>
+            <p>{{ form.dividends_from_own_company.label_tag }}{{ form.dividends_from_own_company }}</p>
             <p>{{ form.associated_companies.label_tag }}{{ form.associated_companies }}</p>
-            <p>{{ form.sole_trade_annual_profit.label_tag }}{{ form.sole_trade_annual_profit }}</p>
             <p style="align-self:end">{{ form.employment_allowance_available }} {{ form.employment_allowance_available.label }}</p>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" data-section="sole" hidden>
+        <h2 style="margin-top:0">Self-employment</h2>
+        <div class="field-grid">
+            <p>{{ form.sole_trade_annual_profit.label_tag }}{{ form.sole_trade_annual_profit }}</p>
+        </div>
+    </div>
+
+    <div class="card" data-section="pension" hidden>
         <h2 style="margin-top:0">Pension</h2>
         <div class="field-grid">
             <p>{{ form.pension_desired_contribution.label_tag }}{{ form.pension_desired_contribution }}</p>
@@ -57,8 +82,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <h2 style="margin-top:0">Estate &amp; inheritance tax</h2>
+    <div class="card" data-section="estate" hidden>
+        <h2 style="margin-top:0">Estate &amp; inheritance</h2>
         <div class="field-grid">
             <p>{{ form.estate_gross_value.label_tag }}{{ form.estate_gross_value }}</p>
             <p>{{ form.estate_liabilities.label_tag }}{{ form.estate_liabilities }}</p>
@@ -73,7 +98,7 @@
         <p>{{ form.estate_prior_year_annual_exemption_unused }} {{ form.estate_prior_year_annual_exemption_unused.label }}</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-section="property" hidden>
         <h2 style="margin-top:0">Property &amp; capital gains</h2>
         <div class="field-grid">
             <p>{{ form.property_disposal_gain.label_tag }}{{ form.property_disposal_gain }}</p>
@@ -87,6 +112,22 @@
         <p>{{ form.property_purchase_first_time_buyer }} {{ form.property_purchase_first_time_buyer.label }}</p>
     </div>
 
-    <button class="btn" type="submit" style="font-size:.95rem;padding:.7rem 1.4rem">Save facts &amp; continue</button>
+    <button class="btn" type="submit" style="font-size:.95rem;padding:.7rem 1.4rem">Save &amp; continue</button>
 </form>
+
+<script>
+(function(){
+    function apply(t){
+        var on=t.checked;
+        document.querySelectorAll('[data-section="'+t.getAttribute('data-section')+'"]').forEach(function(el){
+            if(el===t || el.classList.contains('q-toggle')) return;
+            el.hidden=!on;
+        });
+    }
+    document.querySelectorAll('.q-toggle').forEach(function(t){
+        t.addEventListener('change',function(){apply(t);});
+        apply(t); // set initial state (and re-show a section if the form came back with errors)
+    });
+})();
+</script>
 {% endblock %}
