@@ -63,6 +63,7 @@ def client_detail(request, pk):
         {
             "client": client,
             "fact_sets": fact_sets,
+            "profile": profile,
             "manages_access": manages_access,
             "staff_users": staff_users,
             "granted_ids": granted_ids,
