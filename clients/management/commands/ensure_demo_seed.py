@@ -50,16 +50,26 @@ class Command(BaseCommand):
         firm, _ = Firm.objects.get_or_create(
             slug=DEMO_FIRM_SLUG, defaults={"name": "Demo Accountants"}
         )
+        # Partner role: partners see every client in the firm. (Staff users only
+        # see clients explicitly granted to them, which would hide the demo data.)
         user, created = User.objects.get_or_create(
             username=DEMO_USERNAME,
-            defaults={"email": "demo@example.invalid", "firm": firm, "role": User.Role.STAFF},
+            defaults={"email": "demo@example.invalid", "firm": firm, "role": User.Role.PARTNER},
         )
+        changed = False
         if created:
             user.set_password(os.environ.get("DEMO_PASSWORD", "changeme-demo"))
-            user.save()
+            changed = True
             self.stdout.write(self.style.SUCCESS(f"Created demo firm-user '{DEMO_USERNAME}'."))
-        elif user.firm_id != firm.id:
+        if user.firm_id != firm.id:
             user.firm = firm
+            changed = True
+        if user.role != User.Role.PARTNER:
+            # Fix an earlier demo user that was created as staff and so saw no clients.
+            user.role = User.Role.PARTNER
+            changed = True
+            self.stdout.write(f"Promoted '{DEMO_USERNAME}' to partner so it sees all firm clients.")
+        if changed:
             user.save()
 
         # 3. Demo clients — only if this firm has none yet.
