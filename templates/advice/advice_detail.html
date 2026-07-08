@@ -2,145 +2,152 @@
 {% load report_format %}
 {% block title %}Advice — {{ record.client.name }}{% endblock %}
 {% block content %}
-<h1>Advice for {{ record.client.name }} — {{ record.tax_year }}</h1>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Tax-planning advice</div>
+        <h1>{{ record.client.name }} <span style="color:var(--faint);font-weight:600">· {{ record.tax_year }}</span></h1>
+    </div>
+    {% if record.rendered_report %}<a class="btn" href="{{ record.rendered_report.url }}">Download PDF</a>{% endif %}
+</div>
+
 <p class="disclaimer">
-    This is decision support for the reviewing accountant, not tax advice to the client.
+    Decision support for the reviewing accountant — not tax advice to the client.
     Generated {{ record.generated_at|date:"d M Y H:i" }} by {{ record.generated_by }},
     rule-base version <strong>{{ record.rule_base_release.version }}</strong>.
-    {% if record.rendered_report %}<a href="{{ record.rendered_report.url }}">Download PDF</a>{% endif %}
 </p>
 
 {% if intake_gaps %}
-<section style="border:2px solid #b7791f; border-radius:6px; padding:1rem; margin:1rem 0; background:#fffbea;">
-    <h2 style="margin-top:0;">Questions to confirm before relying on this advice</h2>
-    <p style="margin-top:0;">The advice was generated from the facts on file. The engine made the
-    following assumptions where a material fact was not recorded — confirm or correct each with
-    the client, then update the facts and regenerate.</p>
-    <ul style="margin-bottom:0;">
+<section class="callout callout-warn">
+    <h2>Questions to confirm before relying on this advice</h2>
+    <p>The advice was generated from the facts on file. The engine made the following assumptions
+    where a material fact was not recorded — confirm or correct each with the client, then update
+    the facts and regenerate.</p>
+    <ul style="margin-bottom:0">
         {% for gap in intake_gaps %}
-        <li style="margin-bottom:0.6rem;">
+        <li style="margin-bottom:.7rem">
             <strong>{{ gap.question }}</strong><br>
-            <span style="color:#555;">Why it matters: {{ gap.why }}</span><br>
-            <span style="color:#b7791f;">Assumed for now: {{ gap.assumption }}</span>
+            <span style="color:var(--muted)">Why it matters: {{ gap.why }}</span><br>
+            <span style="color:var(--amber)">Assumed for now: {{ gap.assumption }}</span>
         </li>
         {% endfor %}
     </ul>
 </section>
 {% endif %}
 
-<section style="border:2px solid #0b3d59; border-radius:6px; padding:1rem; margin:1rem 0; background:#f6fafd;">
-    <h2 style="margin-top:0;">Expert panel review</h2>
+<section class="card">
+    <h2 style="margin-top:0">Expert panel review</h2>
     {% with review=record.latest_panel_review decision=record.latest_decision %}
     {% if review %}
-        <p>
-            Panel deployed {{ review.created_at|date:"d M Y H:i" }} by {{ review.requested_by }} —
-            overall verdict:
-            <strong style="text-transform:uppercase;
-                {% if review.overall == 'blocked' %}color:#c0392b;
-                {% elif review.overall == 'attention' %}color:#b9770e;
-                {% else %}color:#1e8449;{% endif %}">{{ review.overall }}</strong>
+        <p style="color:var(--muted)">
+            Panel deployed {{ review.created_at|date:"d M Y H:i" }} by {{ review.requested_by }} — overall verdict:
+            {% if review.overall == 'blocked' %}<span class="flag">BLOCKED</span>
+            {% elif review.overall == 'attention' %}<span class="badge badge-warn">ATTENTION</span>
+            {% else %}<span class="badge badge-ok">CLEAR</span>{% endif %}
         </p>
         {% if panel_summaries %}
-        <div style="margin:0.5rem 0;">
+        <div style="margin:.5rem 0">
             {% for s in panel_summaries %}
-            <p style="margin:0.4rem 0;">
-                <strong>{{ s.title }}</strong> — {{ s.lead }}
-                {% for point in s.points %}{% if point.severity != "info" %}
-                    {{ point.message }}{% endif %}{% endfor %}
+            <p style="margin:.4rem 0"><strong>{{ s.title }}</strong> — {{ s.lead }}
+                {% for point in s.points %}{% if point.severity != "info" %}{{ point.message }}{% endif %}{% endfor %}
             </p>
             {% endfor %}
         </div>
         {% endif %}
-        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        {% if review.findings %}
+        <table>
+            <thead><tr><th>Reviewer</th><th>Severity</th><th>Finding</th></tr></thead>
+            <tbody>
             {% for f in review.findings %}
-            <tr style="border-bottom:1px solid #dde;">
-                <td style="padding:4px 8px; white-space:nowrap; vertical-align:top;">
-                    <strong>{{ f.persona|title }}</strong><br>
-                    <span style="font-size:0.75rem; color:#666;">{{ f.code }}</span>
+            <tr>
+                <td style="white-space:nowrap"><strong>{{ f.persona|title }}</strong><br><span style="font-size:.75rem;color:var(--faint)">{{ f.code }}</span></td>
+                <td style="white-space:nowrap">
+                    {% if f.severity == 'blocker' %}<span class="flag">BLOCKER</span>
+                    {% elif f.severity == 'caution' %}<span class="badge badge-warn">CAUTION</span>
+                    {% else %}<span class="badge badge-neutral">INFO</span>{% endif %}
                 </td>
-                <td style="padding:4px 8px; vertical-align:top; white-space:nowrap;">
-                    <span style="padding:1px 6px; border-radius:3px; color:white; font-size:0.75rem;
-                        {% if f.severity == 'blocker' %}background:#c0392b;
-                        {% elif f.severity == 'caution' %}background:#b9770e;
-                        {% else %}background:#5d6d7e;{% endif %}">{{ f.severity|upper }}</span>
-                </td>
-                <td style="padding:4px 8px;">{{ f.message }}</td>
+                <td>{{ f.message }}</td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
+        {% endif %}
 
         {% if decision %}
-            <p style="margin-top:1rem;">
+            <div class="callout callout-accent" style="margin-bottom:0">
                 <strong>Professional decision:</strong> {{ decision.get_decision_display }}
                 by {{ decision.decided_by }} on {{ decision.decided_at|date:"d M Y H:i" }}.
                 {% if decision.notes %}<br><em>Note: {{ decision.notes }}</em>{% endif %}
-            </p>
+            </div>
         {% else %}
-            <form method="post" action="{% url 'advice:advice-decide' record.pk %}" style="margin-top:1rem;">
+            <form method="post" action="{% url 'advice:advice-decide' record.pk %}" style="margin-top:1rem">
                 {% csrf_token %}
-                <label><input type="radio" name="decision" value="approved" required> Approve for client</label>
-                <label style="margin-left:1rem;"><input type="radio" name="decision" value="rejected"> Reject</label>
-                <label style="margin-left:1rem;"><input type="radio" name="decision" value="needs_revision"> Needs revision</label><br>
-                <textarea name="notes" rows="2" style="width:100%; margin-top:0.5rem;"
+                <div style="display:flex;gap:1.25rem;flex-wrap:wrap">
+                    <label style="margin:0"><input type="radio" name="decision" value="approved" required> Approve for client</label>
+                    <label style="margin:0"><input type="radio" name="decision" value="rejected"> Reject</label>
+                    <label style="margin:0"><input type="radio" name="decision" value="needs_revision"> Needs revision</label>
+                </div>
+                <textarea name="notes" rows="2" style="margin-top:.6rem"
                           placeholder="Notes for the file (required to reject/revise, or to approve over a blocker)"></textarea>
-                <button type="submit" style="margin-top:0.5rem;">Record decision</button>
+                <button type="submit" style="margin-top:.6rem">Record decision</button>
             </form>
         {% endif %}
-        <form method="post" action="{% url 'advice:panel-deploy' record.pk %}" style="margin-top:0.5rem;">
+        <form method="post" action="{% url 'advice:panel-deploy' record.pk %}" style="margin-top:.75rem">
             {% csrf_token %}
-            <button type="submit">Re-deploy panel (fresh review)</button>
+            <button type="submit" class="secondary">Re-deploy panel (fresh review)</button>
         </form>
     {% else %}
-        <p>The independent expert panel — tax lawyer, tax accountant, HMRC consultant, and
+        <p>The independent expert panel — tax lawyer, tax accountant, HMRC consultant and
            business expert — has not reviewed this advice yet. A professional decision cannot
            be recorded until it has.</p>
         <form method="post" action="{% url 'advice:panel-deploy' record.pk %}">
             {% csrf_token %}
-            <button type="submit" style="font-size:1rem; padding:0.4rem 1rem;">Deploy expert panel</button>
+            <button type="submit">Deploy expert panel</button>
         </form>
     {% endif %}
     {% endwith %}
 </section>
 
-<section style="border:1px solid #1e8449; border-radius:6px; padding:1rem; margin:1rem 0; background:#f4faf6;">
-    <h2 style="margin-top:0;">Client narrative</h2>
+<section class="card">
+    <h2 style="margin-top:0">Client narrative</h2>
     {% if narrative %}
-        <p style="font-size:0.85rem; color:#555;">
+        <p style="color:var(--muted);font-size:.86rem">
             Drafted {{ narrative.created_at|date:"d M Y H:i" }} by {{ narrative.drafter }} —
             validator confirmed every figure and citation exists in this advice record.
             Edit in your own voice before issuing; the draft is a starting point, not client-ready.
         </p>
-        <div style="white-space:pre-wrap; background:white; border:1px solid #ddd; padding:0.75rem; font-size:0.95rem;">{{ narrative.text }}</div>
-        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}" style="margin-top:0.5rem;">
-            {% csrf_token %}<button type="submit">Redraft</button>
+        <div style="white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--line);
+             border-radius:var(--radius-sm);padding:1rem;font-size:.95rem">{{ narrative.text }}</div>
+        <form method="post" action="{% url 'advice:narrative-draft' record.pk %}" style="margin-top:.75rem">
+            {% csrf_token %}<button type="submit" class="secondary">Redraft</button>
         </form>
     {% else %}
-        <p>No narrative drafted yet. The drafter composes client-facing prose from the
-           computed figures only, and a validator rejects any draft containing a number
-           or citation not present in this record.</p>
+        <p>No narrative drafted yet. The drafter composes client-facing prose from the computed
+           figures only, and a validator rejects any draft containing a number or citation not
+           present in this record.</p>
         <form method="post" action="{% url 'advice:narrative-draft' record.pk %}">
             {% csrf_token %}<button type="submit">Draft client narrative</button>
         </form>
     {% endif %}
 </section>
 
+<div class="eyebrow" style="margin:1.75rem 0 .25rem">Recommended strategies</div>
 {% for r in record.results %}
-<section style="border-top:1px solid #eee; padding-top:1rem; margin-top:1rem;">
-    <h2>{{ r.strategy_name }}
-        {% if r.risk_status != "settled" %}<span class="flag">{{ r.risk_status|upper }}</span>{% endif %}
+<section class="card">
+    <h2 style="margin-top:0">{{ r.strategy_name }}
+        {% if r.risk_status != "settled" %}<span class="badge badge-warn">{{ r.risk_status|upper }}</span>{% endif %}
         {% if r.dotas_notifiable %}<span class="flag">DOTAS</span>{% endif %}
         {% if r.gaar_exposure %}<span class="flag">GAAR</span>{% endif %}
     </h2>
-    <p><em>Timeframe: {{ r.timeframe }}</em></p>
+    <p style="color:var(--faint);font-size:.82rem;text-transform:uppercase;letter-spacing:.05em">Timeframe · {{ r.timeframe }}</p>
     <p>{{ r.explanation }}</p>
     <h4>Quantification</h4>
-    <div style="font-size:0.9rem;">{{ r.quantification|quant_table }}</div>
+    <div style="font-size:.9rem">{{ r.quantification|quant_table }}</div>
     <h4>Legal basis</h4>
     <ul>
-        {% for a in r.authorities %}<li>{{ a.citation }} ({{ a.status }})</li>{% endfor %}
+        {% for a in r.authorities %}<li>{{ a.citation }} <span class="badge badge-ok">{{ a.status }}</span></li>{% endfor %}
     </ul>
 </section>
 {% empty %}
-<p>No eligible strategies were identified from the recorded facts.</p>
+<div class="card empty"><p style="margin:0">No eligible strategies were identified from the recorded facts.</p></div>
 {% endfor %}
 {% endblock %}
