@@ -27,6 +27,46 @@ DEMO_FIRM_SLUG = "demo-accountants"
 DEMO_USERNAME = "demo"
 TAX_YEAR = "2025/26"
 
+# A deliberately conflicted owner-manager: what's tax-optimal is not what's
+# commercially or legally clean. Engineered to make the four reviewers raise
+# DIFFERENT points — wasted pension relief + annual-allowance charge (accountant),
+# settlements risk on spousal dividends + gift-with-reservation (lawyer), AA
+# reporting + £2m estate valuation scrutiny (HMRC), and gift affordability +
+# pension lock-up + working capital (business expert) — so the panel visibly
+# deliberates rather than rubber-stamps.
+TENSION_FACTS = {
+    "personal": {
+        "other_income": 0,
+        "salary_from_own_company": 0,
+        "dividends_from_own_company": 70000,   # heavy extraction
+        "spouse_income": 25000,                # spousal dividends -> settlements
+    },
+    "company": {
+        "profit_before_remuneration": 90000,   # extraction is a large share -> working capital
+        "employment_allowance_available": False,
+        "associated_companies": 0,
+    },
+    "sole_trade": {"annual_profit": 0},
+    "pension": {
+        "threshold_income": 0,
+        "adjusted_income": 0,
+        "unused_aa_prior_3_years": [0, 0, 0],
+        "desired_contribution": 80000,         # > earnings (unrelieved) and > AA (charge)
+    },
+    "estate": {
+        "gross_value": 2100000,
+        "liabilities": 100000,
+        "home_equity_value": 500000,
+        "home_passes_to_direct_descendants": True,
+        "amount_to_spouse": 1500000,
+        "charitable_legacy": 0,
+        "combined_estate_second_death": 2000000,   # right on the £2m RNRB taper cliff
+        "combined_home_equity_second_death": 600000,
+        "planned_lifetime_gift": 400000,           # ~20% of the estate
+        "prior_year_annual_exemption_unused": True,
+    },
+}
+
 
 class Command(BaseCommand):
     help = "Idempotently ensure a released rule base, a demo firm/user, and demo clients with advice."
