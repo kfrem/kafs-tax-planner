@@ -1,29 +1,57 @@
 {% extends "base.html" %}
 {% block title %}Import clients{% endblock %}
 {% block content %}
-<h1>Import clients from CSV</h1>
-<p>Required columns: client_reference, client_name, entity_type, tax_year, plus any of the numeric fact columns
-   (other_income, salary_from_own_company, dividends_from_own_company, spouse_income,
-   company_profit_before_remuneration, employment_allowance_available, associated_companies,
-   sole_trade_annual_profit, pension_threshold_income, pension_adjusted_income,
-   pension_unused_aa_y1/y2/y3, pension_desired_contribution). entity_type must be one of:
-   individual, company, individual_with_company.</p>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn" type="submit">Import</button>
-</form>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Bulk entry</div>
+        <h1>Import clients from CSV</h1>
+    </div>
+    <a class="btn-secondary" href="{% url 'clients:csv-template' %}">&#8681; Download CSV template</a>
+</div>
+
+<div class="callout callout-info">
+    <strong>New here?</strong> Download the template above — it has the exact column headings
+    and one worked example row. Fill in one row per client and upload it below.
+    Prefer to type a single client in by hand? <a href="{% url 'clients:client-create' %}">Add a client</a>
+    and record their facts on a form instead.
+</div>
+
+<div class="card">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit" style="margin-top:.5rem">Import clients</button>
+    </form>
+</div>
+
+<details class="card" style="padding:1rem 1.25rem">
+    <summary style="cursor:pointer;font-weight:600">Required &amp; optional columns</summary>
+    <p style="margin-top:.75rem"><strong>Required:</strong> client_reference, client_name, entity_type, tax_year.
+    <br><strong>entity_type</strong> must be one of: <code>individual</code>, <code>company</code>,
+    <code>individual_with_company</code>.</p>
+    <p><strong>Optional numeric columns</strong> (blank = 0): other_income, salary_from_own_company,
+    dividends_from_own_company, spouse_income, company_profit_before_remuneration,
+    employment_allowance_available, associated_companies, sole_trade_annual_profit,
+    pension_threshold_income, pension_adjusted_income, pension_unused_aa_y1/y2/y3,
+    pension_desired_contribution.</p>
+</details>
 
 {% if result %}
-<h2>Import result</h2>
-<ul>
-    <li>Clients created: {{ result.created_clients }}</li>
-    <li>Clients updated: {{ result.updated_clients }}</li>
-    <li>Fact sets created: {{ result.created_fact_sets }}</li>
-</ul>
-{% if result.errors %}
-<h3>Errors</h3>
-<ul>{% for e in result.errors %}<li>{{ e }}</li>{% endfor %}</ul>
-{% endif %}
+<div class="card">
+    <h2 style="margin-top:0">Import result</h2>
+    <table>
+        <tbody>
+            <tr><td>Clients created</td><td class="num"><strong>{{ result.created_clients }}</strong></td></tr>
+            <tr><td>Clients updated</td><td class="num"><strong>{{ result.updated_clients }}</strong></td></tr>
+            <tr><td>Fact sets created</td><td class="num"><strong>{{ result.created_fact_sets }}</strong></td></tr>
+        </tbody>
+    </table>
+    {% if result.errors %}
+    <div class="callout callout-warn" style="margin-bottom:0">
+        <strong>Some rows had problems:</strong>
+        <ul style="margin-bottom:0">{% for e in result.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+</div>
 {% endif %}
 {% endblock %}
