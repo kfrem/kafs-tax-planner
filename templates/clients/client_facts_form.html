@@ -1,10 +1,92 @@
 {% extends "base.html" %}
 {% block title %}Record facts — {{ client.name }}{% endblock %}
 {% block content %}
-<h1>Record financial facts — {{ client.name }}</h1>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Manual entry &middot; {{ client.name }}</div>
+        <h1>Record financial facts</h1>
+    </div>
+</div>
+
+<div class="callout callout-accent">
+    Enter what you know — leave anything that doesn't apply at <strong>0</strong>. When you save,
+    you can <strong>generate advice</strong> for this client in one click to see which planning
+    strategies apply and the potential tax saving, before committing to anything.
+</div>
+
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn" type="submit">Save facts</button>
+    {{ form.non_field_errors }}
+
+    <div class="card">
+        <label>Tax year</label>
+        {{ form.tax_year }}
+        {% if form.tax_year.help_text %}<span class="helptext">{{ form.tax_year.help_text }}</span>{% endif %}
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Income &amp; dividends</h2>
+        <div class="field-grid">
+            <p>{{ form.other_income.label_tag }}{{ form.other_income }}</p>
+            <p>{{ form.employment_income.label_tag }}{{ form.employment_income }}</p>
+            <p>{{ form.salary_from_own_company.label_tag }}{{ form.salary_from_own_company }}</p>
+            <p>{{ form.dividends_from_own_company.label_tag }}{{ form.dividends_from_own_company }}</p>
+            <p>{{ form.spouse_income.label_tag }}{{ form.spouse_income }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Company &amp; self-employment</h2>
+        <div class="field-grid">
+            <p>{{ form.company_profit_before_remuneration.label_tag }}{{ form.company_profit_before_remuneration }}</p>
+            <p>{{ form.associated_companies.label_tag }}{{ form.associated_companies }}</p>
+            <p>{{ form.sole_trade_annual_profit.label_tag }}{{ form.sole_trade_annual_profit }}</p>
+            <p style="align-self:end">{{ form.employment_allowance_available }} {{ form.employment_allowance_available.label }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Pension</h2>
+        <div class="field-grid">
+            <p>{{ form.pension_desired_contribution.label_tag }}{{ form.pension_desired_contribution }}</p>
+            <p>{{ form.pension_threshold_income.label_tag }}{{ form.pension_threshold_income }}</p>
+            <p>{{ form.pension_adjusted_income.label_tag }}{{ form.pension_adjusted_income }}</p>
+            <p>{{ form.pension_unused_aa_y1.label_tag }}{{ form.pension_unused_aa_y1 }}</p>
+            <p>{{ form.pension_unused_aa_y2.label_tag }}{{ form.pension_unused_aa_y2 }}</p>
+            <p>{{ form.pension_unused_aa_y3.label_tag }}{{ form.pension_unused_aa_y3 }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Estate &amp; inheritance tax</h2>
+        <div class="field-grid">
+            <p>{{ form.estate_gross_value.label_tag }}{{ form.estate_gross_value }}</p>
+            <p>{{ form.estate_liabilities.label_tag }}{{ form.estate_liabilities }}</p>
+            <p>{{ form.estate_home_equity_value.label_tag }}{{ form.estate_home_equity_value }}</p>
+            <p>{{ form.estate_amount_to_spouse.label_tag }}{{ form.estate_amount_to_spouse }}</p>
+            <p>{{ form.estate_charitable_legacy.label_tag }}{{ form.estate_charitable_legacy }}</p>
+            <p>{{ form.estate_planned_lifetime_gift.label_tag }}{{ form.estate_planned_lifetime_gift }}</p>
+            <p>{{ form.estate_combined_value_second_death.label_tag }}{{ form.estate_combined_value_second_death }}</p>
+            <p>{{ form.estate_combined_home_equity_second_death.label_tag }}{{ form.estate_combined_home_equity_second_death }}</p>
+        </div>
+        <p style="margin-top:.5rem">{{ form.estate_home_to_direct_descendants }} {{ form.estate_home_to_direct_descendants.label }}</p>
+        <p>{{ form.estate_prior_year_annual_exemption_unused }} {{ form.estate_prior_year_annual_exemption_unused.label }}</p>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Property &amp; capital gains</h2>
+        <div class="field-grid">
+            <p>{{ form.property_disposal_gain.label_tag }}{{ form.property_disposal_gain }}</p>
+            <p>{{ form.property_disposal_asset_type.label_tag }}{{ form.property_disposal_asset_type }}</p>
+            <p>{{ form.property_ownership_months.label_tag }}{{ form.property_ownership_months }}</p>
+            <p>{{ form.property_occupied_as_main_residence_months.label_tag }}{{ form.property_occupied_as_main_residence_months }}</p>
+            <p>{{ form.property_purchase_price.label_tag }}{{ form.property_purchase_price }}</p>
+        </div>
+        <p style="margin-top:.5rem">{{ form.property_spouse_available_for_transfer }} {{ form.property_spouse_available_for_transfer.label }}</p>
+        <p>{{ form.property_purchase_is_additional_dwelling }} {{ form.property_purchase_is_additional_dwelling.label }}</p>
+        <p>{{ form.property_purchase_first_time_buyer }} {{ form.property_purchase_first_time_buyer.label }}</p>
+    </div>
+
+    <button class="btn" type="submit" style="font-size:.95rem;padding:.7rem 1.4rem">Save facts &amp; continue</button>
 </form>
 {% endblock %}
