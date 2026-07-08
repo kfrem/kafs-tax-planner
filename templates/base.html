@@ -212,5 +212,37 @@
         {% endif %}
         {% block content %}{% endblock %}
     </main>
+    <script>
+    window.GLOSSARY = {% glossary_json %};
+    (function(){
+        var pop=null;
+        function close(){ if(pop){pop.remove();pop=null;} }
+        document.addEventListener('click',function(e){
+            var t=e.target.closest('.gloss');
+            if(!t){ if(!e.target.closest('.gloss-pop')) close(); return; }
+            e.stopPropagation();
+            var g=window.GLOSSARY[t.getAttribute('data-gloss')];
+            if(!g){ return; }
+            close();
+            pop=document.createElement('div'); pop.className='gloss-pop';
+            pop.innerHTML='<h5></h5><div class="gp-plain"></div><div class="gp-detail"></div>'
+                +'<div class="gp-client"></div><a class="gp-more">Open full glossary &rarr;</a>';
+            pop.querySelector('h5').textContent=g.term;
+            pop.querySelector('.gp-plain').textContent=g.plain;
+            pop.querySelector('.gp-detail').textContent=g.detail;
+            var c=pop.querySelector('.gp-client');
+            if(g.client){ c.innerHTML='<strong>Say it to the client:</strong> '; c.appendChild(document.createTextNode(g.client)); }
+            else { c.remove(); }
+            pop.querySelector('.gp-more').href='/glossary/#'+t.getAttribute('data-gloss');
+            document.body.appendChild(pop);
+            var r=t.getBoundingClientRect();
+            var left=window.scrollX+r.left;
+            if(left+352>window.scrollX+window.innerWidth){ left=window.scrollX+window.innerWidth-352; }
+            pop.style.top=(window.scrollY+r.bottom+6)+'px';
+            pop.style.left=Math.max(window.scrollX+8,left)+'px';
+        });
+        document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+    })();
+    </script>
 </body>
 </html>
