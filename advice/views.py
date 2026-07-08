@@ -55,6 +55,18 @@ def advice_generate(request, fact_set_id):
 
 
 @login_required
+def advice_pdf(request, pk):
+    """Render the advice report to PDF on demand and stream it back. Rendering
+    per request (rather than serving a stored file) works on hosts with an
+    ephemeral filesystem and with MEDIA unserved in production."""
+    record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
+    get_accessible_client_or_404(request.user, record.client_id)
+    response = HttpResponse(advice_pdf_bytes(record), content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="{advice_pdf_filename(record)}"'
+    return response
+
+
+@login_required
 def advice_detail(request, pk):
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
     get_accessible_client_or_404(request.user, record.client_id)
