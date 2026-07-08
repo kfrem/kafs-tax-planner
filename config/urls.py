@@ -4,11 +4,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView
 
+from advice.views import glossary_page
 from config.health import healthz
 
 urlpatterns = [
     path("healthz", healthz, name="healthz"),
     path("admin/", admin.site.urls),
+    path("glossary/", glossary_page, name="glossary"),
     path("", RedirectView.as_view(pattern_name="clients:client-list")),
     path("accounts/", include("firms.urls")),
     path("clients/", include("clients.urls")),
