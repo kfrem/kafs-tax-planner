@@ -127,3 +127,34 @@ def csv_import_view(request):
     else:
         form = CsvImportForm()
     return render(request, "clients/csv_import.html", {"form": form, "result": result})
+
+
+# The columns the importer understands (see clients/csv_import.py). One example
+# row is included so an accountant can see the expected format at a glance.
+CSV_TEMPLATE_COLUMNS = [
+    "client_reference", "client_name", "entity_type", "tax_year",
+    "other_income", "salary_from_own_company", "dividends_from_own_company",
+    "spouse_income", "company_profit_before_remuneration",
+    "employment_allowance_available", "associated_companies",
+    "sole_trade_annual_profit", "pension_threshold_income",
+    "pension_adjusted_income", "pension_unused_aa_y1", "pension_unused_aa_y2",
+    "pension_unused_aa_y3", "pension_desired_contribution",
+]
+CSV_TEMPLATE_EXAMPLE = {
+    "client_reference": "C001", "client_name": "Jane Director",
+    "entity_type": "individual_with_company", "tax_year": "2025/26",
+    "salary_from_own_company": "12570", "dividends_from_own_company": "40000",
+    "company_profit_before_remuneration": "120000",
+}
+
+
+@login_required
+def csv_template_download(request):
+    """Serve a ready-to-fill CSV template (headers + one example row)."""
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="uk-tax-planner-client-template.csv"'
+    writer = csv.DictWriter(response, fieldnames=CSV_TEMPLATE_COLUMNS)
+    writer.writeheader()
+    writer.writerow({c: CSV_TEMPLATE_EXAMPLE.get(c, "0" if c not in
+                     ("client_reference", "client_name", "entity_type", "tax_year") else "") for c in CSV_TEMPLATE_COLUMNS})
+    return response
