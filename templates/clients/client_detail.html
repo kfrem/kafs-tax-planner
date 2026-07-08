@@ -16,6 +16,25 @@
     </div>
 </div>
 
+{% if profile %}
+<div class="card">
+    <h2 style="margin-top:0">Client profile</h2>
+    <p class="lead" style="margin-top:0">{{ profile.headline }}</p>
+    <div class="field-grid" style="gap:.75rem 2rem">
+        {% for section in profile.sections %}
+        <div>
+            <h4 style="margin:.2rem 0 .4rem">{{ section.title }}</h4>
+            <ul style="margin:0;padding-left:1.1rem">
+                {% for point in section.points %}<li style="margin-bottom:.25rem">{{ point }}</li>{% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    <p style="color:var(--faint);font-size:.8rem;margin-bottom:0">A plain-English read-back of the
+    recorded facts — check it reflects the client before relying on the advice below.</p>
+</div>
+{% endif %}
+
 <h2>Tax-year fact sets</h2>
 <table>
     <thead><tr><th>Tax year</th><th>Source</th><th>Recorded</th><th style="text-align:right">Action</th></tr></thead>
