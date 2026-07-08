@@ -138,9 +138,9 @@
 {% for r in record.results %}
 <section class="card">
     <h2 style="margin-top:0">{{ r.strategy_name }}
-        {% if r.risk_status != "settled" %}<span class="badge badge-warn">{{ r.risk_status|upper }}</span>{% endif %}
-        {% if r.dotas_notifiable %}<span class="flag">DOTAS</span>{% endif %}
-        {% if r.gaar_exposure %}<span class="flag">GAAR</span>{% endif %}
+        {% if r.risk_status != "settled" %}<span class="badge badge-warn">{% explain "risk_status" r.risk_status|upper %}</span>{% endif %}
+        {% if r.dotas_notifiable %}<span class="flag">{% explain "dotas" "DOTAS" %}</span>{% endif %}
+        {% if r.gaar_exposure %}<span class="flag">{% explain "gaar" "GAAR" %}</span>{% endif %}
     </h2>
     <p style="color:var(--faint);font-size:.82rem;text-transform:uppercase;letter-spacing:.05em">Timeframe · {{ r.timeframe }}</p>
     <p>{{ r.explanation }}</p>
