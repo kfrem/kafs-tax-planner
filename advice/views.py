@@ -1,14 +1,14 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
 from clients.models import (
     ClientFactSet,
     get_accessible_client_or_404,
 )
-from reports.pdf import render_advice_pdf
+from reports.pdf import advice_pdf_bytes, advice_pdf_filename, render_advice_pdf
 
 from .generator import NoReleasedRuleBaseError, generate_advice
 from .intake import intake_gaps
