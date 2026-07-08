@@ -118,6 +118,11 @@
         fieldset{border:1px solid var(--line);border-radius:var(--radius-sm);margin:0 0 1.25rem;padding:1rem 1.25rem}
         legend{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:0 .4rem}
         input[type=radio],input[type=checkbox]{width:auto;accent-color:var(--accent)}
+        .field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.1rem 1.75rem}
+        .field-grid p{margin:.35rem 0}
+        .field-grid label{margin-top:.4rem}
+        .field-grid input,.field-grid select{max-width:100%}
+        .field-grid .helptext,.helptext{display:block;color:var(--faint);font-size:.78rem;margin-top:.2rem}
 
         /* ---------- Messages ---------- */
         .messages{list-style:none;padding:0;margin:0 0 1.25rem}
