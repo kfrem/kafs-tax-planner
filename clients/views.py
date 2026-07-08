@@ -145,21 +145,30 @@ CSV_TEMPLATE_COLUMNS = [
     "pension_adjusted_income", "pension_unused_aa_y1", "pension_unused_aa_y2",
     "pension_unused_aa_y3", "pension_desired_contribution",
 ]
-CSV_TEMPLATE_EXAMPLE = {
-    "client_reference": "C001", "client_name": "Jane Director",
-    "entity_type": "individual_with_company", "tax_year": "2025/26",
-    "salary_from_own_company": "12570", "dividends_from_own_company": "40000",
-    "company_profit_before_remuneration": "120000",
-}
+# Three worked rows covering different client types, so it's clear the template
+# is not only for company owner-managers.
+CSV_TEMPLATE_EXAMPLES = [
+    {"client_reference": "C001", "client_name": "Jane Director",
+     "entity_type": "individual_with_company", "tax_year": "2025/26",
+     "salary_from_own_company": "12570", "dividends_from_own_company": "40000",
+     "company_profit_before_remuneration": "120000"},
+    {"client_reference": "C002", "client_name": "Sam Sole-Trader",
+     "entity_type": "individual", "tax_year": "2025/26",
+     "sole_trade_annual_profit": "55000", "pension_desired_contribution": "10000"},
+    {"client_reference": "C003", "client_name": "Priya Employee",
+     "entity_type": "individual", "tax_year": "2025/26",
+     "other_income": "48000", "spouse_income": "9000"},
+]
 
 
 @login_required
 def csv_template_download(request):
-    """Serve a ready-to-fill CSV template (headers + one example row)."""
+    """Serve a ready-to-fill CSV template (headers + a few worked example rows)."""
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="uk-tax-planner-client-template.csv"'
     writer = csv.DictWriter(response, fieldnames=CSV_TEMPLATE_COLUMNS)
     writer.writeheader()
-    writer.writerow({c: CSV_TEMPLATE_EXAMPLE.get(c, "0" if c not in
-                     ("client_reference", "client_name", "entity_type", "tax_year") else "") for c in CSV_TEMPLATE_COLUMNS})
+    text_cols = {"client_reference", "client_name", "entity_type", "tax_year"}
+    for example in CSV_TEMPLATE_EXAMPLES:
+        writer.writerow({c: example.get(c, "" if c in text_cols else "0") for c in CSV_TEMPLATE_COLUMNS})
     return response
