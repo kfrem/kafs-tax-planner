@@ -7,7 +7,7 @@
         <div class="eyebrow">Tax-planning advice</div>
         <h1>{{ record.client.name }} <span style="color:var(--faint);font-weight:600">· {{ record.tax_year }}</span></h1>
     </div>
-    {% if record.rendered_report %}<a class="btn" href="{{ record.rendered_report.url }}">Download PDF</a>{% endif %}
+    <a class="btn" href="{% url 'advice:advice-pdf' record.pk %}" target="_blank">Download PDF</a>
 </div>
 
 <p class="disclaimer">
