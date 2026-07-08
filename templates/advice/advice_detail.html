@@ -36,7 +36,10 @@
 {% endif %}
 
 <section class="card">
-    <h2 style="margin-top:0">Expert panel review</h2>
+    <h2 style="margin-top:0">{% explain "expert_panel" "Expert panel review" %}</h2>
+    <p style="color:var(--faint);font-size:.82rem;margin-top:-.3rem">Tip: click any
+        <span class="gloss" style="border:none">term with an <span class="gloss-i" style="position:static">i</span></span>
+        for a plain-English explanation you can pass on to the client.</p>
     {% with review=record.latest_panel_review decision=record.latest_decision %}
     {% if review %}
         <p style="color:var(--muted)">
