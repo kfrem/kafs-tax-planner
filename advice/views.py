@@ -14,6 +14,7 @@ from .generator import NoReleasedRuleBaseError, generate_advice
 from .intake import intake_gaps
 from .models import AdviceImpactAlert, AdviceRecord, ProfessionalDecision
 from .narrative import NarrativeRejected, create_narrative
+from .narrative_llm import llm_available, llm_draft
 from .panel import DecisionError, deploy_panel, persona_summaries, record_decision
 from .scenarios import run_scenario
 
