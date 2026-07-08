@@ -1,46 +1,56 @@
 {% extends "base.html" %}
 {% block title %}{{ client.name }}{% endblock %}
 {% block content %}
-<h1>{{ client.name }}</h1>
-<p>Reference: {{ client.reference }} &middot; {{ client.get_entity_type_display }}</p>
-<p><a class="btn" href="{% url 'clients:client-facts-create' client.pk %}">+ Record facts for a tax year</a>
-   <a class="btn" href="{% url 'advice:advice-list' client.pk %}">View advice history</a>
-   <a class="btn" href="{% url 'advice:scenario' client.pk %}">Model a scenario</a></p>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Client</div>
+        <h1>{{ client.name }}</h1>
+        <p style="color:var(--muted);margin:.2rem 0 0">
+            {{ client.reference }} &middot; <span class="badge badge-neutral">{{ client.get_entity_type_display }}</span>
+        </p>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <a class="btn" href="{% url 'clients:client-facts-create' client.pk %}">+ Record facts</a>
+        <a class="btn-secondary" href="{% url 'advice:advice-list' client.pk %}">Advice history</a>
+        <a class="btn-secondary" href="{% url 'advice:scenario' client.pk %}">Model a scenario</a>
+    </div>
+</div>
 
-<h2>Tax year fact sets</h2>
+<h2>Tax-year fact sets</h2>
 <table>
-    <thead><tr><th>Tax year</th><th>Source</th><th>Recorded</th><th></th></tr></thead>
+    <thead><tr><th>Tax year</th><th>Source</th><th>Recorded</th><th style="text-align:right">Action</th></tr></thead>
     <tbody>
     {% for fs in fact_sets %}
         <tr>
-            <td>{{ fs.tax_year }}</td>
-            <td>{{ fs.get_source_display }}</td>
+            <td><strong>{{ fs.tax_year }}</strong></td>
+            <td><span class="badge badge-neutral">{{ fs.get_source_display }}</span></td>
             <td>{{ fs.created_at|date:"d M Y H:i" }}</td>
-            <td>
+            <td style="text-align:right">
                 <form method="post" action="{% url 'advice:advice-generate' fs.pk %}" style="display:inline">
                     {% csrf_token %}
-                    <button class="btn" type="submit">Generate advice</button>
+                    <button type="submit">Generate advice</button>
                 </form>
             </td>
         </tr>
     {% empty %}
-        <tr><td colspan="4">No facts recorded yet.</td></tr>
+        <tr><td colspan="4" style="color:var(--muted)">No facts recorded yet.</td></tr>
     {% endfor %}
     </tbody>
 </table>
+
 {% if manages_access %}
-<h2>Staff access</h2>
-<p style="font-size:0.9rem; color:#555;">Partners and managers see every client;
-STAFF users see only clients ticked for them here.</p>
-<form method="post" action="{% url 'clients:client-access' client.pk %}">
-    {% csrf_token %}
-    {% for u in staff_users %}
-    <label style="display:block;">
-        <input type="checkbox" name="staff" value="{{ u.pk }}"
-               {% if u.pk in granted_ids %}checked{% endif %}> {{ u.username }}
-    </label>
-    {% empty %}<p>No staff-role users in this firm yet.</p>{% endfor %}
-    {% if staff_users %}<button type="submit">Save access</button>{% endif %}
-</form>
+<section class="card">
+    <h2 style="margin-top:0">Staff access</h2>
+    <p style="color:var(--muted);font-size:.9rem">Partners and managers see every client;
+    STAFF users see only clients ticked for them here.</p>
+    <form method="post" action="{% url 'clients:client-access' client.pk %}">
+        {% csrf_token %}
+        {% for u in staff_users %}
+        <label style="font-weight:500"><input type="checkbox" name="staff" value="{{ u.pk }}"
+               {% if u.pk in granted_ids %}checked{% endif %}> {{ u.username }}</label>
+        {% empty %}<p>No staff-role users in this firm yet.</p>{% endfor %}
+        {% if staff_users %}<button type="submit" style="margin-top:.75rem">Save access</button>{% endif %}
+    </form>
+</section>
 {% endif %}
 {% endblock %}
