@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 {% block title %}New client{% endblock %}
 {% block content %}
-<h1>New client</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn" type="submit">Save</button>
-</form>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">New client</div>
+        <h1>Add a client</h1>
+    </div>
+</div>
+<div class="callout callout-info">
+    Add the client's basic details here. On the next screen you'll record their financial facts
+    by hand and generate advice — a quick way to check the potential tax saving before committing.
+</div>
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit" style="margin-top:.5rem">Save &amp; record facts</button>
+    </form>
+</div>
 {% endblock %}
