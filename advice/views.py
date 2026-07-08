@@ -88,6 +88,7 @@ def advice_detail(request, pk):
             "panel_summaries": persona_summaries(review) if review else None,
             "narrative": record.narratives.order_by("-created_at").first(),
             "intake_gaps": intake_gaps(record.input_data_snapshot),
+            "llm_enabled": llm_available(),
         },
     )
 
@@ -98,6 +99,36 @@ def narrative_draft(request, pk):
         return HttpResponseNotAllowed(["POST"])
     record = get_object_or_404(AdviceRecord, pk=pk, firm=request.user.firm)
     get_accessible_client_or_404(request.user, record.client_id)
+
+    # AI drafting: richer prose, but bound by the SAME validator — if the model
+    # invents a figure or citation not in the record, the draft is rejected.
+    if request.POST.get("mode") == "ai":
+        if not llm_available():
+            messages.error(
+                request,
+                "AI drafting isn't configured yet. Set ANTHROPIC_API_KEY in the environment "
+                "to enable it; until then the standard drafter is available.",
+            )
+            return redirect("advice:advice-detail", pk=record.pk)
+        try:
+            create_narrative(record, request.user, draft_fn=llm_draft, drafter_name="llm")
+        except NarrativeRejected as exc:
+            messages.error(
+                request,
+                "The AI draft introduced a figure or citation not in the advice record, so the "
+                "validator rejected it (this is the guardrail working). Try again or use the "
+                "standard drafter. Detail: " + str(exc),
+            )
+        except Exception as exc:  # network/API problems must never 500 the page
+            messages.error(request, "AI drafting failed: " + str(exc))
+        else:
+            messages.success(
+                request,
+                "AI narrative drafted and validated: every figure and citation was checked "
+                "against the advice record. Edit in your own voice before issuing.",
+            )
+        return redirect("advice:advice-detail", pk=record.pk)
+
     try:
         create_narrative(record, request.user)
     except NarrativeRejected as exc:
