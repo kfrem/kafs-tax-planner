@@ -55,6 +55,14 @@ def advice_generate(request, fact_set_id):
 
 
 @login_required
+def glossary_page(request):
+    """Plain-English glossary of every term used across the app."""
+    from advice.glossary import all_terms
+
+    return render(request, "glossary.html", {"terms": all_terms()})
+
+
+@login_required
 def advice_pdf(request, pk):
     """Render the advice report to PDF on demand and stream it back. Rendering
     per request (rather than serving a stored file) works on hosts with an
