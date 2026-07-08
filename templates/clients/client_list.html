@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Clients{% endblock %}
 {% block content %}
-<h1>Clients</h1>
-<p><a class="btn" href="{% url 'clients:client-create' %}">+ New client</a></p>
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Practice workspace</div>
+        <h1>Clients</h1>
+    </div>
+    <a class="btn" href="{% url 'clients:client-create' %}">+ New client</a>
+</div>
+{% if clients %}
 <table>
-    <thead><tr><th>Reference</th><th>Name</th><th>Type</th><th></th></tr></thead>
+    <thead><tr><th>Reference</th><th>Name</th><th>Type</th><th style="text-align:right">Action</th></tr></thead>
     <tbody>
     {% for client in clients %}
         <tr>
-            <td>{{ client.reference }}</td>
+            <td><strong>{{ client.reference }}</strong></td>
             <td>{{ client.name }}</td>
-            <td>{{ client.get_entity_type_display }}</td>
-            <td><a href="{% url 'clients:client-detail' client.pk %}">View</a></td>
+            <td><span class="badge badge-neutral">{{ client.get_entity_type_display }}</span></td>
+            <td style="text-align:right"><a href="{% url 'clients:client-detail' client.pk %}">View&nbsp;&rarr;</a></td>
         </tr>
-    {% empty %}
-        <tr><td colspan="4">No clients yet.</td></tr>
     {% endfor %}
     </tbody>
 </table>
+{% else %}
+<div class="card empty">
+    <h3 style="margin-top:0">No clients yet</h3>
+    <p>Add your first client to start generating tax-planning advice.</p>
+    <a class="btn" href="{% url 'clients:client-create' %}" style="margin-top:.75rem">+ New client</a>
+</div>
+{% endif %}
 {% endblock %}
