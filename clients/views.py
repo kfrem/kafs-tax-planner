@@ -41,8 +41,12 @@ def client_create(request):
 
 @login_required
 def client_detail(request, pk):
+    from .profile import client_profile
+
     client = get_accessible_client_or_404(request.user, pk)
     fact_sets = client.fact_sets.filter(superseded_by__isnull=True)
+    latest = fact_sets.order_by("-created_at").first()
+    profile = client_profile(latest.facts) if latest else None
     manages_access = request.user.role in ("partner", "manager") or request.user.is_superuser
     staff_users = []
     granted_ids = set()
