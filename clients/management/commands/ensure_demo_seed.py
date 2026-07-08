@@ -73,6 +73,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from advice.generator import generate_advice
+        from advice.models import ProfessionalDecision
+        from advice.panel import DecisionError, deploy_panel, record_decision
         from clients.models import Client, ClientFactSet
         from clients.personas import PERSONAS
         from firms.models import Firm, User
