@@ -4,7 +4,7 @@ validator so it can never introduce an ungrounded number."""
 import pytest
 
 from advice import narrative_llm
-from advice.narrative import NarrativeRejected, validate_narrative
+from advice.narrative import validate_narrative
 
 
 def test_llm_unavailable_without_key(monkeypatch):
