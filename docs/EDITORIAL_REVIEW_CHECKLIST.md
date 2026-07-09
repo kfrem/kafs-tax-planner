@@ -6,12 +6,24 @@ correction in *Comments*.
 
 | Field | |
 |---|---|
-| Reviewing professional | _______________________ |
-| Second reviewer (distinct from editor) | _______________________ |
-| Date | _______________________ |
-| Rule-base version | 2025.x |
+| Reviewing professional | kfrem (editor / first reviewer) |
+| Second reviewer (distinct from editor) | Paul Mixer — see note below |
+| Date | 9 July 2026 |
+| Rule-base version | 2025.1 / 2025.2 / 2025.3 / 2026.1 (all released rows in force at review date) |
 
 Totals: **37 parameters · 42 strategies · 50 authorities = 129 items.**
+
+**Sign-off, 9 July 2026 (kfrem):** Approved — **Y** on all 129 items. This
+consolidated review covers the whole current rule base, including the content
+added after the 7 July four-eyes pass (item-by-item verdicts already recorded in
+[`EDITORIAL_SIGNOFF.md`](EDITORIAL_SIGNOFF.md)). Machine pre-check clean at review
+date (0 failures across 40 parameters, 42 strategies, 50 authorities per the
+self-audit — the checklist's "37 parameters" reflects the single-anchor count;
+the future-dated 2026/27 rows are the difference). No exceptions raised beyond the
+non-blocking next-cycle refinements already logged. Second-reviewer independent
+sign-off by Paul Mixer stands from 7 July for the then-current items; the
+post-7-July additions carry the editor's approval here and are queued for the
+second reviewer's next pass before their releases are relied on commercially.
 
 ## A. Parameters — rates & thresholds (37)
 
