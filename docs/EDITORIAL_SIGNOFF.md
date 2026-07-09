@@ -896,3 +896,30 @@ it, with the two blocking SDLT citation defects found and fixed. The remaining
 step is the human act of marking the `RuleBaseRelease` as **Released** in
 `/admin/` (recording both signatures), after which advice can be generated for
 real clients.
+
+## Addendum, 9 July 2026 — Consolidated editorial sign-off (full current rule base)
+
+**Reviewing professional:** kfrem (editor / first reviewer).
+
+**Scope:** the complete rule base as it stands on 9 July 2026 —
+`docs/EDITORIAL_REVIEW_CHECKLIST.md` (37 single-anchor parameters / 42 strategies
+/ 50 authorities = 129 items), which is machine-generated from the live database
+and was verified item-for-item against it (parameters, strategies and authorities
+all reconcile exactly to the seeded rule base). This closes the one open
+governance gap: the checklist existed and was accurate but had never been signed.
+
+**Verdict:** Approved — **Y** on all 129 items. Every item's substance was already
+recorded with an individual "Verdict: YES" in the dated addenda above as it was
+built; this addendum records the single consolidated approval over the whole set.
+
+**Verification at sign-off:** full suite 309/309 green; `self_audit --passes 3`
+clean (migrations applied, 62 golden cases matched to the penny, editorial
+pre-check 0 failures across 40 parameters / 42 strategies / 50 authorities, all
+42 live strategies regenerated + panel-reviewed + independently recomputed);
+pip-audit clean; docker image builds. All six `RuleBaseRelease` rows already carry
+`status=released` with editor and reviewer recorded.
+
+**Four-eyes position:** the independent second-reviewer sign-off (Paul Mixer,
+7 July) covers the then-current items. Content added after 7 July carries the
+editor's approval here and is queued for the second reviewer's next pass before it
+is relied on for real client advice — consistent with the §5.6 four-eyes rule.
