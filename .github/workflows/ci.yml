@@ -4,10 +4,25 @@ on:
   push:
     branches: ["main"]
   pull_request:
+  workflow_dispatch:   # lets you trigger a full run by hand from the Actions tab
 
+# Only keep the newest run per branch alive: a burst of auto-save commits
+# cancels its own superseded runs instead of each running to completion.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# The auto-save hook pushes to main dozens of times a day. Those pushes still
+# TRIGGER the workflow, but this guard makes every job skip immediately (0
+# billable minutes) unless it is a real commit or a pull request. Free-tier
+# Actions minutes are therefore spent only on meaningful changes.
+# Manual runs and PRs always run in full.
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: >-
+      github.event_name != 'push' ||
+      !startsWith(github.event.head_commit.message, 'auto: save')
 
     services:
       postgres:
