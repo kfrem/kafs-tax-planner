@@ -98,6 +98,9 @@ jobs:
 
   docker-image:
     runs-on: ubuntu-latest
+    if: >-
+      github.event_name != 'push' ||
+      !startsWith(github.event.head_commit.message, 'auto: save')
     steps:
       - uses: actions/checkout@v4
       - name: Build the production container image
