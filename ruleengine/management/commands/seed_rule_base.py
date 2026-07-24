@@ -1375,6 +1375,52 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="capital-allowances-full-expensing",
+                name="Full expensing (100% FYA on new plant)",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.capital_allowances_full_expensing",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A company buying new, unused main-rate plant and "
+                "machinery can claim full expensing: a 100% first-year allowance with no "
+                "upper limit, permanent since Finance (No.2) Act 2023. Unlike the Annual "
+                "Investment Allowance, relief does not stop at the £1m AIA cap, so for "
+                "large capital programmes the whole spend is deducted in year one instead "
+                "of the excess trickling through at the 18% writing-down rate. This "
+                "quantifies the year-one allowance and tax saved, and the extra relief "
+                "versus the AIA-then-writing-down route. The plant must be new and unused, "
+                "bought by a company (not an unincorporated business), and not for leasing "
+                "— conditions the adviser confirms. On a later sale a balancing charge "
+                "claws back relief on the proceeds.",
+                authority_keys=["caa2001_s45s"],
+                eligibility_conditions={"all": [
+                    {"path": "company.full_expensing_new_plant_spend", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="holding-company-structuring",
+                name="Holding-company structuring (retain profits in the group)",
+                tax_domain=TaxDomain.CORPORATION_TAX,
+                calculator_key="strategy.holding_company_structuring",
+                timeframe=Timeframe.LONG,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Dividends a trading subsidiary pays to its "
+                "holding company are exempt from corporation tax (CTA 2009 Part 9A), so "
+                "profits the owner does not need personally can be passed up and retained "
+                "in the group with no tax cost — ring-fenced from the trading company's "
+                "commercial risk, and available for reinvestment, property purchase or a "
+                "future exit. Extracting the same amount as personal dividends now would "
+                "trigger dividend tax immediately (and can taper the personal allowance). "
+                "This quantifies that immediate personal tax — the amount deferred, not "
+                "escaped: it falls due when the funds are eventually drawn. Setting up the "
+                "holding structure itself (share-for-share exchange, clearances under "
+                "s.138 TCGA 1992) needs commercial purpose and is the adviser's judgement.",
+                authority_keys=["cta2009_part9a"],
+                eligibility_conditions={"all": [
+                    {"path": "company.holdco_retention_amount", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="isa-bed-and-isa",
                 name="Bed-and-ISA (shelter investments in an ISA)",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
