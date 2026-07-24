@@ -2528,6 +2528,75 @@ class Command(BaseCommand):
                                  "personal_higher_rate_relief": 200.0},
             ),
             dict(
+                calculator_key="strategy.income_timing",
+                description="Dividend timed 2025/26 vs 2026/27 (+2pp rise), higher-rate",
+                source="Hand-computed: earned 60,000 both years (taxable 47,430, all "
+                "dividend in the upper band). This year: 20,000 at 33.75% less 500 "
+                "allowance at 33.75% = 6,750.00 - 168.75 = 6,581.25. Next year at the "
+                "2026/27 35.75% rate: 7,150.00 - 178.75 = 6,971.25. Taking it this year "
+                "saves 390.00 (= 19,500 x 2pp).",
+                input_facts={"shiftable_amount": 20000, "income_type": "dividend",
+                             "earned_income": 60000},
+                expected_output={
+                    "incremental_tax_this_year": 6581.25,
+                    "incremental_tax_next_year": 6971.25,
+                    "recommendation": "take_this_year",
+                    "saving": 390.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.payroll_giving",
+                description="Payroll Giving by a higher-rate employee, 2025/26",
+                source="Hand-computed: salary 60,000, taxable 47,430, tax 11,432.00; "
+                "donating 1,200 pre-tax leaves taxable 46,230, tax 10,952.00 — saving "
+                "480.00 (40% of 1,200); the charity receives the full 1,200 and the "
+                "donor's net cost is 720.00.",
+                input_facts={"earned_income": 60000, "annual_donation": 1200},
+                expected_output={
+                    "charity_receives": 1200.0,
+                    "income_tax_saved": 480.0,
+                    "net_cost_to_donor": 720.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.charity_gift_of_assets",
+                description="Listed shares worth 20,000 (gain 10,000) gifted, 2025/26",
+                source="Hand-computed: earned 80,000 (taxable 67,430, tax 19,432.00); "
+                "s.431 deducts 20,000 -> taxable 47,430, tax 11,432.00 = 8,000.00 income "
+                "tax saved (all at 40%). s.257 no-gain/no-loss: selling instead would "
+                "charge 10,000 - 3,000 AEA = 7,000 at 24% ('other', income above the "
+                "basic band) = 1,680.00 CGT avoided. Total benefit 9,680.00; net cost "
+                "of the gift 20,000 - 8,000 = 12,000.00.",
+                input_facts={"gift_value": 20000, "held_gain": 10000,
+                             "earned_income": 80000},
+                expected_output={
+                    "income_tax_saved": 8000.0,
+                    "cgt_avoided": 1680.0,
+                    "total_tax_benefit": 9680.0,
+                    "net_cost_of_gift": 12000.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.cgt_rollover_relief",
+                description="Partial reinvestment: 450k of 500k proceeds, 2025/26",
+                source="Hand-computed: proceeds 500,000, gain 200,000, replacement "
+                "450,000 -> 50,000 not reinvested, chargeable now (s.153); 150,000 "
+                "rolled over. Earned 60,000 (taxable 47,430, above the basic band) so "
+                "the 'other' higher rate 24% applies throughout. Without relief: "
+                "(200,000 - 3,000 AEA) x 24% = 47,280.00. With relief: (50,000 - 3,000) "
+                "x 24% = 11,280.00. Tax deferred 36,000.00.",
+                input_facts={"disposal_proceeds": 500000, "disposal_gain": 200000,
+                             "replacement_cost": 450000, "earned_income": 60000},
+                expected_output={
+                    "amount_not_reinvested": 50000.0,
+                    "gain_chargeable_now": 50000.0,
+                    "gain_rolled_over": 150000.0,
+                    "cgt_without_relief": 47280.0,
+                    "cgt_with_relief": 11280.0,
+                    "tax_deferred": 36000.0,
+                },
+            ),
+            dict(
                 calculator_key="combined_personal_tax",
                 description="Dividends push total income into personal allowance taper, 2025/26",
                 source="Hand-computed: earned 28,000 + dividends 73,575 = 101,575 total; "
