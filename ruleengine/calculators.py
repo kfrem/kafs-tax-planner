@@ -21,6 +21,7 @@ from __future__ import annotations
 import datetime
 
 from .engine import _apply_band_rates, get_parameter, parameter_cache, register
+from .taxyear import next_tax_year
 
 
 def _apply_band_rates_with_offset(amount: float, bands: list[dict], offset: float) -> float:
