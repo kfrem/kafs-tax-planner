@@ -637,6 +637,50 @@ def strategy_capital_allowances(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.capital_allowances_full_expensing",
+    consumes=[
+        "capital_allowances.full_expensing",
+        "capital_allowances.aia",
+        "corporation_tax.rates",
+    ],
+    description="Full expensing (CAA 2001 s.45S, permanent from FA (No.2) 2023): a company "
+    "buying NEW, unused main-rate plant and machinery claims a 100% first-year allowance "
+    "with no upper limit — so, unlike the AIA, relief does not stop at the AIA cap. This "
+    "quantifies the year-one allowance and tax saved, and the extra relief versus the "
+    "AIA-then-writing-down route the spend would otherwise take.",
+)
+def strategy_capital_allowances_full_expensing(facts: dict, tax_year: str) -> dict:
+    spend = max(0.0, float(facts.get("new_main_rate_spend", 0)))
+    fe_param = get_parameter("capital_allowances.full_expensing", tax_year)
+    aia_param = get_parameter("capital_allowances.aia", tax_year)
+    ct_param = get_parameter("corporation_tax.rates", tax_year)
+    marginal_rate = float(facts.get("marginal_rate", ct_param["main_rate"]))
+
+    first_year_allowance = round(spend * fe_param["main_rate_fya"], 2)
+    tax_saved = round(first_year_allowance * marginal_rate, 2)
+
+    # What the same spend would relieve in year one without s.45S: AIA up to
+    # the limit, then the main-pool writing-down allowance on the excess.
+    aia_route_allowance = round(
+        min(spend, aia_param["aia_limit"])
+        + max(0.0, spend - aia_param["aia_limit"]) * aia_param["main_pool_wda"],
+        2,
+    )
+    extra_allowance = round(first_year_allowance - aia_route_allowance, 2)
+
+    return {
+        "new_main_rate_spend": round(spend, 2),
+        "fya_rate": fe_param["main_rate_fya"],
+        "first_year_allowance": first_year_allowance,
+        "marginal_rate": marginal_rate,
+        "tax_saved_year_one": tax_saved,
+        "allowance_via_aia_route": aia_route_allowance,
+        "extra_first_year_allowance": extra_allowance,
+        "extra_tax_saved_year_one": round(extra_allowance * marginal_rate, 2),
+    }
+
+
+@register(
     "pension_available_annual_allowance",
     consumes=["pension.annual_allowance"],
     description="Available pension annual allowance for a tax year including up to 3 years' carry-forward, with tapering for high earners.",
