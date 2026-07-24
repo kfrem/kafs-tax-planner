@@ -1242,7 +1242,7 @@ class Command(BaseCommand):
                 "to the wholly-and-exclusively condition as part of a reasonable remuneration package. "
                 "This quantifies the corporation tax saved, the employer NIC saved versus paying the "
                 "same amount as salary, and the net cost to the company.",
-                authority_keys=["cta2009_s54"],
+                authority_keys=["cta2009_s54", "fa2004_s197"],
                 eligibility_conditions={"all": [
                     {"path": "company.desired_employer_pension_contribution", "op": "gt", "value": 0},
                 ]},
