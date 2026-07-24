@@ -1349,7 +1349,7 @@ class Command(BaseCommand):
                 "genuine commercial contribution — it cannot be set purely to save tax, and HMRC "
                 "can challenge allocations that divert income (settlements rules) — which is why "
                 "this is flagged as a borderline judgement for the accountant to stand behind.",
-                authority_keys=["ittoia2005_s850"],
+                authority_keys=["ittoia2005_s850", "ittoia2005_s850c"],
                 eligibility_conditions={"all": [
                     {"path": "partnership.total_profit", "op": "gt", "value": 0},
                 ]},
