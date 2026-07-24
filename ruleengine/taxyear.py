@@ -46,6 +46,12 @@ def tax_year_for_date(date: datetime.date) -> str:
     return f"{start_year}/{str(start_year + 1)[-2:]}"
 
 
+def next_tax_year(tax_year: str) -> str:
+    """The following tax year label, e.g. '2025/26' -> '2026/27'."""
+    start_year = parse_tax_year(tax_year) + 1
+    return f"{start_year}/{str(start_year + 1)[-2:]}"
+
+
 def previous_tax_years(tax_year: str, count: int) -> list[str]:
     start_year = parse_tax_year(tax_year)
     return [f"{y}/{str(y + 1)[-2:]}" for y in range(start_year - count, start_year)]
