@@ -1646,6 +1646,96 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="income-timing-across-years",
+                name="Timing of income across tax years",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.income_timing",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Where the client controls when income lands — a "
+                "dividend they can declare either side of 6 April, or a bonus whose payment "
+                "date they set — the year it falls in fixes the rates it is taxed at and the "
+                "income it stacks on top of. This compares the extra tax the amount causes "
+                "in the current year against the following year, using each year's own "
+                "rates and the client's expected income in each, and recommends the cheaper "
+                "year. With dividend rates rising two percentage points from April 2026, "
+                "bringing a planned dividend forward can produce a real, quantified saving; "
+                "equally a bonus deferred out of the £100,000-£125,140 taper zone can attract "
+                "relief at up to 60%. The income must genuinely be controllable — the "
+                "receipts basis, not paperwork, decides the year.",
+                authority_keys=["ittoia2005_s383_384", "itepa2003_s18"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.shiftable_income", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="payroll-giving",
+                name="Payroll Giving (pre-tax donation from salary)",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.payroll_giving",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="A donation made through an employer's approved "
+                "payroll deduction scheme comes out of pay before PAYE is applied, so the "
+                "donor gets relief at their full marginal rate immediately — with no "
+                "grossing-up, no claim, and no self-assessment entry — and the charity "
+                "receives the whole amount without needing to reclaim anything. For a "
+                "higher-rate employee this beats Gift Aid on simplicity: a £1,200 donation "
+                "costs a 40% taxpayer only £720. National Insurance remains due on the "
+                "donated pay, and the employer must operate a scheme with an approved "
+                "agency, which is the practical condition to confirm.",
+                authority_keys=["itepa2003_part12"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.payroll_giving_annual", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="charity-gift-of-assets",
+                name="Gift of shares or property to charity",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.charity_gift_of_assets",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="Giving qualifying listed shares, securities or "
+                "land to charity earns two reliefs at once: the full market value is "
+                "deducted from the donor's income for the year, giving income tax relief at "
+                "their marginal rate, and the disposal is treated as no-gain/no-loss so any "
+                "capital gain held in the asset escapes CGT entirely. For an asset standing "
+                "at a large gain this is often the most tax-efficient way to give: the "
+                "combined relief can exceed 60% of the value given. The asset must be a "
+                "qualifying investment (listed shares/securities, units, or a qualifying "
+                "interest in land) and the whole beneficial interest must pass — conditions "
+                "the adviser confirms, along with the land certificate requirements.",
+                authority_keys=["ita2007_s431", "tcga1992_s257"],
+                eligibility_conditions={"all": [
+                    {"path": "personal.charity_asset_gift_value", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
+                code="cgt-rollover-relief",
+                name="Business-asset rollover relief",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.cgt_rollover_relief",
+                timeframe=Timeframe.MEDIUM,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="When a trader sells a qualifying business asset "
+                "(land and buildings occupied and used for the trade, fixed plant and "
+                "machinery, goodwill) and reinvests the proceeds in replacement qualifying "
+                "assets within the window from 12 months before to 3 years after the "
+                "disposal, the gain can be rolled into the base cost of the new assets "
+                "instead of being taxed now. Full reinvestment defers the whole gain; if "
+                "part of the proceeds is kept back, the smaller of the gain and the amount "
+                "not reinvested is chargeable now. The deferred gain re-emerges on a future "
+                "disposal of the replacement asset, so this is a deferral, not an "
+                "exemption — but it keeps the full proceeds working in the trade. Both "
+                "assets must be used only for the trade, which the adviser confirms.",
+                authority_keys=["tcga1992_s152"],
+                eligibility_conditions={"all": [
+                    {"path": "property.rollover_disposal_gain", "op": "gt", "value": 0},
+                    {"path": "property.rollover_replacement_cost", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="iht-spousal-transfer-and-nil-rate-bands",
                 name="Spouse exemption and transferable nil-rate bands",
                 tax_domain=TaxDomain.INHERITANCE_TAX,
