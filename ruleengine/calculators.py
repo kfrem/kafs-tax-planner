@@ -2451,6 +2451,35 @@ def strategy_sdlt_non_residential_purchase(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.sdlt_mixed_use_classification",
+    consumes=["sdlt.residential_bands", "sdlt.non_residential_bands"],
+    description="Mixed-use SDLT classification (FA 2003 s.55(1B) Table B): a purchase that "
+    "genuinely includes non-residential land (e.g. a shop with a flat, a farmhouse with "
+    "working farmland) is charged wholly at the non-residential rates — with no "
+    "additional-dwelling surcharge — instead of the residential rates. This quantifies the "
+    "difference between the residential treatment (including any 5% surcharge) and the "
+    "Table B charge. The classification is a question of fact HMRC actively litigates, so "
+    "the claim needs genuine, evidenced non-residential use.",
+)
+def strategy_sdlt_mixed_use_classification(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts.get("price", 0)))
+    additional = bool(facts.get("additional_dwelling", False))
+
+    residential = sdlt_residential(
+        {"price": price, "additional_dwelling": additional}, tax_year
+    )
+    param = get_parameter("sdlt.non_residential_bands", tax_year)
+    mixed_use_charge = _progressive_tax(price, param["bands"])
+
+    return {
+        "price": price,
+        "residential_treatment": residential,
+        "mixed_use_sdlt": mixed_use_charge,
+        "saving_if_mixed_use": round(residential["total_sdlt"] - mixed_use_charge, 2),
+    }
+
+
+@register(
     "strategy.lbtt_non_residential_purchase",
     consumes=["lbtt.non_residential_bands"],
     description="LBTT on a planned non-residential freehold purchase in Scotland: "
