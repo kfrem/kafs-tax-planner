@@ -340,6 +340,57 @@ class Command(BaseCommand):
                 "advantage (see also the settlements rules, ITTOIA 2005 Part 5 Ch 5).",
             ),
             dict(
+                key="ittoia2005_s850c",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Trading and Other Income) Act 2005 s.850C",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/850C",
+                verbatim_extract="Excess profit allocation to non-individual partners (the "
+                "mixed-member anti-avoidance rule): where an individual partner's deferred "
+                "profit appears in a non-individual member's share, or a company member's "
+                "share exceeds the appropriate notional profit and the individual has the "
+                "power to enjoy it, the individual's taxable share is increased on a just and "
+                "reasonable basis. Introduced by FA 2014 against mixed partnerships routing "
+                "profit through corporate members taxed at lower rates.",
+            ),
+            dict(
+                key="fa2004_s197",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance Act 2004 s.197",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2004/12/section/197",
+                verbatim_extract="Spreading of relief: where employer pension contributions in "
+                "the current chargeable period exceed 210% of the previous period's, the excess "
+                "above 110% of the previous period's contributions is spread — half to the next "
+                "period where the excess is £500,000 or more, one third across two periods from "
+                "£1,000,000, and one quarter across three periods from £2,000,000 — rather than "
+                "relieved in full at once. Contributions for excepted purposes (e.g. cost-of-"
+                "living increases, new employees) are excluded.",
+            ),
+            dict(
+                key="lbtta2013_sch2a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Land and Buildings Transaction Tax (Scotland) Act 2013 Sch 2A",
+                canonical_uri="https://www.legislation.gov.uk/asp/2013/11/schedule/2A",
+                verbatim_extract="Additional amount: transactions relating to second homes etc. "
+                "— the Additional Dwelling Supplement. An additional charge (8% of the relevant "
+                "consideration since 5 December 2024) applies where a buyer acquires a dwelling "
+                "of £40,000 or more and owns another dwelling at the end of the effective date, "
+                "unless replacing a main residence. Repayment may be claimed where the previous "
+                "main residence is disposed of within 36 months.",
+            ),
+            dict(
+                key="ltta2017_sch5",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Land Transaction Tax and Anti-avoidance of Devolved Taxes "
+                "(Wales) Act 2017 Sch 5",
+                canonical_uri="https://www.legislation.gov.uk/anaw/2017/1/schedule/5",
+                verbatim_extract="Higher rates residential property transactions: a chargeable "
+                "transaction is a higher-rates transaction where an individual buys a dwelling "
+                "for £40,000 or more and owns an interest in another dwelling at the end of the "
+                "day of the transaction (with a replacement-of-main-residence exception, "
+                "normally within three years), and for all purchases by non-individuals. Higher "
+                "rates are prescribed under s.24(1)(b) in the Welsh rates regulations.",
+            ),
+            dict(
                 key="ittoia2005_s272a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.272A-274C",
