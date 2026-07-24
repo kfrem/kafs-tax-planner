@@ -391,6 +391,33 @@ class Command(BaseCommand):
                 "rates are prescribed under s.24(1)(b) in the Welsh rates regulations.",
             ),
             dict(
+                key="cta2009_part9a",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Corporation Tax Act 2009 Part 9A s.931A",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2009/4/section/931A",
+                verbatim_extract="Charge to tax on distributions received: the charge to "
+                "corporation tax on income applies to any dividend or other distribution "
+                "of a company, but only if the distribution is not exempt. A distribution "
+                "is exempt if it falls within an exempt class under Chapter 2 (small "
+                "companies) or Chapter 3 (companies that are not small) of Part 9A — in "
+                "practice almost all dividends paid by a trading subsidiary to its UK "
+                "holding company are exempt, so profits pass up the group with no "
+                "corporation tax cost.",
+            ),
+            dict(
+                key="caa2001_s45s",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Capital Allowances Act 2001 s.45S",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2001/2/section/45S",
+                verbatim_extract="Full expensing: expenditure is first-year qualifying "
+                "expenditure if it is incurred on or after 1 April 2023 by a company "
+                "within the charge to corporation tax, on plant or machinery which is "
+                "unused and not second-hand, and is not excluded by s.45T or the general "
+                "exclusions in s.46. The first-year allowance is 100% for main-rate "
+                "expenditure and 50% for special-rate expenditure (s.52(3)), with no "
+                "monetary cap — made permanent by Finance (No.2) Act 2023.",
+            ),
+            dict(
                 key="ittoia2005_s383_384",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.383-384",
