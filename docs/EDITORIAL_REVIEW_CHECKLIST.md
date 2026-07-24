@@ -185,11 +185,13 @@ Rows marked **borderline** carry a professional-judgement caveat.
 ---
 
 **Post-sign-off note, 24 July 2026:** the rule base has since grown to
-**46 strategies / 60 authorities / 66 golden cases** — four new strategies
+**49 strategies / 62 authorities / 69 golden cases** — seven new strategies
 (income timing across years, Payroll Giving, charity gift of assets,
-business-asset rollover relief), ten new authorities (including the FA 2004
-s.197 correction of the reviewer-suggested CTA 2009 s.55), and the four
-next-cycle refinements. Item-level detail and reconciled figures are in the
-24 July addendum of [`EDITORIAL_SIGNOFF.md`](EDITORIAL_SIGNOFF.md); the new
-items are queued for the second reviewer's next pass per §5.6. The signed
-9 July totals above are left unchanged as the historical record.
+business-asset rollover relief, full expensing, holding-company structuring,
+SDLT mixed-use classification), twelve new authorities (including the FA 2004
+s.197 correction of the reviewer-suggested CTA 2009 s.55), one new parameter
+(`capital_allowances.full_expensing`), and the four next-cycle refinements.
+Item-level detail and reconciled figures are in the 24 July addendum of
+[`EDITORIAL_SIGNOFF.md`](EDITORIAL_SIGNOFF.md); the new items are queued for
+the second reviewer's next pass per §5.6. The signed 9 July totals above are
+left unchanged as the historical record.

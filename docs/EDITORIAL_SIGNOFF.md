@@ -997,3 +997,39 @@ full suite and `self_audit --passes 3` results recorded in the session log
 below the sign-off table. The four new strategies and the FA 2004 s.197
 correction are queued for the second reviewer's next pass, consistent with
 the §5.6 four-eyes rule.
+
+### E. Second tranche, same day — three further strategies + security patch
+
+To the same six-part protocol, with authorities verified against
+legislation.gov.uk on 24 July 2026:
+
+1. **`capital-allowances-full-expensing`** (CAA 2001 s.45S, settled/short)
+   — 100% FYA for companies on new, unused main-rate plant, no cap; new
+   parameter `capital_allowances.full_expensing` (main 100% / special-rate
+   50% as data). Reconciled: £1.5m spend → £1.5m year-one allowance,
+   £375,000 saved at 25% — £102,500 more than the AIA + 18% WDA route
+   (£1,090,000); within-AIA spend gains nothing extra.
+2. **`holding-company-structuring`** (CTA 2009 Part 9A s.931A,
+   settled/long) — intercompany dividends exempt; quantifies the personal
+   dividend tax deferred by retention. Reconciled: £50,000 on £60,000
+   earned = £18,706.25 deferred (£16,706.25 dividend tax + £2,000 from the
+   £5,000 PA taper); £10,000 above a full basic band = £3,375 (33.75%
+   upper rate). Setup clearances (s.138) left to the adviser.
+3. **`sdlt-mixed-use-classification`** (FA 2003 s.55(1B) Table B, existing
+   authority reused, **BORDERLINE**/short) — residential-with-surcharge vs
+   Table B. Reconciled: £800,000 additional dwelling: £70,000 residential
+   (30,000 banded + 40,000 surcharge) vs £29,500 Table B = £40,500; £2m
+   main residence: £153,750 vs £89,500. The explanation and risk flag say
+   plainly that HMRC litigates weak claims.
+
+**Security:** Django 6.0.6 → 6.0.7 (PYSEC-2026-2090/-2091/-2092; the CI
+pip-audit gate went red on 24 July and is green again). Full suite re-run
+after the bump.
+
+**Verification (second tranche):** editorial pre-check **0 failures across
+152 items (41 parameters / 49 strategies / 62 authorities)**; 69 golden
+cases to the penny; `self_audit --passes 3` green — all 49 strategies
+end-to-end (new AUDIT-ENG-MIXED case; Daniel gains the holdco retention;
+the innovative company gains the £1.5m plant programme). One recurring
+BAILII citation-reorder alert dismissed with notes. All queued for the
+second reviewer per §5.6.
