@@ -1086,6 +1086,46 @@ def strategy_group_loss_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.holding_company_structuring",
+    consumes=[
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Holding-company structuring: dividends paid by a trading subsidiary to its "
+    "holding company are exempt from corporation tax (CTA 2009 Part 9A s.931A), so profits "
+    "not needed personally can be passed up and retained — ring-fenced from trading risk — "
+    "with no tax cost, instead of being extracted as personal dividends now. This "
+    "quantifies the personal dividend tax an immediate extraction of the same amount would "
+    "cost on top of the client's other income: that is the tax deferred (not escaped — it "
+    "falls due when the funds are eventually drawn personally).",
+)
+def strategy_holding_company_structuring(facts: dict, tax_year: str) -> dict:
+    retained = max(0.0, float(facts.get("retained_amount", 0)))
+    earned = max(0.0, float(facts.get("earned_income", 0)))
+    dividends = max(0.0, float(facts.get("dividend_income", 0)))
+
+    baseline = combined_personal_tax(
+        {"earned_income": earned, "dividend_income": dividends}, tax_year
+    )
+    if_extracted = combined_personal_tax(
+        {"earned_income": earned, "dividend_income": dividends + retained}, tax_year
+    )
+    tax_if_extracted_now = round(if_extracted["total_tax"] - baseline["total_tax"], 2)
+
+    return {
+        "amount_retained_in_group": round(retained, 2),
+        "intercompany_dividend_tax": 0.0,
+        "personal_tax_if_extracted_now": tax_if_extracted_now,
+        "tax_deferred_by_retention": tax_if_extracted_now,
+        "personal_allowance_lost_if_extracted": round(
+            baseline["personal_allowance"] - if_extracted["personal_allowance"], 2
+        ),
+    }
+
+
+@register(
     "strategy.isa_bed_and_isa",
     consumes=[
         "isa.allowance",
