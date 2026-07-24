@@ -134,6 +134,8 @@ INNOVATIVE_COMPANY_FACTS = {
         "patent_profit": 200000,
         "fixtures_value": 200000,
         "marginal_rate": 0.25,
+        # A capital programme of new main-rate plant above the AIA cap.
+        "full_expensing_new_plant_spend": 1500000,
     },
     "sole_trade": {"annual_profit": 0},
     "estate": {},
