@@ -28,6 +28,9 @@ HEADLINES = {
     "payroll-giving": ("Income tax saved", lambda q: q.get("income_tax_saved")),
     "charity-gift-of-assets": ("Total tax benefit", lambda q: q.get("total_tax_benefit")),
     "cgt-rollover-relief": ("Tax deferred", lambda q: q.get("tax_deferred")),
+    "capital-allowances-full-expensing": ("Tax saved year one", lambda q: q.get("tax_saved_year_one")),
+    "holding-company-structuring": ("Tax deferred", lambda q: q.get("tax_deferred_by_retention")),
+    "sdlt-mixed-use-classification": ("Saving if mixed-use", lambda q: q.get("saving_if_mixed_use")),
 }
 
 
