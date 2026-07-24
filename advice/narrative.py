@@ -83,6 +83,28 @@ _HEADLINE_SENTENCES = {
     "sdlt-purchase-planning": lambda q: (
         f"Stamp duty on the planned purchase is £{q['as_planned']['total_sdlt']:,.2f}."
     ),
+    "income-timing-across-years": lambda q: (
+        f"Timing the £{q['shiftable_amount']:,.0f} to land in the "
+        f"{'current' if q['recommendation'] == 'take_this_year' else 'following'} tax year "
+        f"would save £{q['saving']:,.2f}."
+        if q.get("recommendation") in ("take_this_year", "defer_to_next_year") else ""
+    ),
+    "payroll-giving": lambda q: (
+        f"Giving £{q['annual_donation']:,.2f} through payroll costs you "
+        f"£{q['net_cost_to_donor']:,.2f} after £{q['income_tax_saved']:,.2f} of tax relief, "
+        f"and the charity receives the full amount."
+        if q.get("annual_donation") else ""
+    ),
+    "charity-gift-of-assets": lambda q: (
+        f"Gifting the asset worth £{q['gift_value']:,.0f} to charity would save "
+        f"£{q['income_tax_saved']:,.2f} of income tax and £{q['cgt_avoided']:,.2f} of "
+        f"capital gains tax — a combined benefit of £{q['total_tax_benefit']:,.2f}."
+    ),
+    "cgt-rollover-relief": lambda q: (
+        f"Rolling the gain into the replacement assets defers "
+        f"£{q['tax_deferred']:,.2f} of capital gains tax, leaving "
+        f"£{q['cgt_with_relief']:,.2f} payable now."
+    ),
 }
 
 
