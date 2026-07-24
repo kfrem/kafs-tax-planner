@@ -883,7 +883,8 @@ class Command(BaseCommand):
              cgt_2024_h1,
              {"residential": {"lower": 0.18, "higher": 0.24},
               "other": {"lower": 0.10, "higher": 0.20}}),
-            ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
+            ("cgt.rates", "CGT rates by asset class (lower = within basic band; "
+             "residential and other deliberately aligned at 18%/24% since 30 Oct 2024)",
              cgt_2024_h2,
              {"residential": {"lower": 0.18, "higher": 0.24},
               "other": {"lower": 0.18, "higher": 0.24}}),
