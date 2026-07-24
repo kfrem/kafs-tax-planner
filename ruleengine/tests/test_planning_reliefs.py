@@ -31,6 +31,7 @@ from ruleengine.calculators import (
     strategy_rd_tax_relief,
     strategy_relevant_property_trust_charges,
     strategy_salary_sacrifice,
+    strategy_sdlt_mixed_use_classification,
     strategy_venture_capital_investment,
 )
 
