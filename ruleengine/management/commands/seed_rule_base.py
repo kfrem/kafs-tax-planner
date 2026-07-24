@@ -2558,12 +2558,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.charity_gift_of_assets",
                 description="Listed shares worth 20,000 (gain 10,000) gifted, 2025/26",
-                source="Hand-computed: earned 80,000 (taxable 67,430, tax 19,432.00); "
-                "s.431 deducts 20,000 -> taxable 47,430, tax 11,432.00 = 8,000.00 income "
-                "tax saved (all at 40%). s.257 no-gain/no-loss: selling instead would "
-                "charge 10,000 - 3,000 AEA = 7,000 at 24% ('other', income above the "
-                "basic band) = 1,680.00 CGT avoided. Total benefit 9,680.00; net cost "
-                "of the gift 20,000 - 8,000 = 12,000.00.",
+                source="Hand-computed: earned 80,000; s.431 deduction of 20,000 saves "
+                "8,000.00 at 40%; s.257 no-gain/no-loss avoids (10,000 - 3,000 AEA) x "
+                "24% = 1,680.00 CGT; total 9,680.00, net cost 12,000.00.",
                 input_facts={"gift_value": 20000, "held_gain": 10000,
                              "earned_income": 80000},
                 expected_output={
