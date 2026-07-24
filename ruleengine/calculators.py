@@ -250,6 +250,160 @@ def strategy_gift_aid_relief(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.payroll_giving",
+    consumes=[
+        "income_tax.bands",
+        "income_tax.personal_allowance",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Payroll Giving (ITEPA 2003 Part 12 ss.713-715): a donation deducted from "
+    "pay before PAYE is applied, so the donor gets full relief at their marginal rate with "
+    "no grossing-up or claim, and the charity receives the whole amount. National Insurance "
+    "is still due on the donated pay — the scheme relieves income tax only.",
+)
+def strategy_payroll_giving(facts: dict, tax_year: str) -> dict:
+    earned = max(0.0, float(facts.get("earned_income", 0)))
+    dividends = max(0.0, float(facts.get("dividend_income", 0)))
+    donation = min(max(0.0, float(facts.get("annual_donation", 0))), earned)
+
+    baseline = combined_personal_tax(
+        {"earned_income": earned, "dividend_income": dividends}, tax_year
+    )
+    with_donation = combined_personal_tax(
+        {"earned_income": earned - donation, "dividend_income": dividends}, tax_year
+    )
+    tax_saved = round(baseline["total_tax"] - with_donation["total_tax"], 2)
+
+    return {
+        "annual_donation": round(donation, 2),
+        "charity_receives": round(donation, 2),
+        "income_tax_saved": tax_saved,
+        "net_cost_to_donor": round(donation - tax_saved, 2),
+        "personal_allowance_restored": round(
+            with_donation["personal_allowance"] - baseline["personal_allowance"], 2
+        ),
+    }
+
+
+@register(
+    "strategy.income_timing",
+    consumes=[
+        "income_tax.bands",
+        "income_tax.personal_allowance",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Timing of income across tax years: compares the incremental tax on a "
+    "controllable amount of income (a bonus under the ITEPA 2003 s.18 receipts basis, or a "
+    "dividend charged for the year it is paid, ITTOIA 2005 ss.383-384) landing in the "
+    "current tax year against the following one, using each year's own released rates and "
+    "the client's expected income position in each year.",
+)
+def strategy_income_timing(facts: dict, tax_year: str) -> dict:
+    amount = max(0.0, float(facts.get("shiftable_amount", 0)))
+    income_type = facts.get("income_type", "dividend")
+    this_earned = max(0.0, float(facts.get("earned_income", 0)))
+    this_dividends = max(0.0, float(facts.get("dividend_income", 0)))
+    later_year = next_tax_year(tax_year)
+    next_earned = max(0.0, float(facts.get("next_year_earned_income", this_earned)))
+    next_dividends = max(0.0, float(facts.get("next_year_dividend_income", this_dividends)))
+
+    def incremental_tax(year: str, base_earned: float, base_dividends: float) -> float:
+        base = combined_personal_tax(
+            {"earned_income": base_earned, "dividend_income": base_dividends}, year
+        )
+        if income_type == "dividend":
+            loaded = combined_personal_tax(
+                {"earned_income": base_earned, "dividend_income": base_dividends + amount},
+                year,
+            )
+        else:
+            loaded = combined_personal_tax(
+                {"earned_income": base_earned + amount, "dividend_income": base_dividends},
+                year,
+            )
+        return round(loaded["total_tax"] - base["total_tax"], 2)
+
+    tax_if_this_year = incremental_tax(tax_year, this_earned, this_dividends)
+    tax_if_next_year = incremental_tax(later_year, next_earned, next_dividends)
+
+    if tax_if_this_year < tax_if_next_year:
+        recommendation = "take_this_year"
+    elif tax_if_next_year < tax_if_this_year:
+        recommendation = "defer_to_next_year"
+    else:
+        recommendation = "indifferent"
+
+    return {
+        "shiftable_amount": round(amount, 2),
+        "income_type": income_type,
+        "this_tax_year": tax_year,
+        "next_tax_year": later_year,
+        "incremental_tax_this_year": tax_if_this_year,
+        "incremental_tax_next_year": tax_if_next_year,
+        "recommendation": recommendation,
+        "saving": round(abs(tax_if_this_year - tax_if_next_year), 2),
+    }
+
+
+@register(
+    "strategy.charity_gift_of_assets",
+    consumes=[
+        "income_tax.bands",
+        "income_tax.personal_allowance",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+    ],
+    description="Gift of qualifying shares/securities or land to charity: the market value "
+    "is deducted from net income (ITA 2007 s.431), giving relief at the donor's marginal "
+    "rate, and the disposal is no-gain/no-loss (TCGA 1992 s.257), so any held gain escapes "
+    "CGT entirely. The deduction is modelled against earned income first, then dividends "
+    "(the standard order); the CGT avoided is what a market-value sale would have cost "
+    "given the client's income composition.",
+)
+def strategy_charity_gift_of_assets(facts: dict, tax_year: str) -> dict:
+    gift_value = max(0.0, float(facts.get("gift_value", 0)))
+    held_gain = max(0.0, float(facts.get("held_gain", 0)))
+    asset_type = facts.get("asset_type", "other")
+    earned = max(0.0, float(facts.get("earned_income", 0)))
+    dividends = max(0.0, float(facts.get("dividend_income", 0)))
+
+    baseline = combined_personal_tax(
+        {"earned_income": earned, "dividend_income": dividends}, tax_year
+    )
+    relieved_earned = max(0.0, earned - gift_value)
+    remainder = max(0.0, gift_value - earned)
+    relieved_dividends = max(0.0, dividends - remainder)
+    with_relief = combined_personal_tax(
+        {"earned_income": relieved_earned, "dividend_income": relieved_dividends}, tax_year
+    )
+    income_tax_saved = round(baseline["total_tax"] - with_relief["total_tax"], 2)
+
+    cgt_if_sold = cgt_liability(
+        {
+            "chargeable_gain": held_gain,
+            "asset_type": asset_type,
+            "earned_income": earned,
+            "dividend_income": dividends,
+        },
+        tax_year,
+    )
+    cgt_avoided = cgt_if_sold["tax_due"]
+
+    return {
+        "gift_value": round(gift_value, 2),
+        "held_gain": round(held_gain, 2),
+        "income_tax_saved": income_tax_saved,
+        "cgt_avoided": cgt_avoided,
+        "total_tax_benefit": round(income_tax_saved + cgt_avoided, 2),
+        "net_cost_of_gift": round(gift_value - income_tax_saved, 2),
+    }
+
+
+@register(
     "employee_class1_nic",
     consumes=["national_insurance.employee_class1"],
     description="Employee Class 1 NIC on annual salary.",
