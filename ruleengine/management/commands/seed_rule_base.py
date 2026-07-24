@@ -903,7 +903,8 @@ class Command(BaseCommand):
         rows = [
             ("cgt.annual_exempt_amount", "CGT annual exempt amount",
              {"amount": 3000}),
-            ("cgt.rates", "CGT rates by asset class (lower = within basic band)",
+            ("cgt.rates", "CGT rates by asset class (lower = within basic band; "
+             "residential and other deliberately aligned at 18%/24% since 30 Oct 2024)",
              {"residential": {"lower": 0.18, "higher": 0.24},
               "other": {"lower": 0.18, "higher": 0.24}}),
             ("cgt.lettings_relief",
