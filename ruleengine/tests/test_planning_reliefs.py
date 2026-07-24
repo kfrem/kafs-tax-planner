@@ -7,6 +7,7 @@ import pytest
 from ruleengine.calculators import (
     strategy_business_property_relief,
     strategy_capital_allowances,
+    strategy_capital_allowances_full_expensing,
     strategy_cgt_rollover_relief,
     strategy_cgt_timing_of_disposals,
     strategy_charity_gift_of_assets,
@@ -965,3 +966,112 @@ class TestRolloverRelief:
         assert result["cgt_without_relief"] == approx(4860.0)
         assert result["cgt_with_relief"] == approx(3060.0)
         assert result["tax_deferred"] == approx(1800.0)
+
+
+class TestFullExpensing:
+    def test_spend_above_the_aia_cap_gets_100_percent(self):
+        # 1,500,000 of new main-rate plant: 100% FYA = 1,500,000, saving
+        # 375,000 at 25%. The AIA route would have relieved 1,000,000 +
+        # 18% x 500,000 = 1,090,000 — full expensing adds 410,000 of
+        # year-one allowance, worth 102,500.
+        result = strategy_capital_allowances_full_expensing(
+            {"new_main_rate_spend": 1500000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["first_year_allowance"] == approx(1500000.0)
+        assert result["tax_saved_year_one"] == approx(375000.0)
+        assert result["allowance_via_aia_route"] == approx(1090000.0)
+        assert result["extra_first_year_allowance"] == approx(410000.0)
+        assert result["extra_tax_saved_year_one"] == approx(102500.0)
+
+    def test_spend_within_the_aia_gains_nothing_extra(self):
+        # 800,000 is within the 1,000,000 AIA, so both routes fully relieve
+        # it in year one: the FYA matters only above the cap.
+        result = strategy_capital_allowances_full_expensing(
+            {"new_main_rate_spend": 800000, "marginal_rate": 0.25}, TAX_YEAR
+        )
+        assert result["first_year_allowance"] == approx(800000.0)
+        assert result["extra_first_year_allowance"] == approx(0.0)
+        assert result["extra_tax_saved_year_one"] == approx(0.0)
+
+    def test_marginal_rate_defaults_to_ct_main_rate(self):
+        # No marginal_rate fact -> the seeded 25% main rate applies.
+        result = strategy_capital_allowances_full_expensing(
+            {"new_main_rate_spend": 100000}, TAX_YEAR
+        )
+        assert result["marginal_rate"] == approx(0.25)
+        assert result["tax_saved_year_one"] == approx(25000.0)
+
+
+class TestHoldingCompanyStructuring:
+    def test_higher_rate_owner_defers_dividend_tax_and_taper(self):
+        # Earned 60,000; extracting 50,000 as dividends now would raise ANI
+        # to 110,000, tapering the PA by 5,000 (2,000 extra tax on earned)
+        # and charging the dividends at 33.75% less the 500 allowance
+        # (16,875 - 168.75 = 16,706.25): 18,706.25 deferred by retention.
+        result = strategy_holding_company_structuring(
+            {"retained_amount": 50000, "earned_income": 60000}, TAX_YEAR
+        )
+        assert result["personal_tax_if_extracted_now"] == approx(18706.25)
+        assert result["tax_deferred_by_retention"] == approx(18706.25)
+        assert result["personal_allowance_lost_if_extracted"] == approx(5000.0)
+        assert result["intercompany_dividend_tax"] == approx(0.0)
+
+    def test_basic_rate_owner_defers_the_ordinary_rate(self):
+        # Earned 20,000 (taxable 7,430); 10,000 of dividends would all fall
+        # in the basic band at 8.75% less the 500 allowance relief:
+        # 875.00 - 43.75 = 831.25 deferred. No PA taper this far down.
+        result = strategy_holding_company_structuring(
+            {"retained_amount": 10000, "earned_income": 20000}, TAX_YEAR
+        )
+        assert result["personal_tax_if_extracted_now"] == approx(831.25)
+        assert result["personal_allowance_lost_if_extracted"] == approx(0.0)
+
+    def test_retention_on_top_of_existing_dividends(self):
+        # Earned 12,570 (exactly the PA) + existing dividends 37,700 fill
+        # the basic band precisely. A further 10,000 retained-or-extracted
+        # would all be charged at the 33.75% upper rate = 3,375.00 (the 500
+        # allowance is already used by the existing dividends).
+        result = strategy_holding_company_structuring(
+            {"retained_amount": 10000, "earned_income": 12570,
+             "dividend_income": 37700},
+            TAX_YEAR,
+        )
+        assert result["personal_tax_if_extracted_now"] == approx(3375.0)
+
+
+class TestSdltMixedUse:
+    def test_additional_dwelling_purchase_reclassified(self):
+        # 800,000 as residential + 5% surcharge: banded 125,000 x 0 +
+        # 125,000 x 2% (2,500) + 550,000 x 5% (27,500) = 30,000, plus
+        # 40,000 surcharge = 70,000. As mixed-use (Table B): 100,000 x 2%
+        # + 550,000 x 5% = 29,500. Saving 40,500.
+        result = strategy_sdlt_mixed_use_classification(
+            {"price": 800000, "additional_dwelling": True}, TAX_YEAR
+        )
+        assert result["residential_treatment"]["total_sdlt"] == approx(70000.0)
+        assert result["mixed_use_sdlt"] == approx(29500.0)
+        assert result["saving_if_mixed_use"] == approx(40500.0)
+
+    def test_main_residence_purchase_still_saves_at_scale(self):
+        # 2,000,000 with no surcharge: residential 0 + 2,500 + 33,750
+        # (675,000 x 5%) + 57,500 (575,000 x 10%) + 60,000 (500,000 x 12%)
+        # = 153,750. Table B: 2,000 + 87,500 (1,750,000 x 5%) = 89,500.
+        # Saving 64,250.
+        result = strategy_sdlt_mixed_use_classification(
+            {"price": 2000000, "additional_dwelling": False}, TAX_YEAR
+        )
+        assert result["residential_treatment"]["total_sdlt"] == approx(153750.0)
+        assert result["mixed_use_sdlt"] == approx(89500.0)
+        assert result["saving_if_mixed_use"] == approx(64250.0)
+
+    def test_small_purchase_can_favour_residential(self):
+        # 140,000, no surcharge: residential 15,000 x 2% above 125,000 =
+        # 300; Table B: 0 (below the 150,000 nil band) — mixed-use still
+        # cheaper here (300 saved), but the calculator reports whatever the
+        # difference is rather than assuming a saving.
+        result = strategy_sdlt_mixed_use_classification(
+            {"price": 140000, "additional_dwelling": False}, TAX_YEAR
+        )
+        assert result["residential_treatment"]["total_sdlt"] == approx(300.0)
+        assert result["mixed_use_sdlt"] == approx(0.0)
+        assert result["saving_if_mixed_use"] == approx(300.0)
