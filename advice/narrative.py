@@ -105,6 +105,24 @@ _HEADLINE_SENTENCES = {
         f"£{q['tax_deferred']:,.2f} of capital gains tax, leaving "
         f"£{q['cgt_with_relief']:,.2f} payable now."
     ),
+    "capital-allowances-full-expensing": lambda q: (
+        f"Full expensing relieves the whole £{q['new_main_rate_spend']:,.0f} of new plant "
+        f"in year one, saving £{q['tax_saved_year_one']:,.2f} of corporation tax"
+        + (
+            f" — £{q['extra_tax_saved_year_one']:,.2f} more than the standard allowances route."
+            if q.get("extra_tax_saved_year_one") else "."
+        )
+    ),
+    "holding-company-structuring": lambda q: (
+        f"Retaining £{q['amount_retained_in_group']:,.0f} in the group rather than "
+        f"extracting it now defers £{q['tax_deferred_by_retention']:,.2f} of personal "
+        f"dividend tax; the intercompany dividend itself is tax-free."
+    ),
+    "sdlt-mixed-use-classification": lambda q: (
+        f"If the mixed-use classification holds, stamp duty falls to "
+        f"£{q['mixed_use_sdlt']:,.2f} — a difference of £{q['saving_if_mixed_use']:,.2f} "
+        f"against the residential treatment."
+    ),
 }
 
 
