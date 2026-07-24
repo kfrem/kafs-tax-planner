@@ -276,6 +276,16 @@ def _build_cases():
                       "individual", _non_residential_purchase(juris)))
         cases.append((f"AUDIT-{tag}-LEASE", f"Audit: {juris} commercial lease",
                       "individual", _lease(juris)))
+    # A shop-with-flat purchase where mixed-use classification is in point.
+    cases.append(("AUDIT-ENG-MIXED", "Audit: england mixed-use purchase", "individual", {
+        "personal": {}, "company": {}, "sole_trade": {}, "estate": {},
+        "property": {
+            "purchase_price": 800000,
+            "jurisdiction": "england",
+            "mixed_use_candidate": True,
+            "purchase_is_additional_dwelling": True,
+        },
+    }))
     return cases
 
 
