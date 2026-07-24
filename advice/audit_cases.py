@@ -68,6 +68,10 @@ DANIEL_FACTS = {
     "property": {
         # A separate business-asset sale qualifying for BADR.
         "badr_qualifying_gain": 500000,
+        # And a trade premises sale mostly reinvested — rollover relief.
+        "rollover_disposal_proceeds": 500000,
+        "rollover_disposal_gain": 200000,
+        "rollover_replacement_cost": 450000,
     },
     "estate": {
         "gross_value": 3000000,
