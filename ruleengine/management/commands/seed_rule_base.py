@@ -2530,11 +2530,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.income_timing",
                 description="Dividend timed 2025/26 vs 2026/27 (+2pp rise), higher-rate",
-                source="Hand-computed: earned 60,000 both years (taxable 47,430, all "
-                "dividend in the upper band). This year: 20,000 at 33.75% less 500 "
-                "allowance at 33.75% = 6,750.00 - 168.75 = 6,581.25. Next year at the "
-                "2026/27 35.75% rate: 7,150.00 - 178.75 = 6,971.25. Taking it this year "
-                "saves 390.00 (= 19,500 x 2pp).",
+                source="Hand-computed: earned 60,000 both years; 20,000 dividend at "
+                "33.75% less 500 allowance = 6,581.25 this year vs 6,971.25 at the "
+                "2026/27 35.75% rate; taking it this year saves 390.00.",
                 input_facts={"shiftable_amount": 20000, "income_type": "dividend",
                              "earned_income": 60000},
                 expected_output={
