@@ -183,9 +183,23 @@ maps every mainstream UK planning strategy (~38) to built / partial /
 planned, with a value×frequency build order. Use it as the source of truth
 for "is X covered?" and what to pick up next.
 
-0-bis. **CURRENT STATE (24 Jul 2026) — 46 strategies, 321 tests, 66 golden
-   cases, 60 authorities.** This session delivered, to the full six-part
+0-bis. **CURRENT STATE (24 Jul 2026) — 49 strategies, 330 tests, 69 golden
+   cases, 62 authorities.** This session delivered, to the full six-part
    recipe and self-audit protocol:
+   - **Second tranche (same day):** `capital-allowances-full-expensing`
+     (CAA 2001 s.45S: 100% FYA on new main-rate plant, no cap, quantified
+     against the AIA-then-WDA route — closes the coverage map's "full
+     expensing not yet added"); `holding-company-structuring` (CTA 2009
+     Part 9A s.931A: personal dividend tax deferred by retaining profits in
+     the group, incl. PA-taper effects); and `sdlt-mixed-use-classification`
+     (FA 2003 s.55(1B) Table B vs residential-with-surcharge, flagged
+     BORDERLINE — HMRC litigates weak claims). New parameter
+     `capital_allowances.full_expensing` (rates as data). Plus the
+     **Django 6.0.6 → 6.0.7 security bump** (PYSEC-2026-2090/91/92, the CI
+     pip-audit red). Known cosmetic nuisance: the BAILII Jones-v-Garnett
+     page shuffles its citation list per render, raising a spurious watcher
+     alert most runs — dismissed with notes each time; a future fetcher
+     improvement is to sort the citation list before fingerprinting.
    - **Four new strategies:** `income-timing-across-years` (incremental tax
      on a controllable dividend/bonus this year vs next, each year at its own
      released rates — the April-2026 +2pp dividend rise is priced in;
