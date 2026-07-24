@@ -45,7 +45,7 @@ Last updated: 24 July 2026.
 | Group relief / loss relief | ✓ | `group-loss-relief` — surrenders a current-period loss from a 75%-group company to a profitable member, relieving it at the claimant's marginal rate (26.5% in the marginal band vs a 19%/25% carry-forward), and carries forward any excess (CTA 2010 Part 5). Carry-back is a documented next step. | — |
 | Patent Box | ✓ | `patent-box` — the 10% effective CT rate on patented-product profits vs the main rate; quantifies the saving (CTA 2010 Part 8A). IP-profit apportionment and the modified-nexus fraction flagged for the adviser. | — |
 | Business Asset Disposal Relief | ✓ | `cgt-business-asset-disposal-relief` (10%/14%/18% by year) | — |
-| Holding company structuring | ○ | Structural/advisory; ring-fencing + tax-efficient exit. | Low–Med |
+| Holding company structuring | ✓ | `holding-company-structuring` — intercompany dividends exempt (CTA 2009 Part 9A s.931A): quantifies the personal dividend tax deferred by retaining profits in the group vs extracting now (incl. PA-taper effects). Share-for-share setup, s.138 clearance and commercial purpose left to the adviser. | — |
 
 ## Partnerships & LLPs
 
