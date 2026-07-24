@@ -17,6 +17,7 @@ from ruleengine.calculators import (
     strategy_eot_disposal_relief,
     strategy_gift_aid_relief,
     strategy_group_loss_relief,
+    strategy_holding_company_structuring,
     strategy_income_timing,
     strategy_isa_bed_and_isa,
     strategy_life_policy_in_trust,
