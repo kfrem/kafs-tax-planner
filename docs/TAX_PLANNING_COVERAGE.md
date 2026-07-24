@@ -98,7 +98,13 @@ Last updated: 24 July 2026.
 
 ## Coverage tally
 
-Roughly **34 built, 2 partial, ~3 planned** of ~38 mainstream strategies (plus
+**24 July 2026:** four more built — timing of income across years, Payroll
+Giving, gifts of shares/property to charity, and business-asset rollover
+relief — taking the app to **46 live strategies**. Remaining from the menu
+below: holding-company structuring, charity VAT, the FHL transitional, and
+the SDLT mixed-use/uninhabitable refinements.
+
+Previously: roughly **34 built, 2 partial, ~3 planned** of ~38 mainstream strategies (plus
 new client-category strategies — partnership, trust — beyond the original ~38).
 **Tier 2 complete** (incl. the flagship); **Tier 3 largely built** (7 Jul 2026):
 R&D relief, Patent Box, commercial-property fixtures, EOT sale, pension
