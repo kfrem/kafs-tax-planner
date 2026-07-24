@@ -1759,7 +1759,7 @@ class Command(BaseCommand):
                 "buyer relief, which raises the nil-rate band to 175,000 and is worth up to 600. "
                 "Scotland sets its own rates and bands, so the English SDLT figures do not apply "
                 "north of the border.",
-                authority_keys=["lbtt_scotland_act_2013_s24"],
+                authority_keys=["lbtt_scotland_act_2013_s24", "lbtta2013_sch2a"],
                 eligibility_conditions={"all": [
                     {"path": "property.purchase_price", "op": "gt", "value": 0},
                     {"path": "property.jurisdiction", "op": "eq", "value": "scotland"},
