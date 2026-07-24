@@ -16,7 +16,10 @@ def _fmt_payload(payload, indent=0):
     pad = "  " * indent
     lines = []
     if isinstance(payload, dict):
-        for key, value in payload.items():
+        # Sorted for a stable, predictable reading order: PostgreSQL jsonb
+        # stores keys by length then value, which rendered e.g. the
+        # venture-capital block as EIS/VCT/SEIS (editorial refinement #1).
+        for key, value in sorted(payload.items()):
             if isinstance(value, (dict, list)):
                 lines.append(f"{pad}- {key}:")
                 lines.extend(_fmt_payload(value, indent + 1))
