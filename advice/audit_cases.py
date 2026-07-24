@@ -44,6 +44,14 @@ DANIEL_FACTS = {
         "venture_capital_scheme": "eis",
         "venture_capital_gain_reinvested": 20000,
         "income_tax_liability": 25000,
+        # The four charitable/timing planning additions (July 2026): a
+        # dividend he controls the timing of, a payroll-giving pledge, and a
+        # gift of listed shares standing at a gain.
+        "shiftable_income": 20000,
+        "shiftable_income_type": "dividend",
+        "payroll_giving_annual": 1200,
+        "charity_asset_gift_value": 20000,
+        "charity_asset_held_gain": 10000,
     },
     "company": {
         "profit_before_remuneration": 300000,

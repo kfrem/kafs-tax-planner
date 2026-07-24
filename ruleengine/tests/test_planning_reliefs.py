@@ -788,3 +788,180 @@ class TestLifePolicyInTrust:
         assert result["iht_if_written_in_trust"] == approx(0.0)
         assert result["iht_saved_by_writing_in_trust"] == approx(160000.0)
         assert result["payout_available_for_iht_bill"] == approx(400000.0)
+
+
+class TestIncomeTiming:
+    def test_dividend_cheaper_this_year_before_the_2026_rise(self):
+        # Earned 60,000 both years -> taxable 47,430, so the whole dividend
+        # sits in the upper band. This year (2025/26): 20,000 x 33.75% less
+        # the 500 allowance at 33.75% = 6,750.00 - 168.75 = 6,581.25. Next
+        # year (2026/27, +2pp): 20,000 x 35.75% - 500 x 35.75% = 7,150.00 -
+        # 178.75 = 6,971.25. Paying it this year saves 390.00 (19,500 x 2pp).
+        result = strategy_income_timing(
+            {"shiftable_amount": 20000, "income_type": "dividend",
+             "earned_income": 60000},
+            TAX_YEAR,
+        )
+        assert result["incremental_tax_this_year"] == approx(6581.25)
+        assert result["incremental_tax_next_year"] == approx(6971.25)
+        assert result["recommendation"] == "take_this_year"
+        assert result["saving"] == approx(390.0)
+
+    def test_bonus_deferred_out_of_the_taper_zone(self):
+        # Bonus 10,000, earned income type. This year on 100,000: the bonus
+        # tapers the PA by 5,000 (half the excess over 100,000), so tax is
+        # 10,000 x 40% + 5,000 of re-taxed income x 40% = 6,000 (the 60%
+        # effective zone). Next year on an expected 80,000: 10,000 x 40% =
+        # 4,000. Deferring saves 2,000.
+        result = strategy_income_timing(
+            {"shiftable_amount": 10000, "income_type": "earned",
+             "earned_income": 100000, "next_year_earned_income": 80000},
+            TAX_YEAR,
+        )
+        assert result["incremental_tax_this_year"] == approx(6000.0)
+        assert result["incremental_tax_next_year"] == approx(4000.0)
+        assert result["recommendation"] == "defer_to_next_year"
+        assert result["saving"] == approx(2000.0)
+
+    def test_basic_rate_both_years_is_indifferent(self):
+        # Earned 20,000 both years; 5,000 more stays within the basic band
+        # in either year at the unchanged 20% rate = 1,000 both ways.
+        result = strategy_income_timing(
+            {"shiftable_amount": 5000, "income_type": "earned",
+             "earned_income": 20000},
+            TAX_YEAR,
+        )
+        assert result["incremental_tax_this_year"] == approx(1000.0)
+        assert result["incremental_tax_next_year"] == approx(1000.0)
+        assert result["recommendation"] == "indifferent"
+        assert result["saving"] == approx(0.0)
+
+
+class TestPayrollGiving:
+    def test_higher_rate_employee_full_marginal_relief(self):
+        # Salary 60,000 -> taxable 47,430, tax 11,432.00. Donating 1,200
+        # pre-tax leaves taxable 46,230, tax 10,952.00: 480.00 saved (40%),
+        # net cost 720.00, and the charity receives the whole 1,200.
+        result = strategy_payroll_giving(
+            {"earned_income": 60000, "annual_donation": 1200}, TAX_YEAR
+        )
+        assert result["charity_receives"] == approx(1200.0)
+        assert result["income_tax_saved"] == approx(480.0)
+        assert result["net_cost_to_donor"] == approx(720.0)
+
+    def test_donation_in_the_taper_zone_gets_60_percent_relief(self):
+        # Salary 110,000: PA tapered to 7,570, tax 33,432.00. A 10,000
+        # pre-tax donation reduces pay to 100,000: full 12,570 PA restored,
+        # tax 27,432.00 — 6,000 saved (60% effective) and 5,000 of PA back.
+        result = strategy_payroll_giving(
+            {"earned_income": 110000, "annual_donation": 10000}, TAX_YEAR
+        )
+        assert result["income_tax_saved"] == approx(6000.0)
+        assert result["personal_allowance_restored"] == approx(5000.0)
+        assert result["net_cost_to_donor"] == approx(4000.0)
+
+    def test_donation_capped_at_pay(self):
+        # A donation cannot exceed the pay it is deducted from: 5,000
+        # requested against 1,000 of pay is capped at 1,000; pay was below
+        # the personal allowance so no tax was saved.
+        result = strategy_payroll_giving(
+            {"earned_income": 1000, "annual_donation": 5000}, TAX_YEAR
+        )
+        assert result["annual_donation"] == approx(1000.0)
+        assert result["income_tax_saved"] == approx(0.0)
+
+
+class TestCharityGiftOfAssets:
+    def test_double_relief_for_a_higher_rate_donor(self):
+        # Earned 80,000 (taxable 67,430, tax 19,432.00). s.431 deducts the
+        # 20,000 market value -> taxable 47,430, tax 11,432.00 = 8,000 income
+        # tax saved (all at 40%). s.257 no-gain/no-loss: a sale would have
+        # charged 10,000 - 3,000 AEA = 7,000 at 24% = 1,680 CGT avoided.
+        # Total 9,680; net cost 20,000 - 8,000 = 12,000.
+        result = strategy_charity_gift_of_assets(
+            {"gift_value": 20000, "held_gain": 10000, "earned_income": 80000},
+            TAX_YEAR,
+        )
+        assert result["income_tax_saved"] == approx(8000.0)
+        assert result["cgt_avoided"] == approx(1680.0)
+        assert result["total_tax_benefit"] == approx(9680.0)
+        assert result["net_cost_of_gift"] == approx(12000.0)
+
+    def test_basic_rate_donor_gain_within_aea(self):
+        # Earned 30,000 + dividends 5,000. Relief 10,000 at 20% = 2,000 (the
+        # dividends are untouched: earned absorbs the whole deduction). The
+        # held gain of 2,000 is within the 3,000 AEA, so a sale would have
+        # been tax-free anyway: cgt_avoided 0.
+        result = strategy_charity_gift_of_assets(
+            {"gift_value": 10000, "held_gain": 2000, "earned_income": 30000,
+             "dividend_income": 5000},
+            TAX_YEAR,
+        )
+        assert result["income_tax_saved"] == approx(2000.0)
+        assert result["cgt_avoided"] == approx(0.0)
+        assert result["net_cost_of_gift"] == approx(8000.0)
+
+    def test_gift_larger_than_earned_income_relieves_dividends(self):
+        # Earned 10,000 (below the 12,570 PA -> no earned tax). Dividends
+        # 30,000: PA remainder 2,570 shelters some, taxable dividends 27,430
+        # at 8.75% less the 500 allowance at 8.75% = 2,400.13 - 43.75 =
+        # 2,356.38. A 15,000 gift takes earned to 0 and dividends to 25,000:
+        # taxable dividends 12,430 -> 1,087.63 - 43.75 = 1,043.88. Saved
+        # 1,312.50 (= 15,000 x 8.75%, the dividend marginal rate).
+        result = strategy_charity_gift_of_assets(
+            {"gift_value": 15000, "held_gain": 0, "earned_income": 10000,
+             "dividend_income": 30000},
+            TAX_YEAR,
+        )
+        assert result["income_tax_saved"] == approx(1312.50)
+        assert result["cgt_avoided"] == approx(0.0)
+
+
+class TestRolloverRelief:
+    def test_partial_reinvestment_leaves_the_shortfall_chargeable(self):
+        # Proceeds 500,000, gain 200,000, replacement 450,000: 50,000 not
+        # reinvested is chargeable now (s.153), 150,000 rolled over. Earned
+        # 60,000 -> income fills the basic band, so the 'other' 24% higher
+        # rate applies. Without relief (200,000 - 3,000) x 24% = 47,280;
+        # with relief (50,000 - 3,000) x 24% = 11,280; 36,000 deferred.
+        result = strategy_cgt_rollover_relief(
+            {"disposal_proceeds": 500000, "disposal_gain": 200000,
+             "replacement_cost": 450000, "earned_income": 60000},
+            TAX_YEAR,
+        )
+        assert result["amount_not_reinvested"] == approx(50000.0)
+        assert result["gain_chargeable_now"] == approx(50000.0)
+        assert result["gain_rolled_over"] == approx(150000.0)
+        assert result["cgt_without_relief"] == approx(47280.0)
+        assert result["cgt_with_relief"] == approx(11280.0)
+        assert result["tax_deferred"] == approx(36000.0)
+        assert result["replacement_base_cost_reduction"] == approx(150000.0)
+
+    def test_full_reinvestment_defers_the_whole_gain(self):
+        # All 300,000 of proceeds reinvested: nothing chargeable now, the
+        # whole 100,000 gain rolls into the new asset's base cost. Without
+        # relief the charge would have been (100,000 - 3,000) x 24% = 23,280.
+        result = strategy_cgt_rollover_relief(
+            {"disposal_proceeds": 300000, "disposal_gain": 100000,
+             "replacement_cost": 300000, "earned_income": 60000},
+            TAX_YEAR,
+        )
+        assert result["gain_chargeable_now"] == approx(0.0)
+        assert result["gain_rolled_over"] == approx(100000.0)
+        assert result["cgt_with_relief"] == approx(0.0)
+        assert result["tax_deferred"] == approx(23280.0)
+
+    def test_basic_rate_composition_uses_the_18_percent_rate(self):
+        # Earned 20,000 -> taxable 7,430, basic band remaining 30,270.
+        # Proceeds 60,000, gain 30,000, replacement 40,000: 20,000 chargeable
+        # now. Without relief (30,000 - 3,000) = 27,000, all within the band
+        # at 18% = 4,860; with relief (20,000 - 3,000) x 18% = 3,060 —
+        # 1,800 deferred.
+        result = strategy_cgt_rollover_relief(
+            {"disposal_proceeds": 60000, "disposal_gain": 30000,
+             "replacement_cost": 40000, "earned_income": 20000},
+            TAX_YEAR,
+        )
+        assert result["cgt_without_relief"] == approx(4860.0)
+        assert result["cgt_with_relief"] == approx(3060.0)
+        assert result["tax_deferred"] == approx(1800.0)
