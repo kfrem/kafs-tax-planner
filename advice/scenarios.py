@@ -24,6 +24,10 @@ HEADLINES = {
     "cgt-ppr-relief": ("CGT after relief", lambda q: q.get("cgt_with_relief")),
     "cgt-spousal-transfer-before-disposal": ("Saving from transfer", lambda q: q.get("saving")),
     "sdlt-purchase-planning": ("Total SDLT", lambda q: (q.get("as_planned") or {}).get("total_sdlt")),
+    "income-timing-across-years": ("Saving from timing", lambda q: q.get("saving")),
+    "payroll-giving": ("Income tax saved", lambda q: q.get("income_tax_saved")),
+    "charity-gift-of-assets": ("Total tax benefit", lambda q: q.get("total_tax_benefit")),
+    "cgt-rollover-relief": ("Tax deferred", lambda q: q.get("tax_deferred")),
 }
 
 
