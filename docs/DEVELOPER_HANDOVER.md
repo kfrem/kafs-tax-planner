@@ -183,7 +183,36 @@ maps every mainstream UK planning strategy (~38) to built / partial /
 planned, with a value×frequency build order. Use it as the source of truth
 for "is X covered?" and what to pick up next.
 
-0. **CURRENT STATE (7 Jul 2026) — 35 strategies, 47 calculators, 270 tests.**
+0-bis. **CURRENT STATE (24 Jul 2026) — 46 strategies, 321 tests, 66 golden
+   cases, 60 authorities.** This session delivered, to the full six-part
+   recipe and self-audit protocol:
+   - **Four new strategies:** `income-timing-across-years` (incremental tax
+     on a controllable dividend/bonus this year vs next, each year at its own
+     released rates — the April-2026 +2pp dividend rise is priced in;
+     ITTOIA 2005 ss.383-384, ITEPA 2003 s.18); `payroll-giving`
+     (ITEPA 2003 Part 12, pre-tax, marginal-rate relief, NIC unaffected);
+     `charity-gift-of-assets` (ITA 2007 s.431 income deduction + TCGA 1992
+     s.257 no-gain/no-loss, both quantified); and `cgt-rollover-relief`
+     (TCGA 1992 s.152/s.153: partial-reinvestment split, tax deferred,
+     replacement base-cost reduction). Each has a calculator, adapter,
+     Strategy row, verified authorities (extracts checked against
+     legislation.gov.uk on 24 Jul 2026), a golden case, hand-computed tests
+     (12 new), audit-case coverage (Daniel), narrative headline and scenario
+     headline. `next_tax_year()` added to `ruleengine/taxyear.py`.
+   - **Editorial next-cycle refinements (item d below) cleared:** review-pack
+     payload keys now render sorted (fixes the jsonb EIS/VCT/SEIS ordering);
+     `cgt.rates` label states the deliberate 18%/24% alignment of both asset
+     classes since 30 Oct 2024; ITTOIA 2005 s.850C added to the partnership
+     strategy; **FA 2004 s.197** (not the reviewer's suggested CTA 2009 s.55,
+     which is bad debts — correction recorded in EDITORIAL_SIGNOFF) added to
+     employer pension; LBTT Sch 2A and LTT Sch 5 added to the devolved
+     residential purchase strategies. Item (2) was already delivered in
+     release 2026.1.
+   - **Watcher sweep:** 10 new sources baselined; 10 open alerts triaged and
+     dismissed with notes (BAILII citation reordering; Statute Law Database
+     FA 2026 changelog refreshes — no modelled figure affected).
+
+0. **PRIOR STATE (7 Jul 2026) — 35 strategies, 47 calculators, 270 tests.**
    Tier 1 and Tier 2 of `TAX_PLANNING_COVERAGE.md` are **complete, including
    the property-incorporation flagship** (`strategy.property_incorporation`:
    s.24-vs-company annual tax, SDLT-on-transfer, s.162 CGT deferral,
