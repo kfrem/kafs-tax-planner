@@ -2049,6 +2049,32 @@ class Command(BaseCommand):
                 release=release_property,
             ),
             dict(
+                code="sdlt-mixed-use-classification",
+                name="SDLT mixed-use classification (England/NI)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.sdlt_mixed_use_classification",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.BORDERLINE,
+                plain_english_explanation="Where a purchase genuinely includes "
+                "non-residential land — a shop with a flat above, a farmhouse with working "
+                "farmland, offices with a caretaker's dwelling — the whole price is charged "
+                "at the non-residential SDLT rates (FA 2003 s.55(1B) Table B) instead of "
+                "the residential rates, and no additional-dwelling surcharge applies. On a "
+                "large purchase the difference is substantial. But the classification is a "
+                "question of fact that HMRC actively litigates (a paddock or a home office "
+                "does not make a house mixed-use), which is why this is flagged borderline: "
+                "the non-residential element must be genuine, current and evidenced, and "
+                "the adviser must be ready to defend it. This quantifies the residential "
+                "treatment (with any surcharge) against the Table B charge.",
+                authority_keys=["fa2003_s55"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.mixed_use_candidate", "op": "eq", "value": True},
+                    {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
+                ]},
+                release=release_property,
+            ),
+            dict(
                 code="lbtt-non-residential-purchase",
                 name="LBTT on non-residential purchase (Scotland)",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
