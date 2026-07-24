@@ -70,8 +70,10 @@ across the whole client-complexity range; see TEST_EVIDENCE.md §3.
 > effective dating, change-monitoring watchers with an editorial queue UI,
 > MFA, and a `/healthz` probe — plus Tier-1/Tier-2 planning (salary
 > sacrifice, both pension routes, group relief, bed-and-ISA, BPR/APR with the
-> April-2026 cap, EIS/SEIS/VCT) and the landlord s.24 restriction —
-> **42 strategies, 309 tests, and an end-to-end self-audit** (above). See
+> April-2026 cap, EIS/SEIS/VCT), the landlord s.24 restriction, and the
+> July-2026 additions (income timing across years, Payroll Giving, charity
+> gifts of shares/property, business-asset rollover relief) —
+> **46 strategies, 321 tests, and an end-to-end self-audit** (above). See
 > [docs/ONBOARDING.md](docs/ONBOARDING.md) §6 for the current picture.
 > Still out of scope (Phase 2/3): HMRC MTD integration, LLM narrative
 > drafting, practice-management integrations.
