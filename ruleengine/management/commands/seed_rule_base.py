@@ -391,6 +391,81 @@ class Command(BaseCommand):
                 "rates are prescribed under s.24(1)(b) in the Welsh rates regulations.",
             ),
             dict(
+                key="ittoia2005_s383_384",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.383-384",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2005/5/section/383",
+                verbatim_extract="Income tax is charged on dividends and other distributions "
+                "of a UK resident company, which are treated as income (s.383); tax is "
+                "charged on the amount or value of the dividends paid and other "
+                "distributions made in the tax year (s.384). The year a dividend is paid "
+                "therefore fixes the year — and the rates — under which it is taxed, which "
+                "is the statutory basis for timing a declaration either side of 6 April.",
+            ),
+            dict(
+                key="itepa2003_s18",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Earnings and Pensions) Act 2003 s.18",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/1/section/18",
+                verbatim_extract="Receipt of money earnings: general earnings consisting of "
+                "money are treated as received at the earliest of the time payment is made "
+                "(or on account) and the time the person becomes entitled to payment; for "
+                "directors, also the earliest of sums being credited in the company's "
+                "accounts or records, the end of a period whose earnings are determined by "
+                "then, and the time the amount is determined. This receipts basis fixes the "
+                "tax year a bonus falls into.",
+            ),
+            dict(
+                key="ita2007_s431",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax Act 2007 s.431",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2007/3/section/431",
+                verbatim_extract="Relief for gifts of shares, securities and real property "
+                "to charities etc: an individual who disposes of the whole of their "
+                "beneficial interest in a qualifying investment (s.432 listed shares and "
+                "securities, units, and qualifying interests in land, s.433) to a charity "
+                "otherwise than by way of a bargain at arm's length may, on a claim, deduct "
+                "the relievable amount (s.434, broadly market value plus incidental costs) "
+                "in calculating net income for the tax year of the disposal.",
+            ),
+            dict(
+                key="tcga1992_s257",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.257",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/257",
+                verbatim_extract="Gifts to charities etc: where a disposal to a charity is "
+                "otherwise than by way of a bargain at arm's length, the disposal and "
+                "acquisition are treated as made for such consideration as secures that "
+                "neither a gain nor a loss accrues to the donor — so no capital gains tax "
+                "arises on the held gain, and the charity takes the donor's base cost.",
+            ),
+            dict(
+                key="itepa2003_part12",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Income Tax (Earnings and Pensions) Act 2003 Part 12 (ss.713-715)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/1/section/713",
+                verbatim_extract="Payroll giving: where an individual receiving PAYE income "
+                "asks the employer to withhold sums as donations to charity under an "
+                "approved payroll deduction scheme, the withheld amounts are allowed as "
+                "deductions from taxable employment income in the tax year withheld — full "
+                "relief at the donor's marginal rate with no grossing-up or claim. Subject "
+                "to the tainted-donation rules (ITA 2007 ss.809ZM, 809ZMB).",
+            ),
+            dict(
+                key="tcga1992_s152",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Taxation of Chargeable Gains Act 1992 s.152",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/152",
+                verbatim_extract="Roll-over relief: where the consideration for the disposal "
+                "of assets used only for the purposes of the trade throughout ownership is "
+                "applied in acquiring other assets taken into use only for the trade (both "
+                "within the s.155 classes), acquired in the period beginning 12 months "
+                "before and ending 3 years after the disposal, the trader may claim to be "
+                "treated as disposing of the old assets for no gain/no loss, with the new "
+                "assets' acquisition cost reduced accordingly; partial reinvestment leaves "
+                "the proceeds not reinvested in charge (s.153).",
+            ),
+            dict(
                 key="ittoia2005_s272a",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Income Tax (Trading and Other Income) Act 2005 ss.272A-274C",
