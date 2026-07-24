@@ -63,6 +63,8 @@ DANIEL_FACTS = {
         "overdrawn_loan_balance": 40000,
         "repaid_within_9_months": 10000,
         "qualifying_capital_spend": 60000,
+        # Profits he does not need personally, retained via a holding company.
+        "holdco_retention_amount": 100000,
     },
     "sole_trade": {"annual_profit": 0},
     "property": {
