@@ -165,15 +165,17 @@ Far more than the original README's "Phase 1" scope. As of this handover:
   `/monitoring/` (staff-only), machine pre-check + review pack, MFA,
   row-level multi-tenant isolation, append-only audit trail with provenance,
   `/healthz` probe.
-- **Tests: 321 passing**; 66 golden cases; 60 authorities (each watched,
-  with fetched primary-source snapshots); **46 live strategies**; editorial
+- **Tests: 330 passing**; 69 golden cases; 62 authorities (each watched,
+  with fetched primary-source snapshots); **49 live strategies**; editorial
   pre-check reports **0 machine-check failures**. CI green on every push.
 - **July 2026 additions** — income timing across tax years (prices the
   April-2026 dividend rise), Payroll Giving, gifts of shares/property to
-  charity (ITA 2007 s.431 + TCGA 1992 s.257 double relief), and
-  business-asset rollover relief (TCGA 1992 s.152) — plus the editorial
-  next-cycle refinements (review-pack key ordering, `cgt.rates` label,
-  s.850C / FA 2004 s.197 / LBTT Sch 2A / LTT Sch 5 citations).
+  charity (ITA 2007 s.431 + TCGA 1992 s.257 double relief), business-asset
+  rollover relief (TCGA 1992 s.152), **full expensing** (CAA 2001 s.45S),
+  **holding-company structuring** (CTA 2009 Part 9A) and **SDLT mixed-use
+  classification** (borderline) — plus the editorial next-cycle refinements
+  (review-pack key ordering, `cgt.rates` label, s.850C / FA 2004 s.197 /
+  LBTT Sch 2A / LTT Sch 5 citations) and the Django 6.0.7 security bump.
 
 Recent sessions are summarised in `DEVELOPER_HANDOVER.md §6` and the
 `EDITORIAL_SIGNOFF.md` addenda.
