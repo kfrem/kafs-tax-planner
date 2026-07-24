@@ -30,7 +30,7 @@ Last updated: 24 July 2026.
 | Gift Aid (extends basic-rate band) | ✓ | `gift-aid-relief` — basic-rate gross-up, higher-rate band relief + PA restoration in the taper (ITA 2007 s.414). | — |
 | Dividend vs salary optimisation | ✓ | `salary-dividend-mix` | — |
 | EIS / SEIS / VCT (IT relief + CGT defer/exempt) | ✓ | `venture-capital-investment` — income-tax relief (EIS 30%/£1m, SEIS 50%/£200k, VCT 30%/£200k), capped at the investor's IT bill, plus the CGT treatment (EIS gain deferral, SEIS 50% reinvestment exemption, VCT tax-free dividends), and the net cost after relief (ITA 2007 Parts 5/5A/6). Parameterised by scheme (rates-as-data). | — |
-| Timing of income (shift between years) | ○ | The engine is multi-tax-year; needs a strategy that compares landing income in year A vs B. | Med |
+| Timing of income (shift between years) | ✓ | `income-timing-across-years` — compares the incremental tax on a controllable amount (dividend, ITTOIA 2005 ss.383-384; or bonus, ITEPA 2003 s.18 receipts basis) landing this year vs next, using each year's own released rates (so the April-2026 dividend rise is priced in) and the client's expected income in each year. | — |
 
 ## Companies / business owners
 
