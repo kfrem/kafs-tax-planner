@@ -2631,6 +2631,47 @@ class Command(BaseCommand):
                                  "personal_higher_rate_relief": 200.0},
             ),
             dict(
+                calculator_key="strategy.capital_allowances_full_expensing",
+                description="1.5m of new main-rate plant, above the AIA cap, 2025/26",
+                source="Hand-computed: 100% FYA on 1,500,000 saves 375,000 at 25%; the "
+                "AIA route would relieve 1,000,000 + 18% of 500,000 = 1,090,000, so full "
+                "expensing adds 410,000 of year-one allowance = 102,500 of tax.",
+                input_facts={"new_main_rate_spend": 1500000, "marginal_rate": 0.25},
+                expected_output={
+                    "first_year_allowance": 1500000.0,
+                    "tax_saved_year_one": 375000.0,
+                    "allowance_via_aia_route": 1090000.0,
+                    "extra_first_year_allowance": 410000.0,
+                    "extra_tax_saved_year_one": 102500.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.holding_company_structuring",
+                description="50,000 retained in the group vs extracted now, 2025/26",
+                source="Hand-computed: on 60,000 earned, adding 50,000 dividends tapers "
+                "the PA by 5,000 (2,000 extra earned tax) and charges the dividends at "
+                "33.75% less the 500 allowance (16,706.25) = 18,706.25 deferred.",
+                input_facts={"retained_amount": 50000, "earned_income": 60000},
+                expected_output={
+                    "personal_tax_if_extracted_now": 18706.25,
+                    "tax_deferred_by_retention": 18706.25,
+                    "personal_allowance_lost_if_extracted": 5000.0,
+                    "intercompany_dividend_tax": 0.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.sdlt_mixed_use_classification",
+                description="800,000 additional-dwelling purchase vs mixed-use Table B, 2025/26",
+                source="Hand-computed: residential 30,000 banded + 40,000 surcharge (5%) "
+                "= 70,000; non-residential Table B: 100,000 x 2% + 550,000 x 5% = 29,500; "
+                "mixed-use classification saves 40,500.",
+                input_facts={"price": 800000, "additional_dwelling": True},
+                expected_output={
+                    "mixed_use_sdlt": 29500.0,
+                    "saving_if_mixed_use": 40500.0,
+                },
+            ),
+            dict(
                 calculator_key="strategy.income_timing",
                 description="Dividend timed 2025/26 vs 2026/27 (+2pp rise), higher-rate",
                 source="Hand-computed: earned 60,000 both years; 20,000 dividend at "
