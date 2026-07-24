@@ -923,3 +923,77 @@ pip-audit clean; docker image builds. All six `RuleBaseRelease` rows already car
 7 July) covers the then-current items. Content added after 7 July carries the
 editor's approval here and is queued for the second reviewer's next pass before it
 is relied on for real client advice — consistent with the §5.6 four-eyes rule.
+
+## Addendum, 24 July 2026 — Next-cycle refinements cleared + four new strategies
+
+**Prepared by:** engineering (acting on the 7 July reviewers' logged refinements
+and the coverage-map backlog). **Requires:** editor + second-reviewer sign-off
+per §5.6 before the next release is relied on for real client advice.
+
+### A. The four logged next-cycle refinements (7 July addendum), all cleared
+
+1. **Review-pack block ordering** — root cause found: PostgreSQL `jsonb`
+   stores object keys by length-then-value, so `venture_capital.schemes`
+   rendered EIS/VCT/SEIS. `generate_review_pack._fmt_payload` now renders
+   dict keys sorted, giving EIS/SEIS/VCT (and a stable order everywhere).
+2. **April-2026 changes** — verified already seeded under release 2026.1
+   (BADR 18%, dividend +2pp, BPR/APR £1m cap). No action needed.
+3. **Citations added** (each verified against legislation.gov.uk on 24 July
+   2026 before entry): ITTOIA 2005 s.850C (mixed-member excess-allocation)
+   on `partnership-profit-allocation`; **FA 2004 s.197** (spreading of
+   employer-contribution relief) on `employer-pension-contribution` — note:
+   the reviewer's suggested "CTA 2009 s.55" is in fact *Bad debts*; the
+   spreading provision is FA 2004 s.197, and that is what has been cited
+   (correction recorded here for the reviewer to confirm); LBTT(S)A 2013
+   Sch 2A (Additional Dwelling Supplement) on `lbtt-purchase-planning`; and
+   LTTA 2017 Sch 5 (higher rates) on `ltt-purchase-planning`.
+4. **`cgt.rates` display** — the label now states that the residential and
+   other classes are deliberately aligned at 18%/24% since 30 Oct 2024, so
+   the identical figures no longer read as a duplicate.
+
+### B. Four new strategies (coverage-map backlog), to the full six-part recipe
+
+Each has a pure calculator, adapter, Strategy row (≥150-char explanation,
+risk, timeframe), verified authorities with watched sources fetched, a golden
+case, three hand-computed tests, audit-case coverage (Daniel), a narrative
+headline and a scenario headline:
+
+1. **`income-timing-across-years`** (ITTOIA 2005 ss.383-384; ITEPA 2003
+   s.18, settled/short) — incremental tax on a controllable dividend/bonus
+   this year vs next, each year at its own released rates. Reconciled: £20k
+   dividend on £60k earned = £6,581.25 (2025/26) vs £6,971.25 (2026/27,
+   +2pp) — take this year, £390.00 saved (= £19,500 × 2pp); £10k bonus at
+   £100k income = £6,000 (60% taper zone) vs £4,000 on £80k next year.
+2. **`payroll-giving`** (ITEPA 2003 Part 12, settled/short) — pre-tax
+   donation, marginal-rate relief, NIC unaffected, charity receives the full
+   amount. Reconciled: £1,200 from £60k costs £720; £10k at £110k saves
+   £6,000 and restores £5,000 of PA; donation capped at pay.
+3. **`charity-gift-of-assets`** (ITA 2007 s.431 + TCGA 1992 s.257,
+   settled/short) — market-value income deduction plus no-gain/no-loss.
+   Reconciled: £20k shares (gain £10k) from an £80k earner: £8,000 IT saved
+   + £1,680 CGT avoided ((10,000−3,000)×24%) = £9,680; a gift exceeding
+   earned income relieves dividends at 8.75% (£15k → £1,312.50).
+4. **`cgt-rollover-relief`** (TCGA 1992 s.152/s.153, settled/medium) —
+   full/partial reinvestment, chargeable-now vs rolled-over split,
+   replacement base-cost reduction. Reconciled: 450k/500k reinvested →
+   50k chargeable, £47,280 → £11,280, £36,000 deferred; basic-rate
+   composition at 18% (£4,860 → £3,060).
+
+### C. Watcher sweep and alert triage
+
+`run_watchers` (24 July): 60 sources checked, 10 newly baselined, 0 errors.
+10 open alerts triaged and dismissed with notes: two BAILII re-orderings of
+the Jones v Garnett citation list (no change to the judgment), and eight
+Statute Law Database changelog refreshes recording FA 2026 consequentials to
+provisions we do not model figures from (ITA 2007 s.6B via FA 2026 Sch 2;
+ITEPA 2003 s.114 via FA 2026 s.17) — the operative text of every watched
+section is unchanged.
+
+### D. Verification at hand-over
+
+Editorial machine pre-check: **0 failures across 146 items (40 parameters /
+46 strategies / 60 authorities)**; review pack regenerated; 66 golden cases;
+full suite and `self_audit --passes 3` results recorded in the session log
+below the sign-off table. The four new strategies and the FA 2004 s.197
+correction are queued for the second reviewer's next pass, consistent with
+the §5.6 four-eyes rule.
