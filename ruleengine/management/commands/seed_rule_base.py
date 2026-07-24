@@ -1779,7 +1779,7 @@ class Command(BaseCommand):
                 "relief; the main residential nil-rate band runs to 225,000. The devolved rates "
                 "differ from both English SDLT and Scottish LBTT, so the property's jurisdiction "
                 "governs the charge.",
-                authority_keys=["ltt_wales_act_2017_s24"],
+                authority_keys=["ltt_wales_act_2017_s24", "ltta2017_sch5"],
                 eligibility_conditions={"all": [
                     {"path": "property.purchase_price", "op": "gt", "value": 0},
                     {"path": "property.jurisdiction", "op": "eq", "value": "wales"},
