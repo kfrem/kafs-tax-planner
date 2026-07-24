@@ -80,8 +80,8 @@ Last updated: 24 July 2026.
 | Strategy | Status | Notes / what's needed | Priority |
 |---|---|---|---|
 | Gift Aid | ✓ | `gift-aid-relief` (see Individuals). Charity reclaims 20%; higher-rate donor reclaims the difference. | — |
-| Payroll Giving | ○ | Pre-tax donation from salary. | Low |
-| Gifts of shares / property to charity (IT + CGT relief) | ○ | Relief on the gift's value. | Low–Med |
+| Payroll Giving | ✓ | `payroll-giving` — pre-tax donation under an approved payroll deduction scheme (ITEPA 2003 Part 12): full marginal-rate relief with no grossing-up (60% effective in the PA taper); NIC still due; charity receives the whole amount. | — |
+| Gifts of shares / property to charity (IT + CGT relief) | ✓ | `charity-gift-of-assets` — market value deducted from net income (ITA 2007 s.431) plus no-gain/no-loss on the disposal (TCGA 1992 s.257); quantifies both reliefs and the net cost. Qualifying-investment/land-certificate conditions left to the adviser. | — |
 | Charitable legacies (10% rule, 40%→36%) | ✓ | `iht-charitable-legacy-reduced-rate` | — |
 | VAT reliefs for charities | ○ | No VAT module exists yet — larger piece. | Low |
 
