@@ -2545,10 +2545,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.payroll_giving",
                 description="Payroll Giving by a higher-rate employee, 2025/26",
-                source="Hand-computed: salary 60,000, taxable 47,430, tax 11,432.00; "
-                "donating 1,200 pre-tax leaves taxable 46,230, tax 10,952.00 — saving "
-                "480.00 (40% of 1,200); the charity receives the full 1,200 and the "
-                "donor's net cost is 720.00.",
+                source="Hand-computed: salary 60,000, tax 11,432.00; a 1,200 pre-tax "
+                "donation leaves tax 10,952.00 — 480.00 saved (40%), donor net cost "
+                "720.00, charity receives the full 1,200.",
                 input_facts={"earned_income": 60000, "annual_donation": 1200},
                 expected_output={
                     "charity_receives": 1200.0,
