@@ -885,3 +885,88 @@ class IhtCharitableLegacyAdapter:
             "current_charitable_legacy": estate.get("charitable_legacy", 0),
             **_estate_basis(facts),
         }
+
+
+@adapter("strategy.income_timing")
+class IncomeTimingAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("shiftable_income", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        earned = _earned_income(facts)
+        dividends = _dividend_income(facts)
+        return {
+            "shiftable_amount": personal.get("shiftable_income", 0),
+            "income_type": personal.get("shiftable_income_type", "dividend"),
+            "earned_income": earned,
+            "dividend_income": dividends,
+            # Next year's expected position defaults to this year's — the
+            # common steady-state case; record expected figures to refine.
+            "next_year_earned_income": personal.get("next_year_earned_income", earned),
+            "next_year_dividend_income": personal.get(
+                "next_year_dividend_income", dividends
+            ),
+        }
+
+
+@adapter("strategy.payroll_giving")
+class PayrollGivingAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        personal = facts.get("personal", {})
+        employment_pay = personal.get("employment_income", 0) + personal.get(
+            "salary_from_own_company", 0
+        )
+        return personal.get("payroll_giving_annual", 0) > 0 and employment_pay > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        return {
+            "annual_donation": personal.get("payroll_giving_annual", 0),
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+        }
+
+
+@adapter("strategy.charity_gift_of_assets")
+class CharityGiftOfAssetsAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("personal", {}).get("charity_asset_gift_value", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        personal = facts.get("personal", {})
+        return {
+            "gift_value": personal.get("charity_asset_gift_value", 0),
+            "held_gain": personal.get("charity_asset_held_gain", 0),
+            "asset_type": personal.get("charity_asset_type", "other"),
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+        }
+
+
+@adapter("strategy.cgt_rollover_relief")
+class CgtRolloverReliefAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return (
+            prop.get("rollover_disposal_gain", 0) > 0
+            and prop.get("rollover_replacement_cost", 0) > 0
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "disposal_proceeds": prop.get("rollover_disposal_proceeds", 0),
+            "disposal_gain": prop.get("rollover_disposal_gain", 0),
+            "replacement_cost": prop.get("rollover_replacement_cost", 0),
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+        }
