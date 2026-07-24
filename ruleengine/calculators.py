@@ -2129,6 +2129,60 @@ def strategy_cgt_business_asset_disposal_relief(facts: dict, tax_year: str) -> d
 
 
 @register(
+    "strategy.cgt_rollover_relief",
+    consumes=[
+        "cgt.annual_exempt_amount",
+        "cgt.rates",
+        "income_tax.bands",
+        "income_tax.personal_allowance",
+        "dividend_tax.allowance",
+        "dividend_tax.bands",
+    ],
+    description="Business-asset rollover relief (TCGA 1992 s.152): the gain on a qualifying "
+    "business asset is rolled into the base cost of replacement assets acquired between 12 "
+    "months before and 3 years after the disposal, deferring the CGT. Partial reinvestment "
+    "leaves the smaller of the gain and the proceeds not reinvested chargeable now. Both "
+    "assets must be s.155 classes used only for the trade — conditions the adviser confirms.",
+)
+def strategy_cgt_rollover_relief(facts: dict, tax_year: str) -> dict:
+    proceeds = max(0.0, float(facts.get("disposal_proceeds", 0)))
+    gain = max(0.0, float(facts.get("disposal_gain", 0)))
+    replacement_cost = max(0.0, float(facts.get("replacement_cost", 0)))
+    asset_type = facts.get("asset_type", "other")
+    earned_income = max(0.0, float(facts.get("earned_income", 0)))
+    dividend_income = max(0.0, float(facts.get("dividend_income", 0)))
+
+    # s.152/s.153: full reinvestment of the proceeds defers the whole gain;
+    # otherwise the amount not reinvested is chargeable now, capped at the gain.
+    amount_not_reinvested = max(0.0, round(proceeds - replacement_cost, 2))
+    chargeable_now = round(min(gain, amount_not_reinvested), 2)
+    rolled_over = round(gain - chargeable_now, 2)
+
+    common = {
+        "asset_type": asset_type,
+        "earned_income": earned_income,
+        "dividend_income": dividend_income,
+    }
+    without_relief = cgt_liability({**common, "chargeable_gain": gain}, tax_year)
+    with_relief = cgt_liability({**common, "chargeable_gain": chargeable_now}, tax_year)
+
+    return {
+        "disposal_proceeds": round(proceeds, 2),
+        "disposal_gain": round(gain, 2),
+        "replacement_cost": round(replacement_cost, 2),
+        "amount_not_reinvested": amount_not_reinvested,
+        "gain_chargeable_now": chargeable_now,
+        "gain_rolled_over": rolled_over,
+        "cgt_without_relief": without_relief["tax_due"],
+        "cgt_with_relief": with_relief["tax_due"],
+        "tax_deferred": round(without_relief["tax_due"] - with_relief["tax_due"], 2),
+        # The rolled-over gain reduces the replacement asset's base cost, so
+        # it comes back into charge on a future disposal of the new asset.
+        "replacement_base_cost_reduction": rolled_over,
+    }
+
+
+@register(
     "strategy.sdlt_purchase_planning",
     consumes=["sdlt.residential_bands"],
     description="SDLT cost of a planned residential purchase: banded charge, the 5% "
