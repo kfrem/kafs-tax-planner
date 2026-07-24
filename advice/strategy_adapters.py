@@ -950,6 +950,56 @@ class CharityGiftOfAssetsAdapter:
         }
 
 
+@adapter("strategy.capital_allowances_full_expensing")
+class FullExpensingAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("full_expensing_new_plant_spend", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        company = facts.get("company", {})
+        result = {"new_main_rate_spend": company.get("full_expensing_new_plant_spend", 0)}
+        if company.get("marginal_rate"):
+            result["marginal_rate"] = company["marginal_rate"]
+        return result
+
+
+@adapter("strategy.holding_company_structuring")
+class HoldingCompanyStructuringAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        return facts.get("company", {}).get("holdco_retention_amount", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        return {
+            "retained_amount": facts.get("company", {}).get("holdco_retention_amount", 0),
+            "earned_income": _earned_income(facts),
+            "dividend_income": _dividend_income(facts),
+        }
+
+
+@adapter("strategy.sdlt_mixed_use_classification")
+class SdltMixedUseAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return (
+            prop.get("purchase_price", 0) > 0
+            and prop.get("mixed_use_candidate", False)
+            and prop.get("jurisdiction", "england") not in ("scotland", "wales")
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "price": prop.get("purchase_price", 0),
+            "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
+        }
+
+
 @adapter("strategy.cgt_rollover_relief")
 class CgtRolloverReliefAdapter:
     @staticmethod
