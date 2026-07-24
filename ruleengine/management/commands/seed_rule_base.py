@@ -2573,12 +2573,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.cgt_rollover_relief",
                 description="Partial reinvestment: 450k of 500k proceeds, 2025/26",
-                source="Hand-computed: proceeds 500,000, gain 200,000, replacement "
-                "450,000 -> 50,000 not reinvested, chargeable now (s.153); 150,000 "
-                "rolled over. Earned 60,000 (taxable 47,430, above the basic band) so "
-                "the 'other' higher rate 24% applies throughout. Without relief: "
-                "(200,000 - 3,000 AEA) x 24% = 47,280.00. With relief: (50,000 - 3,000) "
-                "x 24% = 11,280.00. Tax deferred 36,000.00.",
+                source="Hand-computed: 50,000 of 500,000 proceeds not reinvested is "
+                "chargeable (s.153); without relief (200,000 - 3,000) x 24% = 47,280.00, "
+                "with relief (50,000 - 3,000) x 24% = 11,280.00; 36,000.00 deferred.",
                 input_facts={"disposal_proceeds": 500000, "disposal_gain": 200000,
                              "replacement_cost": 450000, "earned_income": 60000},
                 expected_output={
