@@ -2104,6 +2104,33 @@ class Command(BaseCommand):
                 release=release_property,
             ),
             dict(
+                code="sdlt-uninhabitable-classification",
+                name="SDLT uninhabitable-dwelling classification (England/NI)",
+                tax_domain=TaxDomain.PROPERTY_TAXES,
+                calculator_key="strategy.sdlt_uninhabitable_classification",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.BORDERLINE,
+                plain_english_explanation="A building that is not 'suitable for use as a "
+                "dwelling' at the effective date is not residential property for SDLT (FA 2003 "
+                "s.116), so it is charged at the non-residential rates with no additional-"
+                "dwelling surcharge. This applies to a genuinely derelict or unsafe building — "
+                "the P N Bewley v HMRC [2019] UKFTT 65 line: a bungalow with asbestos, no "
+                "working kitchen or bathroom and radiators removed was held not suitable for "
+                "use as a dwelling. The bar is high and HMRC challenges weak claims hard: an "
+                "empty house, one in poor decorative order, or one simply needing renovation "
+                "is still 'suitable for use as a dwelling'. The condition must be genuine and "
+                "evidenced at completion (survey, photographs), which is why this is flagged "
+                "borderline. This quantifies the residential treatment (with any surcharge) "
+                "against the non-residential charge.",
+                authority_keys=["fa2003_s116"],
+                eligibility_conditions={"all": [
+                    {"path": "property.purchase_price", "op": "gt", "value": 0},
+                    {"path": "property.uninhabitable_candidate", "op": "eq", "value": True},
+                    {"path": "property.jurisdiction", "op": "not_in", "value": ["scotland", "wales"]},
+                ]},
+                release=release_property,
+            ),
+            dict(
                 code="lbtt-non-residential-purchase",
                 name="LBTT on non-residential purchase (Scotland)",
                 tax_domain=TaxDomain.PROPERTY_TAXES,
