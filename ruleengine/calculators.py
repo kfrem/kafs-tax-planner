@@ -1266,6 +1266,53 @@ def strategy_property_income_finance_cost(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.fhl_abolition_transition",
+    consumes=[
+        "property_income.finance_cost_restriction",
+        "income_tax.personal_allowance",
+        "income_tax.bands",
+    ],
+    description="Furnished Holiday Lettings abolition (from 6 April 2025, 1 April 2025 for "
+    "companies; F(No.2)A 2024 / FA 2025): a former FHL loses its beneficial treatment and is "
+    "taxed as an ordinary property business. The two quantifiable annual hits are the s.24 "
+    "finance-cost restriction (FHLs were exempt; mortgage interest now relieved only as a 20% "
+    "reducer) and the loss of capital allowances on furnishings (replaced by replacement-of-"
+    "domestic-items relief on like-for-like replacements only, not new purchases). This "
+    "quantifies the extra annual income tax the restriction now costs a mortgaged higher-rate "
+    "landlord and the writing-down allowance still available on the capital-allowances pool "
+    "carried forward at 5 April 2025 — the figure that drives whether to incorporate, sell, "
+    "or hold. Pre-April-2025 FHL losses carry forward into the property business; a BADR "
+    "disposal is only available under the transitional window.",
+)
+def strategy_fhl_abolition_transition(facts: dict, tax_year: str) -> dict:
+    # The s.24 restriction FHL status previously shielded: reuse the exact
+    # finance-cost engine so the number is identical to the standalone strategy.
+    s24 = strategy_property_income_finance_cost(
+        {
+            "rental_income": facts.get("rental_income", 0),
+            "allowable_expenses": facts.get("allowable_expenses", 0),
+            "finance_costs": facts.get("finance_costs", 0),
+            "other_income": facts.get("other_income", 0),
+        },
+        tax_year,
+    )
+    # Capital allowances pool carried forward at 5 April 2025: writing-down
+    # allowances (18% main pool) can still be claimed on the b/f balance, but
+    # no allowances arise on NEW furnishings — that relief is gone.
+    pool_bf = max(0.0, float(facts.get("capital_allowances_pool_bf", 0)))
+    wda = round(pool_bf * 0.18, 2)
+
+    return {
+        "extra_income_tax_from_s24": s24["extra_tax_from_restriction"],
+        "tax_under_s24": s24["tax_under_s24"],
+        "tax_if_still_fhl": s24["tax_if_interest_fully_deductible"],
+        "capital_allowances_pool_carried_forward": round(pool_bf, 2),
+        "writing_down_allowance_still_available": wda,
+        "new_furnishings_allowances_lost": True,
+    }
+
+
+@register(
     "strategy.partnership_profit_allocation",
     consumes=[
         "income_tax.personal_allowance",
