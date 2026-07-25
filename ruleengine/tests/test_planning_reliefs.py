@@ -15,6 +15,7 @@ from ruleengine.calculators import (
     strategy_directors_loan_s455,
     strategy_employer_pension_contribution,
     strategy_eot_disposal_relief,
+    strategy_fhl_abolition_transition,
     strategy_gift_aid_relief,
     strategy_group_loss_relief,
     strategy_holding_company_structuring,
