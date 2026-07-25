@@ -2480,6 +2480,39 @@ def strategy_sdlt_mixed_use_classification(facts: dict, tax_year: str) -> dict:
 
 
 @register(
+    "strategy.sdlt_uninhabitable_classification",
+    consumes=["sdlt.residential_bands", "sdlt.non_residential_bands"],
+    description="Uninhabitable-dwelling SDLT classification (FA 2003 s.116): a building that "
+    "is NOT 'suitable for use as a dwelling' at the effective date — genuinely derelict, "
+    "or stripped of a working kitchen/bathroom, or structurally unsafe (the P N Bewley v "
+    "HMRC [2019] UKFTT 65 principle) — is not residential property and is charged wholly at "
+    "the non-residential rates, with no additional-dwelling surcharge. This quantifies the "
+    "residential treatment (including any 5% surcharge) against the non-residential charge. "
+    "The bar is high — general disrepair, an empty house, or a house needing renovation is "
+    "still 'suitable for use as a dwelling'; HMRC challenges weak claims, so the condition "
+    "must be genuine and evidenced at completion (surveys, photographs).",
+)
+def strategy_sdlt_uninhabitable_classification(facts: dict, tax_year: str) -> dict:
+    price = max(0.0, float(facts.get("price", 0)))
+    additional = bool(facts.get("additional_dwelling", False))
+
+    residential = sdlt_residential(
+        {"price": price, "additional_dwelling": additional}, tax_year
+    )
+    param = get_parameter("sdlt.non_residential_bands", tax_year)
+    non_residential_charge = _progressive_tax(price, param["bands"])
+
+    return {
+        "price": price,
+        "residential_treatment": residential,
+        "non_residential_sdlt": non_residential_charge,
+        "saving_if_non_residential": round(
+            residential["total_sdlt"] - non_residential_charge, 2
+        ),
+    }
+
+
+@register(
     "strategy.lbtt_non_residential_purchase",
     consumes=["lbtt.non_residential_bands"],
     description="LBTT on a planned non-residential freehold purchase in Scotland: "
