@@ -2767,10 +2767,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.fhl_abolition_transition",
                 description="Former FHL, mortgaged higher-rate landlord, 2025/26",
-                source="Hand-computed: rental profit 20,000 (24,000 - 4,000) on 55,000 "
-                "salary; interest 12,000 relieved at 40% under FHL (4,800) vs a 20% reducer "
-                "under s.24 (2,400), so abolition costs 2,400 extra income tax a year; a "
-                "10,000 capital-allowances pool b/f still yields an 1,800 WDA (18%).",
+                source="Hand-computed: rental profit 20,000 on 55,000 salary; interest "
+                "12,000 relieved at 40% under FHL (4,800) vs a 20% s.24 reducer (2,400), so "
+                "abolition costs 2,400 extra tax a year; 10,000 pool b/f yields 1,800 WDA.",
                 input_facts={"rental_income": 24000, "allowable_expenses": 4000,
                              "finance_costs": 12000, "other_income": 55000,
                              "capital_allowances_pool_bf": 10000},
