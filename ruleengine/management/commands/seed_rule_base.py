@@ -1514,6 +1514,31 @@ class Command(BaseCommand):
                 ]},
             ),
             dict(
+                code="fhl-abolition-transition",
+                name="Furnished Holiday Lettings abolition — transitional planning",
+                tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
+                calculator_key="strategy.fhl_abolition_transition",
+                timeframe=Timeframe.SHORT,
+                risk_status=RiskStatus.SETTLED,
+                plain_english_explanation="The furnished holiday lettings regime was abolished "
+                "from 6 April 2025 (1 April 2025 for companies), so a former FHL is now taxed as "
+                "an ordinary property business. The two annual hits this quantifies are the s.24 "
+                "finance-cost restriction — FHLs were exempt, so a mortgaged higher-rate "
+                "landlord now pays more tax as interest is relieved only at 20% — and the loss "
+                "of capital allowances on new furnishings (replaced by replacement-of-domestic-"
+                "items relief on like-for-like replacements only). It also shows the writing-"
+                "down allowance still claimable on the capital-allowances pool carried forward "
+                "at 5 April 2025. Pre-April-2025 FHL losses carry forward into the property "
+                "business, and a Business Asset Disposal Relief claim on sale is available only "
+                "under the transitional window — points the adviser weighs when deciding whether "
+                "to incorporate, sell, or hold.",
+                authority_keys=["fa2025_sch5_fhl", "ittoia2005_s272a"],
+                eligibility_conditions={"all": [
+                    {"path": "property.former_fhl", "op": "eq", "value": True},
+                    {"path": "property.rental_income", "op": "gt", "value": 0},
+                ]},
+            ),
+            dict(
                 code="partnership-profit-allocation",
                 name="Partnership / LLP profit-share allocation",
                 tax_domain=TaxDomain.PERSONAL_INCOME_TAX,
