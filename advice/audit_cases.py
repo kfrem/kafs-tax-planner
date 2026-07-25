@@ -289,6 +289,18 @@ def _build_cases():
             "purchase_is_additional_dwelling": True,
         },
     }))
+    # A derelict second-home purchase where the Bewley uninhabitable
+    # classification (FA 2003 s.116) is in point.
+    cases.append(("AUDIT-ENG-DERELICT", "Audit: england derelict-dwelling purchase",
+                  "individual", {
+        "personal": {}, "company": {}, "sole_trade": {}, "estate": {},
+        "property": {
+            "purchase_price": 700000,
+            "jurisdiction": "england",
+            "uninhabitable_candidate": True,
+            "purchase_is_additional_dwelling": True,
+        },
+    }))
     return cases
 
 
