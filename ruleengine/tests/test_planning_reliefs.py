@@ -1077,3 +1077,63 @@ class TestSdltMixedUse:
         assert result["residential_treatment"]["total_sdlt"] == approx(300.0)
         assert result["mixed_use_sdlt"] == approx(0.0)
         assert result["saving_if_mixed_use"] == approx(300.0)
+
+
+class TestSdltUninhabitable:
+    def test_derelict_additional_dwelling_reclassified(self):
+        # 700,000 as residential + 5% surcharge: banded 0 + 125,000 x 2%
+        # (2,500) + 450,000 x 5% (22,500) = 25,000, plus 35,000 surcharge
+        # = 60,000. As non-residential (s.116 / Bewley): 100,000 x 2% +
+        # 450,000 x 5% = 24,500. Saving 35,500.
+        result = strategy_sdlt_uninhabitable_classification(
+            {"price": 700000, "additional_dwelling": True}, TAX_YEAR
+        )
+        assert result["residential_treatment"]["total_sdlt"] == approx(60000.0)
+        assert result["non_residential_sdlt"] == approx(24500.0)
+        assert result["saving_if_non_residential"] == approx(35500.0)
+
+    def test_single_derelict_home_no_surcharge(self):
+        # 400,000, no surcharge: residential 0 + 2,500 + 150,000 x 5%
+        # (7,500) = 10,000. Non-residential: 250,000 x 2%... i.e. 150,000
+        # nil, 100,000 x 2% (2,000) + 150,000 x 5% (7,500) = 9,500.
+        # Saving 500 — small at this level, which is honest: the relief
+        # bites hardest with a surcharge or a high price.
+        result = strategy_sdlt_uninhabitable_classification(
+            {"price": 400000, "additional_dwelling": False}, TAX_YEAR
+        )
+        assert result["residential_treatment"]["total_sdlt"] == approx(10000.0)
+        assert result["non_residential_sdlt"] == approx(9500.0)
+        assert result["saving_if_non_residential"] == approx(500.0)
+
+
+class TestFhlAbolitionTransition:
+    def test_mortgaged_higher_rate_former_fhl(self):
+        # Rental profit 20,000 (24,000 - 4,000) on 55,000 salary. Interest
+        # 12,000 would save 40% = 4,800 under the old FHL full deduction,
+        # but only a 20% reducer = 2,400 under s.24, so abolition costs
+        # 2,400 extra income tax a year. Tax under s.24 = 17,432 - 2,400 =
+        # 15,032; had it stayed an FHL, tax on 63,000 = 12,632.
+        result = strategy_fhl_abolition_transition(
+            {"rental_income": 24000, "allowable_expenses": 4000,
+             "finance_costs": 12000, "other_income": 55000,
+             "capital_allowances_pool_bf": 10000},
+            TAX_YEAR,
+        )
+        assert result["extra_income_tax_from_s24"] == approx(2400.0)
+        assert result["tax_under_s24"] == approx(15032.0)
+        assert result["tax_if_still_fhl"] == approx(12632.0)
+        assert result["writing_down_allowance_still_available"] == approx(1800.0)
+        assert result["new_furnishings_allowances_lost"] is True
+
+    def test_basic_rate_former_fhl_unaffected_by_s24(self):
+        # A basic-rate landlord: rental profit 8,000 on 20,000 salary,
+        # interest 3,000. Both routes relieve at 20%, so s.24 costs nothing
+        # extra — the abolition's income-tax sting is a higher-rate effect.
+        result = strategy_fhl_abolition_transition(
+            {"rental_income": 12000, "allowable_expenses": 4000,
+             "finance_costs": 3000, "other_income": 20000,
+             "capital_allowances_pool_bf": 0},
+            TAX_YEAR,
+        )
+        assert result["extra_income_tax_from_s24"] == approx(0.0)
+        assert result["writing_down_allowance_still_available"] == approx(0.0)
