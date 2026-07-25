@@ -2753,6 +2753,35 @@ class Command(BaseCommand):
                 },
             ),
             dict(
+                calculator_key="strategy.sdlt_uninhabitable_classification",
+                description="700,000 derelict additional dwelling vs non-residential, 2025/26",
+                source="Hand-computed: residential 25,000 banded (2,500 + 22,500) + 35,000 "
+                "surcharge (5%) = 60,000; non-residential Table B: 100,000 x 2% + 450,000 x "
+                "5% = 24,500; a Bewley-style non-residential classification saves 35,500.",
+                input_facts={"price": 700000, "additional_dwelling": True},
+                expected_output={
+                    "non_residential_sdlt": 24500.0,
+                    "saving_if_non_residential": 35500.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.fhl_abolition_transition",
+                description="Former FHL, mortgaged higher-rate landlord, 2025/26",
+                source="Hand-computed: rental profit 20,000 (24,000 - 4,000) on 55,000 "
+                "salary; interest 12,000 relieved at 40% under FHL (4,800) vs a 20% reducer "
+                "under s.24 (2,400), so abolition costs 2,400 extra income tax a year; a "
+                "10,000 capital-allowances pool b/f still yields an 1,800 WDA (18%).",
+                input_facts={"rental_income": 24000, "allowable_expenses": 4000,
+                             "finance_costs": 12000, "other_income": 55000,
+                             "capital_allowances_pool_bf": 10000},
+                expected_output={
+                    "extra_income_tax_from_s24": 2400.0,
+                    "tax_under_s24": 15032.0,
+                    "tax_if_still_fhl": 12632.0,
+                    "writing_down_allowance_still_available": 1800.0,
+                },
+            ),
+            dict(
                 calculator_key="strategy.income_timing",
                 description="Dividend timed 2025/26 vs 2026/27 (+2pp rise), higher-rate",
                 source="Hand-computed: earned 60,000 both years; 20,000 dividend at "
