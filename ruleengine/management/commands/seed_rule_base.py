@@ -671,16 +671,17 @@ class Command(BaseCommand):
                 "dwelling; six or more dwellings in one transaction are treated as non-residential.",
             ),
             dict(
-                key="fno2a2024_fhl",
+                key="fa2025_sch5_fhl",
                 authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="Finance (No.2) Act 2024 s.25 & Sch (abolition of the FHL regime)",
-                canonical_uri="https://www.legislation.gov.uk/ukpga/2024/12/section/25",
-                verbatim_extract="The furnished holiday lettings tax regime is abolished with "
-                "effect from 6 April 2025 (income tax and capital gains tax) and 1 April 2025 "
-                "(corporation tax). From those dates a former FHL is taxed as an ordinary "
-                "property business: the s.24 finance-cost restriction applies, capital "
-                "allowances on new furnishings cease (replaced by replacement-of-domestic-items "
-                "relief), and FHL-specific CGT reliefs (BADR, rollover, gift holdover) no longer "
+                canonical_citation="Finance Act 2025 s.25 and Sch 5 (abolition of the FHL regime)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2025/8/schedule/5",
+                verbatim_extract="Schedule 5 (title: 'Furnished holiday lettings') removes the "
+                "special tax treatment of furnished holiday lettings by repealing the provisions "
+                "that treated such businesses as trades (ITTOIA 2005 Part 3 Ch 6; CTA 2009 Part 4 "
+                "Ch 6). From 6 April 2025 (income tax / CGT) and 1 April 2025 (corporation tax) a "
+                "former FHL is taxed as an ordinary property business: the s.24 finance-cost "
+                "restriction applies, capital allowances on new furnishings cease (replaced by "
+                "replacement-of-domestic-items relief), and FHL-specific CGT reliefs no longer "
                 "apply save under transitional rules. Losses and existing capital-allowances "
                 "pools at 5 April 2025 carry forward into the continuing property business.",
             ),
