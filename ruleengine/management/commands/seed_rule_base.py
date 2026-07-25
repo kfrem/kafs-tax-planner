@@ -657,6 +657,34 @@ class Command(BaseCommand):
                 "charge on net present value (Sch 5), sit in the referenced schedules.",
             ),
             dict(
+                key="fa2003_s116",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance Act 2003 s.116 (meaning of residential property)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2003/14/section/116",
+                verbatim_extract="Residential property means a building that is used or suitable "
+                "for use as a dwelling, or is in the process of being constructed or adapted for "
+                "such use, together with its garden or grounds; anything else is non-residential. "
+                "A building not 'suitable for use as a dwelling' at the effective date — e.g. one "
+                "that is genuinely derelict or unsafe (P N Bewley Ltd v HMRC [2019] UKFTT 65) — "
+                "falls outside the definition and is charged at the non-residential rates. Where "
+                "a building is equally suitable for a dwelling and another use it is treated as a "
+                "dwelling; six or more dwellings in one transaction are treated as non-residential.",
+            ),
+            dict(
+                key="fno2a2024_fhl",
+                authority_type=Authority.AuthorityType.STATUTE,
+                canonical_citation="Finance (No.2) Act 2024 s.25 & Sch (abolition of the FHL regime)",
+                canonical_uri="https://www.legislation.gov.uk/ukpga/2024/12/section/25",
+                verbatim_extract="The furnished holiday lettings tax regime is abolished with "
+                "effect from 6 April 2025 (income tax and capital gains tax) and 1 April 2025 "
+                "(corporation tax). From those dates a former FHL is taxed as an ordinary "
+                "property business: the s.24 finance-cost restriction applies, capital "
+                "allowances on new furnishings cease (replaced by replacement-of-domestic-items "
+                "relief), and FHL-specific CGT reliefs (BADR, rollover, gift holdover) no longer "
+                "apply save under transitional rules. Losses and existing capital-allowances "
+                "pools at 5 April 2025 carry forward into the continuing property business.",
+            ),
+            dict(
                 key="fa2003_sch4za",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Finance Act 2003 Sch 4ZA (higher rates for additional dwellings)",
