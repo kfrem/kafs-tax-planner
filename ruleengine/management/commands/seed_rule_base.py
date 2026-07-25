@@ -2755,9 +2755,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.sdlt_uninhabitable_classification",
                 description="700,000 derelict additional dwelling vs non-residential, 2025/26",
-                source="Hand-computed: residential 25,000 banded (2,500 + 22,500) + 35,000 "
-                "surcharge (5%) = 60,000; non-residential Table B: 100,000 x 2% + 450,000 x "
-                "5% = 24,500; a Bewley-style non-residential classification saves 35,500.",
+                source="Hand-computed: residential 25,000 banded + 35,000 surcharge = "
+                "60,000; non-residential 100,000 x 2% + 450,000 x 5% = 24,500; a Bewley "
+                "non-residential classification saves 35,500.",
                 input_facts={"price": 700000, "additional_dwelling": True},
                 expected_output={
                     "non_residential_sdlt": 24500.0,
