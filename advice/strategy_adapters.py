@@ -520,6 +520,25 @@ class PropertyIncomeFinanceCostAdapter:
         }
 
 
+@adapter("strategy.fhl_abolition_transition")
+class FhlAbolitionTransitionAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return bool(prop.get("former_fhl", False)) and prop.get("rental_income", 0) > 0
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "rental_income": prop.get("rental_income", 0),
+            "allowable_expenses": prop.get("allowable_expenses", 0),
+            "finance_costs": prop.get("finance_costs", 0),
+            "other_income": _earned_income(facts),
+            "capital_allowances_pool_bf": prop.get("capital_allowances_pool_bf", 0),
+        }
+
+
 @adapter("strategy.venture_capital_investment")
 class VentureCapitalInvestmentAdapter:
     @staticmethod
