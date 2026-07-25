@@ -203,6 +203,9 @@ LANDLORD_FACTS = {
         "portfolio_value": 1000000,
         "latent_gain": 300000,
         "s162_relief_available": True,
+        # ...the let was a furnished holiday let until the April-2025 abolition.
+        "former_fhl": True,
+        "capital_allowances_pool_bf": 10000,
     },
     "estate": {},
 }
