@@ -31,6 +31,8 @@ HEADLINES = {
     "capital-allowances-full-expensing": ("Tax saved year one", lambda q: q.get("tax_saved_year_one")),
     "holding-company-structuring": ("Tax deferred", lambda q: q.get("tax_deferred_by_retention")),
     "sdlt-mixed-use-classification": ("Saving if mixed-use", lambda q: q.get("saving_if_mixed_use")),
+    "sdlt-uninhabitable-classification": ("Saving if non-residential", lambda q: q.get("saving_if_non_residential")),
+    "fhl-abolition-transition": ("Extra tax from abolition", lambda q: q.get("extra_income_tax_from_s24")),
 }
 
 
