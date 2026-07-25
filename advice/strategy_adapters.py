@@ -1019,6 +1019,26 @@ class SdltMixedUseAdapter:
         }
 
 
+@adapter("strategy.sdlt_uninhabitable_classification")
+class SdltUninhabitableAdapter:
+    @staticmethod
+    def is_eligible(facts: dict) -> bool:
+        prop = facts.get("property", {})
+        return (
+            prop.get("purchase_price", 0) > 0
+            and prop.get("uninhabitable_candidate", False)
+            and prop.get("jurisdiction", "england") not in ("scotland", "wales")
+        )
+
+    @staticmethod
+    def to_facts(facts: dict) -> dict:
+        prop = facts.get("property", {})
+        return {
+            "price": prop.get("purchase_price", 0),
+            "additional_dwelling": prop.get("purchase_is_additional_dwelling", False),
+        }
+
+
 @adapter("strategy.cgt_rollover_relief")
 class CgtRolloverReliefAdapter:
     @staticmethod
