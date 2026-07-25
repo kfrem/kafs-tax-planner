@@ -123,6 +123,16 @@ _HEADLINE_SENTENCES = {
         f"£{q['mixed_use_sdlt']:,.2f} — a difference of £{q['saving_if_mixed_use']:,.2f} "
         f"against the residential treatment."
     ),
+    "sdlt-uninhabitable-classification": lambda q: (
+        f"If the property is genuinely not suitable for use as a dwelling, stamp duty "
+        f"falls to £{q['non_residential_sdlt']:,.2f} — a difference of "
+        f"£{q['saving_if_non_residential']:,.2f} against the residential treatment."
+    ),
+    "fhl-abolition-transition": lambda q: (
+        f"With the holiday-let regime abolished, the finance-cost restriction now costs "
+        f"£{q['extra_income_tax_from_s24']:,.2f} more income tax a year than the property "
+        f"attracted as a furnished holiday let."
+    ),
 }
 
 
