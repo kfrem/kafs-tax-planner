@@ -33,6 +33,7 @@ from ruleengine.calculators import (
     strategy_relevant_property_trust_charges,
     strategy_salary_sacrifice,
     strategy_sdlt_mixed_use_classification,
+    strategy_sdlt_uninhabitable_classification,
     strategy_venture_capital_investment,
 )
 
