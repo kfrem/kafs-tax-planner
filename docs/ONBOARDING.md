@@ -165,9 +165,14 @@ Far more than the original README's "Phase 1" scope. As of this handover:
   `/monitoring/` (staff-only), machine pre-check + review pack, MFA,
   row-level multi-tenant isolation, append-only audit trail with provenance,
   `/healthz` probe.
-- **Tests: 330 passing**; 69 golden cases; 62 authorities (each watched,
-  with fetched primary-source snapshots); **49 live strategies**; editorial
+- **Tests: 336 passing**; 71 golden cases; 64 authorities (each watched,
+  with fetched primary-source snapshots); **51 live strategies**; editorial
   pre-check reports **0 machine-check failures**. CI green on every push.
+- **25 July 2026 additions** — SDLT uninhabitable/derelict classification
+  (FA 2003 s.116, the *Bewley* principle, borderline) and the FHL abolition
+  transitional (Finance Act 2025 Sch 5). Only remaining coverage-map gap is
+  charity VAT, which needs a VAT module the app does not have — a documented
+  scoping deferral (see DEVELOPER_HANDOVER §6, task list).
 - **July 2026 additions** — income timing across tax years (prices the
   April-2026 dividend rise), Payroll Giving, gifts of shares/property to
   charity (ITA 2007 s.431 + TCGA 1992 s.257 double relief), business-asset
