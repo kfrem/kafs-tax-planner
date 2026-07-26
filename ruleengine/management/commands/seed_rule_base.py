@@ -1486,13 +1486,18 @@ class Command(BaseCommand):
                 plain_english_explanation="Qualifying business and agricultural property is "
                 "relieved from inheritance tax — at 100% for an unquoted trading business or "
                 "qualifying farmland. From 6 April 2026 the 100% rate is capped at a combined "
-                "£1,000,000, with 50% relief on anything above that (Finance Act 2025), so a "
-                "large business or farm can face inheritance tax for the first time. This "
-                "quantifies the value relieved, the taxable value left after relief, and the IHT "
-                "saved. It assumes the rest of the estate has used the nil-rate bands, which is "
-                "the usual position where seven figures of business property are in point. "
-                "Whether specific assets qualify (trading vs investment, two-year ownership) is a "
-                "judgement the accountant confirms.",
+                "£2,500,000 allowance per person, with 50% relief on anything above that "
+                "(Finance Act 2026; the cap was raised from the originally-announced £1m at "
+                "Autumn Budget 2025). The £2.5m allowance is transferable to a spouse or civil "
+                "partner (up to £5m combined) and refreshes every seven years, so a large "
+                "business or farm above the allowance can face inheritance tax for the first "
+                "time. This quantifies the value relieved, the taxable value left after relief, "
+                "and the IHT saved. It models a single person's £2.5m allowance; spousal "
+                "transferability and the 7-year refresh are a documented simplification. It "
+                "assumes the rest of the estate has used the nil-rate bands, the usual position "
+                "where seven figures of business property are in point. Whether specific assets "
+                "qualify (trading vs investment, two-year ownership) is a judgement the "
+                "accountant confirms.",
                 authority_keys=["ihta1984_bpr_apr"],
                 eligibility_conditions={"all": [
                     {"path": "estate.qualifying_business_property", "op": "gt", "value": 0},
