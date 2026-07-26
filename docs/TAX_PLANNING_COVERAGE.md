@@ -98,12 +98,14 @@ Last updated: 24 July 2026.
 
 ## Coverage tally
 
-**24 July 2026:** seven more built — timing of income across years, Payroll
+**24–25 July 2026:** nine more built — timing of income across years, Payroll
 Giving, gifts of shares/property to charity, business-asset rollover relief,
-**full expensing**, **holding-company structuring**, and **SDLT mixed-use
-classification** — taking the app to **49 live strategies**. Remaining from
-the menu below: charity VAT (needs a VAT module), the FHL transitional, SDLT
-uninhabitable/derelict, and Payroll-Giving-adjacent low-priority items.
+**full expensing**, **holding-company structuring**, **SDLT mixed-use
+classification**, **SDLT uninhabitable/derelict classification**, and the
+**FHL abolition transitional** — taking the app to **51 live strategies**.
+The only remaining menu item is **charity VAT reliefs**, which needs a VAT
+module the app does not yet have (see the scoping note in DEVELOPER_HANDOVER
+§6) — a deliberate, documented deferral rather than an oversight.
 
 Previously: roughly **34 built, 2 partial, ~3 planned** of ~38 mainstream strategies (plus
 new client-category strategies — partnership, trust — beyond the original ~38).
