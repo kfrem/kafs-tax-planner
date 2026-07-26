@@ -15,7 +15,7 @@ each one systematically (the six-part recipe in `ONBOARDING.md` §5). Build
 by value × frequency, not top-to-bottom — see the recommended order at the
 end.
 
-Last updated: 24 July 2026.
+Last updated: 25 July 2026.
 
 ---
 
