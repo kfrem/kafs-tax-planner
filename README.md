@@ -73,8 +73,9 @@ across the whole client-complexity range; see TEST_EVIDENCE.md §3.
 > April-2026 cap, EIS/SEIS/VCT), the landlord s.24 restriction, and the
 > July-2026 additions (income timing across years, Payroll Giving, charity
 > gifts of shares/property, business-asset rollover relief, full expensing,
-> holding-company structuring, SDLT mixed-use) —
-> **49 strategies, 330 tests, and an end-to-end self-audit** (above). See
+> holding-company structuring, SDLT mixed-use, SDLT uninhabitable, FHL
+> abolition transitional) —
+> **51 strategies, 336 tests, and an end-to-end self-audit** (above). See
 > [docs/ONBOARDING.md](docs/ONBOARDING.md) §6 for the current picture.
 > Still out of scope (Phase 2/3): HMRC MTD integration, LLM narrative
 > drafting, practice-management integrations.
