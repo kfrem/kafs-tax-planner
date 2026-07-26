@@ -26,15 +26,15 @@ The same suite runs in **GitHub Actions on every push and pull request**
 non-superuser app role so the RLS tests exercise real enforcement, and
 `pytest -q`. Repository: https://github.com/kfrem/kafs-tax-planner.
 
-Last full run: **330 passed, 0 failed, 0 skipped** —
+Last full run: **336 passed, 0 failed, 0 skipped** —
 locally (Python 3.13.14, Django 6.0.7, PostgreSQL 16/Docker, Windows 11),
-24 July 2026. The +21 tests since the 309 baseline are the seven July-2026
+25 July 2026. The +27 tests since the 309 baseline are the nine July-2026
 strategies (`test_planning_reliefs.py`: `TestIncomeTiming`,
 `TestPayrollGiving`, `TestCharityGiftOfAssets`, `TestRolloverRelief`,
-`TestFullExpensing`, `TestHoldingCompanyStructuring`, `TestSdltMixedUse` —
-three hand-computed tests each).
+`TestFullExpensing`, `TestHoldingCompanyStructuring`, `TestSdltMixedUse`,
+`TestSdltUninhabitable`, `TestFhlAbolitionTransition`).
 
-## 2. Test inventory (330 tests)
+## 2. Test inventory (336 tests)
 
 | File | Tests | What it proves |
 |---|---|---|
