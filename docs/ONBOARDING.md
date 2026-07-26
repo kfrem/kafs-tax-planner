@@ -6,7 +6,7 @@ not break, how to get running in ~15 minutes, where everything lives, what
 state it is in today, and how to deploy it. Everything else is linked from
 here.
 
-Last updated: 24 July 2026.
+Last updated: 25 July 2026.
 
 ---
 
