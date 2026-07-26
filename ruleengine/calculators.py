@@ -1693,31 +1693,51 @@ def strategy_commercial_property_fixtures(facts: dict, tax_year: str) -> dict:
 
 @register(
     "strategy.eot_disposal_relief",
-    consumes=["cgt.business_asset_disposal_relief", "cgt.rates"],
+    consumes=["eot.relief", "cgt.business_asset_disposal_relief", "cgt.rates"],
     description="Employee Ownership Trust sale: an owner who sells a controlling interest in a "
-    "trading company to an EOT pays no capital gains tax on the disposal (a full exemption), "
-    "against the CGT a normal third-party sale would bear (Business Asset Disposal Relief at 14% "
-    "on the first £1m, then the standard share rate). Quantifies the CGT saved. The qualifying "
-    "conditions — tightened by Finance Act 2024/2025 (UK-resident trustees, no retained control, "
-    "clawback period, independent valuation) — are the adviser's to confirm (TCGA 1992 s.236H).",
+    "trading company to an EOT gets favourable CGT treatment against the CGT a normal "
+    "third-party sale would bear (Business Asset Disposal Relief on the first £1m, then the "
+    "standard share rate). For disposals up to 25 November 2025 the sale was FULLY exempt; from "
+    "26 November 2025 (Autumn Budget 2025; Finance Act 2026 s.35) only 50% of the gain is "
+    "exempt and the other 50% is chargeable at the standard rate with no BADR. The change is "
+    "resolved by disposal date. Quantifies the CGT under each route and the saving. The "
+    "qualifying conditions — UK-resident trustees, no retained control, clawback period, "
+    "independent valuation — are the adviser's to confirm (TCGA 1992 s.236H).",
 )
 def strategy_eot_disposal_relief(facts: dict, tax_year: str) -> dict:
     gain = max(0.0, float(facts.get("disposal_gain", 0)))
     badr_available = bool(facts.get("badr_available", True))
     badr_used = max(0.0, float(facts.get("badr_lifetime_used", 0)))
 
-    badr = get_parameter("cgt.business_asset_disposal_relief", tax_year)
-    badr_rate, lifetime_limit = badr["rate"], badr["lifetime_limit"]
-    higher_rate = get_parameter("cgt.rates", tax_year)["other"]["higher"]
+    # The disposal date resolves the 26 Nov 2025 intra-year change; without it,
+    # the tax-year anchor applies (correct for 2026/27, and for a pre-26-Nov
+    # 2025/26 disposal — matching the prior full-exemption behaviour).
+    disposal_date = facts.get("disposal_date")
+    as_of = datetime.date.fromisoformat(disposal_date) if disposal_date else None
 
+    badr = get_parameter("cgt.business_asset_disposal_relief", tax_year, as_of=as_of)
+    badr_rate, lifetime_limit = badr["rate"], badr["lifetime_limit"]
+    higher_rate = get_parameter("cgt.rates", tax_year, as_of=as_of)["other"]["higher"]
+    exempt_fraction = get_parameter("eot.relief", tax_year, as_of=as_of)["exempt_fraction"]
+
+    # CGT a normal third-party sale would bear: BADR to the lifetime limit, then
+    # the standard share rate on the excess.
     badr_amount = min(gain, max(0.0, lifetime_limit - badr_used)) if badr_available else 0.0
     excess = gain - badr_amount
     cgt_without_eot = round(badr_amount * badr_rate + excess * higher_rate, 2)
+
+    # CGT under the EOT route: the exempt fraction escapes; the chargeable
+    # fraction bears the standard rate with no BADR (FA 2026 s.35).
+    chargeable = round(gain * (1 - exempt_fraction), 2)
+    cgt_under_eot = round(chargeable * higher_rate, 2)
+
     return {
         "disposal_gain": round(gain, 2),
+        "exempt_fraction": exempt_fraction,
+        "chargeable_gain_under_eot": chargeable,
         "cgt_without_eot": cgt_without_eot,
-        "cgt_under_eot": 0.0,
-        "cgt_saved": cgt_without_eot,
+        "cgt_under_eot": cgt_under_eot,
+        "cgt_saved": round(cgt_without_eot - cgt_under_eot, 2),
     }
 
 
