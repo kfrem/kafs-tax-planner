@@ -2540,14 +2540,28 @@ class Command(BaseCommand):
             ),
             dict(
                 calculator_key="strategy.eot_disposal_relief",
-                description="EOT sale vs a normal BADR sale, 2025/26",
-                source="Hand-computed: 2,000,000 gain — normal sale BADR 14% on 1,000,000 "
-                "(140,000) + 24% on 1,000,000 (240,000) = 380,000; EOT sale is exempt, so 380,000 "
-                "saved.",
+                description="EOT sale before 26 Nov 2025: full exemption, 2025/26",
+                source="Hand-computed: 2,000,000 gain disposed 1 Jun 2025 — normal sale BADR "
+                "14% on 1,000,000 (140,000) + 24% on 1,000,000 (240,000) = 380,000; the EOT "
+                "sale is fully exempt (nil), so 380,000 saved.",
                 input_facts={"disposal_gain": 2000000, "badr_available": True,
-                             "badr_lifetime_used": 0},
-                expected_output={"cgt_without_eot": 380000.0, "cgt_under_eot": 0.0,
+                             "badr_lifetime_used": 0, "disposal_date": "2025-06-01"},
+                expected_output={"exempt_fraction": 1.0, "chargeable_gain_under_eot": 0.0,
+                                 "cgt_without_eot": 380000.0, "cgt_under_eot": 0.0,
                                  "cgt_saved": 380000.0},
+            ),
+            dict(
+                calculator_key="strategy.eot_disposal_relief",
+                description="EOT sale on/after 26 Nov 2025: 50% chargeable, 2026/27",
+                source="Hand-computed: 2,000,000 gain disposed 1 Jun 2026 — normal sale BADR "
+                "18% on 1,000,000 (180,000) + 24% on 1,000,000 (240,000) = 420,000; under the "
+                "EOT, 50% (1,000,000) is chargeable at 24% = 240,000, so 180,000 saved.",
+                tax_year="2026/27",
+                input_facts={"disposal_gain": 2000000, "badr_available": True,
+                             "badr_lifetime_used": 0, "disposal_date": "2026-06-01"},
+                expected_output={"exempt_fraction": 0.5, "chargeable_gain_under_eot": 1000000.0,
+                                 "cgt_without_eot": 420000.0, "cgt_under_eot": 240000.0,
+                                 "cgt_saved": 180000.0},
             ),
             dict(
                 calculator_key="strategy.pension_death_benefit",
