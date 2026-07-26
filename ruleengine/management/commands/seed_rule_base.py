@@ -1226,6 +1226,30 @@ class Command(BaseCommand):
                 risk_classification=RiskStatus.SETTLED, introduced_in_release=release,
             )
 
+        # EOT disposal relief: a sale of a controlling interest to an Employee
+        # Ownership Trust was fully CGT-exempt until 25 Nov 2025. From 26 Nov
+        # 2025 (Autumn Budget 2025; Finance Act 2026 s.35 amending TCGA 1992
+        # s.236H) only 50% of the gain is exempt — the other 50% is chargeable
+        # (no BADR/Investors' Relief on it). This is an INTRA-YEAR change (mid
+        # 2025/26), so it is two effective-dated rows resolved by disposal date
+        # via get_parameter(..., as_of=...), exactly like the 30 Oct 2024 CGT
+        # change. The 50% row opens 26 Nov 2025 under the 2026.1 release.
+        eot_key = "eot.relief"
+        eot_label = "EOT disposal relief: exempt fraction of the gain (TCGA 1992 s.236H)"
+        eot_rows = [
+            (Range(datetime.date(2024, 4, 6), datetime.date(2025, 11, 26), bounds="[)"),
+             {"exempt_fraction": 1.0}, release_property),
+            (Range(datetime.date(2025, 11, 26), None, bounds="[)"),
+             {"exempt_fraction": 0.5}, release_2026),
+        ]
+        TaxParameter.objects.filter(key=eot_key).delete()
+        for effective_range, payload, release in eot_rows:
+            TaxParameter.objects.create(
+                key=eot_key, label=eot_label, tax_domain=TaxDomain.PROPERTY_TAXES,
+                effective_range=effective_range, payload=payload,
+                risk_classification=RiskStatus.SETTLED, introduced_in_release=release,
+            )
+
     def _create_strategies(self, release_2024, release_iht, release_property, authorities):
         open_range = Range(datetime.date(2024, 4, 6), None, bounds="[)")
 
