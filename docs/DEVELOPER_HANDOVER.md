@@ -183,7 +183,34 @@ maps every mainstream UK planning strategy (~38) to built / partial /
 planned, with a value×frequency build order. Use it as the source of truth
 for "is X covered?" and what to pick up next.
 
-0-bis. **CURRENT STATE (24 Jul 2026) — 49 strategies, 330 tests, 69 golden
+0-ter. **CURRENT STATE (25 Jul 2026) — 51 strategies, 336 tests, 71 golden
+   cases, 64 authorities.** Two more strategies, closing the last two
+   *buildable* coverage-map gaps (six-part recipe + self-audit, citations
+   verified against legislation.gov.uk on 25 Jul 2026):
+   - **`sdlt-uninhabitable-classification`** (FA 2003 s.116, BORDERLINE) —
+     a building not "suitable for use as a dwelling" at completion is not
+     residential property and is charged at non-residential rates, the
+     *P N Bewley Ltd v HMRC* [2019] UKFTT 65 principle. Mirrors the mixed-use
+     calculator but is a distinct strategy/adapter/authority; eligibility is
+     `property.uninhabitable_candidate`. New audit case AUDIT-ENG-DERELICT.
+   - **`fhl-abolition-transition`** (Finance Act 2025 s.25 & Sch 5, settled) —
+     the FHL regime was abolished from 6 April 2025 (1 April for CT). Composes
+     the existing s.24 finance-cost engine to quantify the extra annual income
+     tax a former FHL now bears, plus the WDA still claimable on the capital-
+     allowances pool carried forward at 5 Apr 2025. Fires for AUDIT-LANDLORD
+     (now carries `former_fhl: True`). **Citation caution for future editors:**
+     the FHL abolition is Finance Act 2025 (c. 8), NOT Finance (No.2) Act 2024
+     — an initial draft had the wrong Act and it was corrected against the
+     primary source. Always verify.
+   - **Only remaining coverage-map item is charity VAT reliefs**, which needs
+     a VAT module the app does not have (the engine is built around income
+     tax / CGT / CT / IHT / land taxes). This is a **scoping decision, not a
+     quick build**: a VAT module is a multi-strategy piece (registration
+     thresholds, partial exemption, the charity zero/reduced-rate reliefs) and
+     should be its own workstream if the market wants it. Deferred deliberately
+     — see the `Scope charity VAT reliefs` task. Do not half-build it.
+
+0-bis. **PRIOR STATE (24 Jul 2026) — 49 strategies, 330 tests, 69 golden
    cases, 62 authorities.** This session delivered, to the full six-part
    recipe and self-audit protocol:
    - **Second tranche (same day):** `capital-allowances-full-expensing`
