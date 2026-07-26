@@ -84,11 +84,11 @@ python manage.py seed_rule_base --release    # DRAFT by default; --release is de
 python manage.py seed_demo_clients           # Emma / Sarah / Victor + advice + PDFs
 
 # 4. Prove you reproduced the build
-python -m pytest -q                     # expect: 330 passed  (~8 min; the seed rebuilds per test class)
+python -m pytest -q                     # expect: 336 passed  (~8 min; the seed rebuilds per test class)
 python manage.py runserver              # http://localhost:8000
 ```
 
-Reproduction check: **330 passing means you have byte-for-byte the same
+Reproduction check: **336 passing means you have byte-for-byte the same
 calculation behaviour this build has** — every expectation is a
 hand-computed number.
 
