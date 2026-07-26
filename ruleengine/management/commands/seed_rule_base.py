@@ -2469,19 +2469,36 @@ class Command(BaseCommand):
             ),
             dict(
                 calculator_key="strategy.business_property_relief",
-                description="Same 2m business under the 2026/27 reformed 1m cap",
-                source="Hand-computed: 1,000,000 at 100% + 1,000,000 at 50% = 1,500,000 "
-                "relieved; 500,000 taxable; 600,000 IHT saved at 40% (200,000 more IHT than "
-                "before the cap).",
+                description="2m business wholly within the 2026/27 2.5m cap",
+                source="Hand-computed: 2,000,000 is within the 2,500,000 allowance, so 100% "
+                "relieved, no taxable value, 800,000 IHT saved at 40% — same as pre-reform "
+                "(the 2.5m cap only bites above 2.5m).",
                 tax_year="2026/27",
                 input_facts={"qualifying_value": 2000000},
                 expected_output={
-                    "full_relief_cap": 1000000,
-                    "value_relieved_at_100pc": 1000000.0,
+                    "full_relief_cap": 2500000,
+                    "value_relieved_at_100pc": 2000000.0,
+                    "value_above_cap": 0.0,
+                    "total_relieved_value": 2000000.0,
+                    "taxable_value_after_relief": 0.0,
+                    "iht_saved_by_relief": 800000.0,
+                },
+            ),
+            dict(
+                calculator_key="strategy.business_property_relief",
+                description="3.5m business above the 2026/27 2.5m cap",
+                source="Hand-computed: 2,500,000 at 100% + 1,000,000 at 50% = 3,000,000 "
+                "relieved; 500,000 taxable; 1,200,000 IHT saved at 40% (the 500,000 excess "
+                "bears 200,000 IHT it would not have before the cap).",
+                tax_year="2026/27",
+                input_facts={"qualifying_value": 3500000},
+                expected_output={
+                    "full_relief_cap": 2500000,
+                    "value_relieved_at_100pc": 2500000.0,
                     "value_above_cap": 1000000.0,
-                    "total_relieved_value": 1500000.0,
+                    "total_relieved_value": 3000000.0,
                     "taxable_value_after_relief": 500000.0,
-                    "iht_saved_by_relief": 600000.0,
+                    "iht_saved_by_relief": 1200000.0,
                 },
             ),
             dict(
