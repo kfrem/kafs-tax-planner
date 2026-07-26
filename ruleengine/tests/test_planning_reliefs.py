@@ -748,20 +748,43 @@ class TestCommercialPropertyFixtures:
 
 
 class TestEotDisposalRelief:
-    def test_eot_sale_saves_the_whole_cgt(self):
-        # 2m gain: a normal sale bears BADR 14% on the first 1m (140k) + 24% on
-        # the next 1m (240k) = 380k; the EOT sale is exempt, so 380k is saved.
+    def test_eot_sale_before_26_nov_2025_is_fully_exempt(self):
+        # 2m gain disposed 1 Jun 2025 (before the change): a normal sale bears
+        # BADR 14% on the first 1m (140k) + 24% on the next 1m (240k) = 380k;
+        # the EOT sale is fully exempt, so the whole 380k is saved.
         result = strategy_eot_disposal_relief(
-            {"disposal_gain": 2000000, "badr_available": True, "badr_lifetime_used": 0}, TAX_YEAR
+            {"disposal_gain": 2000000, "badr_available": True,
+             "badr_lifetime_used": 0, "disposal_date": "2025-06-01"},
+            TAX_YEAR,
         )
+        assert result["exempt_fraction"] == 1.0
         assert result["cgt_without_eot"] == approx(380000.0)
         assert result["cgt_under_eot"] == approx(0.0)
         assert result["cgt_saved"] == approx(380000.0)
 
-    def test_without_badr_the_whole_gain_is_at_the_standard_rate(self):
-        # No BADR: 500k gain all at the 24% share rate = 120k, all saved by EOT.
+    def test_eot_sale_on_or_after_26_nov_2025_taxes_half(self):
+        # Same 2m gain disposed 1 Jun 2026 (after the FA 2026 s.35 change): a
+        # normal sale bears BADR 18% on 1m (180k) + 24% on 1m (240k) = 420k;
+        # under the EOT only 50% (1m) is exempt, the other 1m is chargeable at
+        # 24% = 240k, so 180k is saved (no longer the full amount).
         result = strategy_eot_disposal_relief(
-            {"disposal_gain": 500000, "badr_available": False}, TAX_YEAR
+            {"disposal_gain": 2000000, "badr_available": True,
+             "badr_lifetime_used": 0, "disposal_date": "2026-06-01"},
+            "2026/27",
+        )
+        assert result["exempt_fraction"] == 0.5
+        assert result["chargeable_gain_under_eot"] == approx(1000000.0)
+        assert result["cgt_without_eot"] == approx(420000.0)
+        assert result["cgt_under_eot"] == approx(240000.0)
+        assert result["cgt_saved"] == approx(180000.0)
+
+    def test_without_badr_before_the_change_the_whole_gain_is_saved(self):
+        # No BADR, disposed before 26 Nov 2025: 500k gain all at the 24% share
+        # rate = 120k, all saved by the full EOT exemption.
+        result = strategy_eot_disposal_relief(
+            {"disposal_gain": 500000, "badr_available": False,
+             "disposal_date": "2025-06-01"},
+            TAX_YEAR,
         )
         assert result["cgt_saved"] == approx(120000.0)
 
