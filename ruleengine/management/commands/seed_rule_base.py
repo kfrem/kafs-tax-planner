@@ -1041,8 +1041,15 @@ class Command(BaseCommand):
         bpr_rows = [
             (Range(datetime.date(2024, 4, 6), datetime.date(2026, 4, 6), bounds="[)"),
              {"full_relief_cap": None, "rate_above_cap": 1.0}, release_iht),
+            # Autumn Budget 2025 raised the combined 100% BPR/APR allowance from
+            # the originally-announced £1m to £2.5m (Finance Act 2026; new IHTA
+            # ss.124D-124E). 50% relief still applies above the cap. The £2.5m
+            # allowance is transferable to a spouse/civil partner (up to £5m
+            # combined) and refreshes every 7 years (10 for trusts) — modelled
+            # here as the single-estate cap; transferability/refresh are a
+            # documented simplification (see DEVELOPER_HANDOVER §5).
             (Range(datetime.date(2026, 4, 6), None, bounds="[)"),
-             {"full_relief_cap": 1000000, "rate_above_cap": 0.5}, release_2026),
+             {"full_relief_cap": 2500000, "rate_above_cap": 0.5}, release_2026),
         ]
         TaxParameter.objects.filter(key=bpr_key).delete()
         for effective_range, payload, release in bpr_rows:
