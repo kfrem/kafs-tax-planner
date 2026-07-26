@@ -84,11 +84,11 @@ python manage.py seed_rule_base --release    # DRAFT by default; --release is de
 python manage.py seed_demo_clients           # Emma / Sarah / Victor + advice + PDFs
 
 # 4. Prove you reproduced the build
-python -m pytest -q                     # expect: 336 passed  (~8 min; the seed rebuilds per test class)
+python -m pytest -q                     # expect: 334 passed  (~8 min; the seed rebuilds per test class)
 python manage.py runserver              # http://localhost:8000
 ```
 
-Reproduction check: **336 passing means you have byte-for-byte the same
+Reproduction check: **334 passing means you have byte-for-byte the same
 calculation behaviour this build has** — every expectation is a
 hand-computed number.
 
@@ -165,7 +165,7 @@ Far more than the original README's "Phase 1" scope. As of this handover:
   `/monitoring/` (staff-only), machine pre-check + review pack, MFA,
   row-level multi-tenant isolation, append-only audit trail with provenance,
   `/healthz` probe.
-- **Tests: 336 passing**; 71 golden cases; 64 authorities (each watched,
+- **Tests: 334 passing**; 71 golden cases; 64 authorities (each watched,
   with fetched primary-source snapshots); **51 live strategies**; editorial
   pre-check reports **0 machine-check failures**. CI green on every push.
 - **25 July 2026 additions** — SDLT uninhabitable/derelict classification

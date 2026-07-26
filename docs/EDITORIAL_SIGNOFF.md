@@ -1033,3 +1033,50 @@ end-to-end (new AUDIT-ENG-MIXED case; Daniel gains the holdco retention;
 the innovative company gains the £1.5m plant programme). One recurring
 BAILII citation-reorder alert dismissed with notes. All queued for the
 second reviewer per §5.6.
+
+## Addendum, 25 July 2026 — Two further strategies (last buildable coverage gaps)
+
+**Prepared by:** engineering. **Requires:** editor + second-reviewer sign-off
+per §5.6 before the next release is relied on for real client data.
+
+To the full six-part protocol, authorities verified against legislation.gov.uk
+on 25 July 2026:
+
+1. **`sdlt-uninhabitable-classification`** (FA 2003 s.116, **BORDERLINE**/short)
+   — a building not "suitable for use as a dwelling" at the effective date is
+   not residential property and is charged at the non-residential rates, the
+   *P N Bewley Ltd v HMRC* [2019] UKFTT 65 principle. Reconciled: £700,000
+   derelict additional dwelling — £60,000 residential (25,000 banded + 35,000
+   surcharge) vs £24,500 non-residential = £35,500 saved; a £400,000 single
+   derelict home saves only £500 (honest — the relief bites hardest with a
+   surcharge or high price). The explanation states plainly that the bar is
+   high (an empty or run-down house is still "suitable for use as a dwelling")
+   and that HMRC challenges weak claims — hence the borderline flag.
+
+2. **`fhl-abolition-transition`** (Finance Act 2025 s.25 & Sch 5, settled/short)
+   — the FHL regime was abolished from 6 April 2025 (1 April for corporation
+   tax). Quantifies the extra annual income tax a former FHL now bears under
+   the s.24 restriction it was previously exempt from, plus the WDA still
+   claimable on the capital-allowances pool carried forward at 5 Apr 2025.
+   Reconciled: rental profit £20,000 on £55,000 salary, £12,000 interest —
+   £4,800 relief under old FHL treatment vs a £2,400 s.24 reducer = £2,400
+   extra tax a year; £10,000 pool b/f yields £1,800 WDA. A basic-rate former
+   FHL is unaffected by s.24 (both routes relieve at 20%).
+
+   **Citation correction recorded for the second reviewer:** an initial draft
+   cited the abolition to "Finance (No.2) Act 2024". That is wrong — the
+   abolition is **Finance Act 2025 (c. 8), s.25 and Schedule 5** (Sch 5 titled
+   "Furnished holiday lettings"). Corrected against the primary source before
+   any test or seed relied on it.
+
+**Verification (25 July):** editorial pre-check **0 failures across 156 items
+(41 parameters / 51 strategies / 64 authorities)**; 71 golden cases to the
+penny; `self_audit --passes 3` green — all 51 strategies end-to-end (new
+AUDIT-ENG-DERELICT case; AUDIT-LANDLORD now carries former_fhl and fires the
+FHL strategy). One recurring BAILII citation-reorder alert dismissed with
+notes. Both new items queued for the second reviewer per §5.6.
+
+**Scope note:** the only remaining coverage-map item, charity VAT reliefs, is
+deferred deliberately — it needs a VAT module the engine does not have and is
+a multi-strategy workstream, not a quick add. Flagged in DEVELOPER_HANDOVER §6
+so it is a recorded decision, not a silent omission.
