@@ -237,11 +237,15 @@ class Command(BaseCommand):
                 canonical_citation="Taxation of Chargeable Gains Act 1992 s.236H (Employee Ownership Trust)",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/1992/12/section/236H",
                 verbatim_extract="A disposal of shares in a trading company to an Employee "
-                "Ownership Trust that acquires a controlling interest is treated as made on a "
-                "no-gain/no-loss basis — the gain is fully exempt from capital gains tax — provided "
-                "the qualifying conditions are met. Finance Act 2024/2025 tightened the rules "
-                "(UK-resident trustees, former owners not to retain control, a longer clawback "
-                "period and an independent valuation), which the adviser must confirm.",
+                "Ownership Trust that acquires a controlling interest gets relief from capital "
+                "gains tax provided the qualifying conditions are met (UK-resident trustees, "
+                "former owners not to retain control, a clawback period and an independent "
+                "valuation, tightened by Finance Act 2024/2025). For disposals up to 25 November "
+                "2025 the relief was a full no-gain/no-loss exemption. For disposals on or after "
+                "26 November 2025 (Finance Act 2026 s.35), only 50% of the gain is relieved — "
+                "the other 50% is chargeable at the standard rate with no Business Asset Disposal "
+                "Relief or Investors' Relief; the relieved half reduces the trustees' acquisition "
+                "cost.",
             ),
             dict(
                 key="ihta1984_s5",
