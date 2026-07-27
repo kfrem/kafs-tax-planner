@@ -745,7 +745,10 @@ class Command(BaseCommand):
                 key="mudan_v_hmrc_2025",
                 authority_type=Authority.AuthorityType.COURT_JUDGMENT,
                 canonical_citation="Mudan & Anor v HMRC [2025] EWCA Civ 799",
-                canonical_uri="https://www.bailii.org/ew/cases/EWCA/Civ/2025/799.html",
+                # The National Archives Find Case Law service is the official
+                # primary source for judgments from 2003 onwards (preferred over
+                # the BAILII mirror for this 2025 Court of Appeal decision).
+                canonical_uri="https://caselaw.nationalarchives.gov.uk/ewca/civ/2025/799",
                 verbatim_extract="Court of Appeal, 27 June 2025. A dilapidated and vandalised "
                 "house requiring extensive works (rewiring, plumbing, boiler, broken windows, "
                 "water ingress) was still 'residential property' for SDLT because it retained "
