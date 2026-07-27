@@ -1363,9 +1363,13 @@ class Command(BaseCommand):
                 plain_english_explanation="Qualifying spend on plant and machinery gets 100% "
                 "tax relief in the year of purchase through the Annual Investment Allowance, "
                 "up to the AIA limit (currently £1,000,000). Spend above that is written down "
-                "at 18% a year in the main pool. This quantifies the first-year deduction and "
-                "the tax it saves at the client's marginal rate — often a reason to time "
-                "capital spend into a particular period.",
+                "in the main pool at 18% a year up to 2025/26, falling to 14% from April 2026 "
+                "(Autumn Budget 2025). This quantifies the first-year deduction and the tax it "
+                "saves at the client's marginal rate — often a reason to time capital spend "
+                "into a particular period. Note: a new 40% first-year allowance for qualifying "
+                "main-rate expenditure from 1 January 2026 is not yet modelled here (a "
+                "documented next step) — the adviser should factor it in for main-rate spend "
+                "above the AIA that does not qualify for full expensing.",
                 authority_keys=["caa2001_s51a"],
                 eligibility_conditions={"all": [
                     {"path": "company.qualifying_capital_spend", "op": "gt", "value": 0},
