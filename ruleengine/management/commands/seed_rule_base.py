@@ -2233,16 +2233,20 @@ class Command(BaseCommand):
                 plain_english_explanation="A building that is not 'suitable for use as a "
                 "dwelling' at the effective date is not residential property for SDLT (FA 2003 "
                 "s.116), so it is charged at the non-residential rates with no additional-"
-                "dwelling surcharge. This applies to a genuinely derelict or unsafe building — "
-                "the P N Bewley v HMRC [2019] UKFTT 65 line: a bungalow with asbestos, no "
-                "working kitchen or bathroom and radiators removed was held not suitable for "
-                "use as a dwelling. The bar is high and HMRC challenges weak claims hard: an "
-                "empty house, one in poor decorative order, or one simply needing renovation "
-                "is still 'suitable for use as a dwelling'. The condition must be genuine and "
-                "evidenced at completion (survey, photographs), which is why this is flagged "
-                "borderline. This quantifies the residential treatment (with any surcharge) "
-                "against the non-residential charge.",
-                authority_keys=["fa2003_s116"],
+                "dwelling surcharge. But the bar is very high, and it was raised further by the "
+                "binding Court of Appeal decision in Mudan v HMRC [2025] EWCA Civ 799: a "
+                "dilapidated, vandalised house needing rewiring, plumbing, a boiler and window "
+                "repairs was still 'residential', because it retained the fundamental "
+                "characteristics of a dwelling. Needing repair or renovation — even extensive "
+                "work — is NOT enough; the condition must be so severe (structural danger, "
+                "genuine dereliction) that the building cannot realistically be used as a "
+                "dwelling at all. The narrow P N Bewley [2019] UKFTT 65 facts (asbestos "
+                "throughout, radiators removed, unsafe) remain the kind of extreme case that "
+                "can still qualify. HMRC challenges these claims hard, so the condition must be "
+                "genuine and evidenced at completion (survey, photographs) — this is flagged "
+                "borderline for good reason. This quantifies the residential treatment (with "
+                "any surcharge) against the non-residential charge if the high threshold is met.",
+                authority_keys=["fa2003_s116", "mudan_v_hmrc_2025"],
                 eligibility_conditions={"all": [
                     {"path": "property.purchase_price", "op": "gt", "value": 0},
                     {"path": "property.uninhabitable_candidate", "op": "eq", "value": True},
