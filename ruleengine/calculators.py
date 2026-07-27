@@ -1744,12 +1744,12 @@ def strategy_eot_disposal_relief(facts: dict, tax_year: str) -> dict:
 @register(
     "strategy.pension_death_benefit",
     consumes=["iht.rates", "iht.nil_rate_band"],
-    description="Pension death-benefit IHT (announced Autumn Budget 2024): from 6 April 2027 most "
-    "unused pension funds are expected to fall within the estate for inheritance tax, where today "
-    "they normally pass outside it. Quantifies the extra IHT a pension pot would attract from that "
-    "date (40% where the estate is already above the nil-rate band). This is a forward-looking "
-    "projection subject to final legislation — flagged borderline; the plan is to review as the "
-    "Finance Bill 2025-26 is enacted (amending IHTA 1984).",
+    description="Pension death-benefit IHT (enacted by Finance Act 2026): for deaths on or after "
+    "6 April 2027 most unused pension funds fall within the estate for inheritance tax, where "
+    "today they normally pass outside it. Quantifies the extra IHT a pension pot would attract "
+    "from that date (40% where the estate is already above the nil-rate band). Forward-dated to "
+    "2027 and modelling the headline charge only; enacted exclusions (death-in-service, charity "
+    "lump sums, surviving-spouse exemption, small funds) are the adviser's to apply.",
 )
 def strategy_pension_death_benefit(facts: dict, tax_year: str) -> dict:
     pot = max(0.0, float(facts.get("pension_pot_value", 0)))
