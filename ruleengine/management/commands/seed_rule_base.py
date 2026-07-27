@@ -1974,13 +1974,19 @@ class Command(BaseCommand):
                 calculator_key="strategy.iht_spousal_transfer_nil_rate_bands",
                 timeframe=Timeframe.LONG,
                 risk_status=RiskStatus.SETTLED,
-                plain_english_explanation="Transfers between spouses or civil partners are wholly exempt from "
+                plain_english_explanation="Transfers between spouses or civil partners are exempt from "
                 "inheritance tax, and any nil-rate band and residence nil-rate band unused on the "
                 "first death transfers to the survivor. Leaving the estate to the surviving spouse "
                 "defers all tax to the second death, where up to double both bands (currently "
                 "£650,000 plus £350,000 where the home passes to direct descendants) shelter the "
                 "combined estate. The transferred bands must be claimed by the survivor's personal "
-                "representatives within two years.",
+                "representatives within two years. This models the ordinary case of a UK-resident "
+                "couple, where the spouse exemption is unlimited. Cross-border caveat (from "
+                "6 April 2025): where a long-term UK resident leaves assets to a spouse who is "
+                "not a long-term resident, the exemption is restricted unless that spouse elects "
+                "to be treated as long-term resident — the domicile-based test was replaced by a "
+                "residence-based one (Finance Act 2025), which the adviser confirms in an "
+                "international case.",
                 authority_keys=["ihta1984_s18", "ihta1984_s8a", "ihta1984_s8g", "ihta1984_s8d"],
                 eligibility_conditions={"all": [{"path": "estate.combined_estate_second_death", "op": "gt", "value": 0}]},
                 release=release_iht,
