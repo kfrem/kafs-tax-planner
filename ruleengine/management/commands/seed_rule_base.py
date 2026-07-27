@@ -261,13 +261,17 @@ class Command(BaseCommand):
             dict(
                 key="ihta1984_pension_2027",
                 authority_type=Authority.AuthorityType.STATUTE,
-                canonical_citation="IHTA 1984 s.3 (as to be amended from 6 April 2027, Finance Bill 2025-26)",
+                canonical_citation="IHTA 1984 s.3 (as amended by Finance Act 2026, effective 6 April 2027)",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/section/3",
-                verbatim_extract="Announced at Autumn Budget 2024: from 6 April 2027 most unused "
-                "pension funds and death benefits will be brought within the value of a person's "
-                "estate for inheritance tax, reversing the current position where they normally "
-                "pass outside the estate. This is a forward-looking planning point subject to final "
-                "legislation — modelled here as a clearly-flagged borderline projection.",
+                verbatim_extract="Enacted by Finance Act 2026 (Royal Assent 18 March 2026): for "
+                "deaths on or after 6 April 2027, most unused pension funds and death benefits "
+                "are brought within the value of a person's estate for inheritance tax, "
+                "reversing the current position where they normally pass outside the estate. "
+                "Enacted exclusions: registered-scheme death-in-service benefits, charity "
+                "lump-sum death benefits, and the existing spouse/civil-partner exemption "
+                "(maintained). Personal representatives may ask a scheme to withhold up to 50% "
+                "of the benefit for up to 15 months to meet the IHT. This is a forward-dated "
+                "charge (from 2027) modelled as a planning projection.",
             ),
             dict(
                 key="cta2009_part13",
