@@ -735,6 +735,21 @@ class Command(BaseCommand):
                 "involving full ordinary shares rather than income-only rights.",
             ),
             dict(
+                key="mudan_v_hmrc_2025",
+                authority_type=Authority.AuthorityType.COURT_JUDGMENT,
+                canonical_citation="Mudan & Anor v HMRC [2025] EWCA Civ 799",
+                canonical_uri="https://www.bailii.org/ew/cases/EWCA/Civ/2025/799.html",
+                verbatim_extract="Court of Appeal, 27 June 2025. A dilapidated and vandalised "
+                "house requiring extensive works (rewiring, plumbing, boiler, broken windows, "
+                "water ingress) was still 'residential property' for SDLT because it retained "
+                "the fundamental characteristics of a dwelling. The threshold for showing a "
+                "building is NOT suitable for use as a dwelling is high: needing repair or "
+                "renovation, even significant work, is not enough — the condition must be such "
+                "that it cannot realistically be used as a dwelling at the effective date. This "
+                "binding decision narrows the earlier first-instance P N Bewley approach and is "
+                "the current leading authority on FA 2003 s.116.",
+            ),
+            dict(
                 key="ihta1984_s18",
                 authority_type=Authority.AuthorityType.STATUTE,
                 canonical_citation="Inheritance Tax Act 1984 s.18",
