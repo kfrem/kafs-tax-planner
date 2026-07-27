@@ -2641,9 +2641,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.eot_disposal_relief",
                 description="EOT sale on/after 26 Nov 2025: 50% chargeable, 2026/27",
-                source="Hand-computed: 2,000,000 gain disposed 1 Jun 2026 — normal sale BADR "
-                "18% on 1,000,000 (180,000) + 24% on 1,000,000 (240,000) = 420,000; under the "
-                "EOT, 50% (1,000,000) is chargeable at 24% = 240,000, so 180,000 saved.",
+                source="Hand-computed: 2,000,000 gain, 1 Jun 2026 — normal sale BADR 18% on "
+                "1,000,000 + 24% on 1,000,000 = 420,000; under the EOT 50% (1,000,000) is "
+                "chargeable at 24% = 240,000, so 180,000 saved.",
                 tax_year="2026/27",
                 input_facts={"disposal_gain": 2000000, "badr_available": True,
                              "badr_lifetime_used": 0, "disposal_date": "2026-06-01"},
