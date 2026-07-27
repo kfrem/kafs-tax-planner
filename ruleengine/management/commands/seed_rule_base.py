@@ -1798,13 +1798,17 @@ class Command(BaseCommand):
                 risk_status=RiskStatus.BORDERLINE,
                 gaar_exposure=False,
                 plain_english_explanation="Today an unused pension pot normally passes on death "
-                "outside the estate, free of inheritance tax. From 6 April 2027 (announced at "
-                "Autumn Budget 2024) most pension funds are expected to be brought into the estate "
-                "for IHT. This shows the extra inheritance tax a pot would attract from that date — "
-                "40% where the estate is already above the nil-rate band — so a client can plan "
-                "(for example, drawing the pension down or gifting) ahead of the change. It is a "
-                "forward-looking projection based on the announcement and is flagged borderline "
-                "until the Finance Bill 2025-26 is enacted.",
+                "outside the estate, free of inheritance tax. For deaths on or after 6 April 2027 "
+                "most pension funds are brought into the estate for IHT — now enacted by Finance "
+                "Act 2026 (Royal Assent 18 March 2026), not merely proposed. This shows the extra "
+                "inheritance tax a pot would attract from that date — 40% where the estate is "
+                "already above the nil-rate band — so a client can plan (for example, drawing the "
+                "pension down or gifting) ahead of the change. Enacted exclusions the adviser "
+                "should apply: registered-scheme death-in-service benefits, charity lump-sum "
+                "death benefits, funds passing to a surviving spouse/civil partner (still "
+                "exempt), and small funds. This models the headline 40% charge on a taxable pot; "
+                "the exclusions and the simplified pot treatment are flagged, and because the "
+                "charge is forward-dated to 2027 the position is still flagged for review.",
                 authority_keys=["ihta1984_pension_2027"],
                 eligibility_conditions={"all": [
                     {"path": "estate.pension_pot_value", "op": "gt", "value": 0},
