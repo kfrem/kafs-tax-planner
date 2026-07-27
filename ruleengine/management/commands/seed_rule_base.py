@@ -2629,9 +2629,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.eot_disposal_relief",
                 description="EOT sale before 26 Nov 2025: full exemption, 2025/26",
-                source="Hand-computed: 2,000,000 gain disposed 1 Jun 2025 — normal sale BADR "
-                "14% on 1,000,000 (140,000) + 24% on 1,000,000 (240,000) = 380,000; the EOT "
-                "sale is fully exempt (nil), so 380,000 saved.",
+                source="Hand-computed: 2,000,000 gain, 1 Jun 2025 — normal sale BADR 14% on "
+                "1,000,000 + 24% on 1,000,000 = 380,000; the EOT sale is fully exempt, so "
+                "380,000 saved.",
                 input_facts={"disposal_gain": 2000000, "badr_available": True,
                              "badr_lifetime_used": 0, "disposal_date": "2025-06-01"},
                 expected_output={"exempt_fraction": 1.0, "chargeable_gain_under_eot": 0.0,
