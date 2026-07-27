@@ -921,9 +921,8 @@ class Command(BaseCommand):
               "main_rate_limit": 250000, "marginal_relief_fraction": 0.015}, None),
             ("directors_loan.s455", "Directors' loan s.455 charge rate", TaxDomain.CORPORATION_TAX,
              {"rate": 0.3375, "beneficial_loan_threshold": 10000}, None),
-            ("capital_allowances.aia", "Capital allowances: AIA limit and writing-down rates",
-             TaxDomain.CORPORATION_TAX,
-             {"aia_limit": 1000000, "main_pool_wda": 0.18, "special_rate_wda": 0.06}, None),
+            # capital_allowances.aia is handled as its own effective-dated block
+            # below (the main-pool WDA falls from 18% to 14% on 1/6 April 2026).
             ("capital_allowances.full_expensing",
              "Full expensing FYA rates (companies, new plant; CAA 2001 s.45S, permanent)",
              TaxDomain.CORPORATION_TAX,
