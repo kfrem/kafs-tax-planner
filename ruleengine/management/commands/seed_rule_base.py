@@ -758,7 +758,13 @@ class Command(BaseCommand):
                 canonical_citation="Inheritance Tax Act 1984 s.18",
                 canonical_uri="https://www.legislation.gov.uk/ukpga/1984/51/section/18",
                 verbatim_extract="Transfers between spouses or civil partners are exempt "
-                "transfers (unlimited where the transferee is UK-domiciled).",
+                "transfers, and the exemption is unlimited in the ordinary case. From 6 April "
+                "2025 (Finance Act 2025), following abolition of the domicile-based regime, the "
+                "exemption is restricted only where a long-term UK resident (LTR — resident in "
+                "at least 10 of the previous 20 tax years) transfers to a spouse/civil partner "
+                "who is NOT a long-term resident; the non-LTR spouse may elect to be treated as "
+                "LTR (the election lasting until 10 consecutive non-resident years). The old "
+                "'UK-domiciled' test no longer applies.",
             ),
             dict(
                 key="ihta1984_s3a",
