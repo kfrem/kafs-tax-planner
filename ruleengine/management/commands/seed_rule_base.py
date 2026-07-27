@@ -2463,10 +2463,9 @@ class Command(BaseCommand):
             dict(
                 calculator_key="strategy.capital_allowances",
                 description="Spend above the AIA under the 2026/27 14% main-pool WDA",
-                source="Hand-computed: 1,200,000 spend -> 1,000,000 AIA + 200,000 at the new "
-                "14% WDA (28,000) = 1,028,000 first-year allowance; at 25% that saves 257,000 "
-                "(the WDA fell from 18% to 14% from April 2026, so a touch less than the "
-                "1,036,000 / 259,000 it would have been in 2025/26).",
+                source="Hand-computed: 1,200,000 -> 1,000,000 AIA + 200,000 at the 14% WDA "
+                "(28,000) = 1,028,000 allowance; at 25% saves 257,000 (WDA fell 18%->14% from "
+                "April 2026).",
                 tax_year="2026/27",
                 input_facts={"qualifying_spend": 1200000, "marginal_rate": 0.25},
                 expected_output={"annual_investment_allowance_used": 1000000.0,
