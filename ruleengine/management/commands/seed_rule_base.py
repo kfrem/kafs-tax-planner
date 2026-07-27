@@ -672,9 +672,12 @@ class Command(BaseCommand):
                 verbatim_extract="Residential property means a building that is used or suitable "
                 "for use as a dwelling, or is in the process of being constructed or adapted for "
                 "such use, together with its garden or grounds; anything else is non-residential. "
-                "A building not 'suitable for use as a dwelling' at the effective date — e.g. one "
-                "that is genuinely derelict or unsafe (P N Bewley Ltd v HMRC [2019] UKFTT 65) — "
-                "falls outside the definition and is charged at the non-residential rates. Where "
+                "The leading authority on 'suitable for use as a dwelling' is now Mudan & Anor v "
+                "HMRC [2025] EWCA Civ 799 (Court of Appeal): a building that needs repair or "
+                "renovation — even significant work — generally retains the character of a "
+                "dwelling, so the bar for non-residential treatment is high (the condition must "
+                "be such that it cannot realistically be used as a dwelling at the effective "
+                "date). This narrows the earlier first-instance P N Bewley [2019] UKFTT 65. Where "
                 "a building is equally suitable for a dwelling and another use it is treated as a "
                 "dwelling; six or more dwellings in one transaction are treated as non-residential.",
             ),
