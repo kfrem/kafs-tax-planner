@@ -146,8 +146,8 @@ class TestCapitalAllowances:
         assert result["tax_saved_year_one"] == approx(12500.0)
 
     def test_spend_above_aia_writes_down_the_excess(self):
-        # 1,200,000: 1,000,000 AIA + 200,000 at the 18% WDA (36,000) =
-        # 1,036,000 first-year allowance; at 25% that saves 259,000.
+        # 2025/26: 1,200,000 -> 1,000,000 AIA + 200,000 at the 18% WDA (36,000)
+        # = 1,036,000 first-year allowance; at 25% that saves 259,000.
         result = strategy_capital_allowances(
             {"qualifying_spend": 1200000, "marginal_rate": 0.25}, TAX_YEAR
         )
@@ -155,6 +155,18 @@ class TestCapitalAllowances:
         assert result["written_down_first_year"] == approx(36000.0)
         assert result["first_year_allowance"] == approx(1036000.0)
         assert result["tax_saved_year_one"] == approx(259000.0)
+
+    def test_excess_writes_down_at_14pc_from_2026_27(self):
+        # 2026/27: the main-pool WDA fell from 18% to 14% (Autumn Budget 2025).
+        # 1,200,000 -> 1,000,000 AIA + 200,000 at 14% (28,000) = 1,028,000
+        # first-year allowance; at 25% that saves 257,000 (2,000 less than the
+        # 259,000 it would have been at 18%).
+        result = strategy_capital_allowances(
+            {"qualifying_spend": 1200000, "marginal_rate": 0.25}, "2026/27"
+        )
+        assert result["written_down_first_year"] == approx(28000.0)
+        assert result["first_year_allowance"] == approx(1028000.0)
+        assert result["tax_saved_year_one"] == approx(257000.0)
 
     def test_marginal_rate_defaults_to_ct_main_rate(self):
         # No marginal_rate given -> uses the 25% CT main rate from the seed.
