@@ -1004,6 +1004,48 @@ class Command(BaseCommand):
                 introduced_in_release=release,
             )
 
+        # Capital allowances: the main-pool writing-down allowance falls from
+        # 18% to 14% from 1 April 2026 (CT) / 6 April 2026 (IT) — Autumn Budget
+        # 2025, Finance Act 2026. Per A5 a rate change is a NEW effective-dated
+        # row, so the 2025/26 row is closed at 6 April 2026 and the 14% row
+        # opens there under 2026.1. AIA limit (£1m) and special-rate WDA (6%)
+        # are unchanged. (A separate new 40% main-rate first-year allowance for
+        # expenditure from 1 Jan 2026 is carried as capital_allowances.fya_main
+        # below.)
+        aia_key = "capital_allowances.aia"
+        aia_label = "Capital allowances: AIA limit and writing-down rates"
+        aia_rows = [
+            (Range(datetime.date(2024, 4, 6), datetime.date(2026, 4, 6), bounds="[)"),
+             {"aia_limit": 1000000, "main_pool_wda": 0.18, "special_rate_wda": 0.06},
+             release_2025),
+            (Range(datetime.date(2026, 4, 6), None, bounds="[)"),
+             {"aia_limit": 1000000, "main_pool_wda": 0.14, "special_rate_wda": 0.06},
+             release_2026),
+        ]
+        TaxParameter.objects.filter(key=aia_key).delete()
+        for effective_range, payload, release in aia_rows:
+            TaxParameter.objects.create(
+                key=aia_key, label=aia_label, tax_domain=TaxDomain.CORPORATION_TAX,
+                effective_range=effective_range, payload=payload,
+                risk_classification=RiskStatus.SETTLED, introduced_in_release=release,
+            )
+
+        # New permanent 40% first-year allowance for main-rate plant and
+        # machinery from 1 January 2026 (Autumn Budget 2025; Finance Act 2026).
+        # Available for qualifying main-rate expenditure that is not relieved by
+        # full expensing or the AIA; the 60% balance enters the main pool and
+        # writes down at 14%. Carried as data, effective from 1 Jan 2026 (an
+        # intra-year date resolved via as_of).
+        fya_key = "capital_allowances.fya_main"
+        fya_label = "Main-rate first-year allowance (40% from 1 Jan 2026; CAA 2001 s.45R)"
+        TaxParameter.objects.filter(key=fya_key).delete()
+        TaxParameter.objects.create(
+            key=fya_key, label=fya_label, tax_domain=TaxDomain.CORPORATION_TAX,
+            effective_range=Range(datetime.date(2026, 1, 1), None, bounds="[)"),
+            payload={"main_rate_fya": 0.40}, risk_classification=RiskStatus.SETTLED,
+            introduced_in_release=release_2026,
+        )
+
     def _create_iht_parameters(self, release_iht, release_2026):
         y2024 = Range(datetime.date(2024, 4, 6), datetime.date(2025, 4, 6), bounds="[)")
         y2025 = Range(datetime.date(2025, 4, 6), None, bounds="[)")
